@@ -7,7 +7,7 @@ body {
 }
 header {
   padding: 20px;
-  background: #fff;
+  background: #ccc;
 }
 .gallery {
   display: flex;
@@ -114,4 +114,17 @@ header {
   position: absolute;
   top: 5px;
   right: 5px;
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+  .gallery {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .image-container {
+    width: 90%;
+    max-width: 400px;
+  }
 }
