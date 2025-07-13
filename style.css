@@ -84,3 +84,34 @@ header {
   justify-content: center;
   cursor: pointer;
 }
+/* New animations */
+.fade-out-other {
+  animation: fadeOut 0.5s forwards;
+}
+@keyframes fadeOut {
+  to { opacity: 0; }
+}
+.dim-image {
+  animation: dimImage 3s forwards;
+}
+@keyframes dimImage {
+  from { opacity: 0.9; }
+  to { opacity: 0.3; }
+}
+.fade-in-text {
+  animation: fadeInText 3s forwards;
+}
+@keyframes fadeInText {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.description {
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+}
+.image-container .close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
