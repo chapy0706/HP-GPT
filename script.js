@@ -36,14 +36,5 @@ images.forEach(img => {
 });
 
 closeBtn.addEventListener('click', () => {
-  if (!currentImg) return;
-  images.forEach(i => {
-    i.classList.remove('fade-out-other', 'hidden', 'expanded', 'dim-image');
-  });
-  details.classList.add('hidden');
-  descriptionDiv.classList.remove('fade-in-text');
-  closeBtn.classList.add('hidden');
-  body.classList.remove('fade-bg');
-  body.appendChild(closeBtn);
-  currentImg = null;
+  window.location.href = 'index.html';
 });
