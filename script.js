@@ -30,6 +30,7 @@ images.forEach(img => {
         img.classList.add('dim-image');
         const desc = img.getAttribute('data-desc');
         descriptionDiv.innerHTML = desc.replace(/\n/g, '<br>');
+        img.appendChild(details);
         details.classList.remove('hidden');
         descriptionDiv.classList.add('fade-in-text');
       }, 500);
