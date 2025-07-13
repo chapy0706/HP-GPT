@@ -132,4 +132,13 @@ header {
     transform: translate(-50%, -50%) scale(1);
     animation: none;
   }
+
+  .details {
+    width: 90%;
+  }
+
+  .description {
+    font-size: 4vw;
+    word-break: break-word;
+  }
 }
