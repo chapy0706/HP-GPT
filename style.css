@@ -127,4 +127,9 @@ header {
     width: 90%;
     max-width: 400px;
   }
+
+  .expanded {
+    transform: translate(-50%, -50%) scale(1);
+    animation: none;
+  }
 }

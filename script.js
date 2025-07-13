@@ -3,6 +3,7 @@ const details = document.querySelector('.details');
 const descriptionDiv = document.querySelector('.description');
 const closeBtn = document.querySelector('.close-btn');
 const body = document.body;
+const header = document.querySelector('header');
 let currentImg = null;
 
 images.forEach(img => {
@@ -24,6 +25,7 @@ images.forEach(img => {
       img.appendChild(closeBtn);
       closeBtn.classList.remove('hidden');
       body.classList.add('fade-bg');
+      header.classList.add('hidden');
       setTimeout(() => {
         img.classList.add('dim-image');
         const desc = img.getAttribute('data-desc');
