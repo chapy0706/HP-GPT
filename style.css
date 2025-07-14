@@ -48,7 +48,7 @@ header {
 
 @keyframes zoomInMobile {
   from { transform: translate(-50%, -50%) scale(1); }
-  to { transform: translate(-50%, -50%) scale(1.5); }
+  to { transform: translate(-50%, -50%) scale(2); }
 }
 .fade-bg {
   background: rgba(128,128,128,0.8);
@@ -114,7 +114,7 @@ header {
   to { opacity: 1; }
 }
 .description {
-  font-size: 1rem;
+  font-size: 10px;
   font-weight: bold;
   text-align: center;
   word-break: break-word;
@@ -141,7 +141,7 @@ header {
   }
 
   .expanded {
-    transform: translate(-50%, -50%) scale(1.5);
+    transform: translate(-50%, -50%) scale(2.0);
     animation: zoomInMobile 0.5s forwards;
     max-width: 100vw;
     max-height: 100vh;
@@ -155,7 +155,7 @@ header {
   }
 
   .description {
-    font-size: 4vw;
+    font-size: 7px;
     word-break: break-word;
   }
 }
