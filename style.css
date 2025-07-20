@@ -19,14 +19,15 @@ header {
 .image-container {
   position: relative;
   overflow: hidden;
-  width: 300px;
+  width: 528px;
+  height: 682px;
   animation: slideIn 1s ease;
   cursor: pointer;
 }
 .image-container img {
-  width: 100%;
+  width: auto;
   height: auto;
-  object-fit: contain;
+  object-fit: none;
 }
 @keyframes slideIn {
   from { transform: translateX(100%); opacity: 0; }
@@ -137,7 +138,8 @@ header {
   }
 
   .image-container {
-    width: 32%;
+    width: 528px;
+    height: 682px;
     max-width: none;
   }
 
