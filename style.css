@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "MS PMincho", "MS Mincho", serif;
   margin: 0;
   padding: 0;
   background: #f5f5f5;
@@ -39,7 +39,7 @@ header {
   left: 50%;
   transform: translate(-50%, -50%) scale(2);
   z-index: 10;
-  opacity: 0.9;
+  opacity: 1;
   animation: zoomIn 0.5s forwards;
 }
 @keyframes zoomIn {
@@ -102,10 +102,14 @@ header {
   to { opacity: 0; }
 }
 .dim-image {
+  opacity: 1;
+}
+
+.dim-image img {
   animation: dimImage 3s forwards;
 }
 @keyframes dimImage {
-  from { opacity: 0.9; }
+  from { opacity: 1; }
   to { opacity: 0.3; }
 }
 .fade-in-text {
