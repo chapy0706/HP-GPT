@@ -41,6 +41,7 @@ header {
   z-index: 10;
   opacity: 1;
   animation: zoomIn 0.5s forwards;
+  overflow: visible;
 }
 @keyframes zoomIn {
   from { transform: translate(-50%, -50%) scale(1); }
@@ -64,6 +65,7 @@ header {
   width: 66%;
   max-width: 100%;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   max-height: 80vh;
 }
 .hidden {
@@ -155,6 +157,7 @@ header {
     animation: zoomInMobile 0.5s forwards;
     max-width: 100vw;
     max-height: 100vh;
+    overflow: visible;
   }
 
   .details {
@@ -163,6 +166,7 @@ header {
     left: 50%;
     transform: translate(-50%, -50%);
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     max-height: 70vh;
   }
 
