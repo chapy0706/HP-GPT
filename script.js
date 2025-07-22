@@ -4,6 +4,12 @@ const descriptionDiv = document.querySelector('.description');
 const closeBtn = document.querySelector('.close-btn');
 const body = document.body;
 const header = document.querySelector('header');
+const moreButton = document.querySelector('.more-button');
+
+// Change button text on mobile
+if (window.matchMedia('(max-width: 600px)').matches) {
+  moreButton.textContent = '詳細へ';
+}
 let currentImg = null;
 
 images.forEach(img => {
@@ -33,6 +39,7 @@ images.forEach(img => {
         img.appendChild(details);
         details.classList.remove('hidden');
         descriptionDiv.classList.add('fade-in-text');
+        moreButton.classList.add('fade-in-btn');
       }, 500);
     }, 500);
   });
