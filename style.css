@@ -130,7 +130,7 @@ header {
 .description {
   font-size: 10px;
   font-weight: bold;
-  text-align: left;
+  text-align: center;
   word-break: break-word;
   overflow-wrap: anywhere;
 }
