@@ -146,6 +146,46 @@ header {
   z-index: 30;
 }
 
+#intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(128, 128, 128, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+#intro-overlay p {
+  opacity: 0;
+  margin: 10px 0;
+  color: #000;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.show-text {
+  animation: fadeInSlow 5s forwards;
+}
+
+.fade-out-overlay {
+  animation: fadeOutSlow 5s forwards;
+}
+
+@keyframes fadeInSlow {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOutSlow {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
 /* Responsive styles */
 @media (max-width: 600px) {
   .gallery {

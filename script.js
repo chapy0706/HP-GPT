@@ -5,6 +5,26 @@ const closeBtn = document.querySelector('.close-btn');
 const body = document.body;
 const header = document.querySelector('header');
 const moreButton = document.querySelector('.more-button');
+const introOverlay = document.getElementById('intro-overlay');
+const introText1 = document.getElementById('intro-text1');
+const introText2 = document.getElementById('intro-text2');
+
+window.addEventListener('DOMContentLoaded', () => {
+  header.classList.add('hidden');
+  setTimeout(() => {
+    introText1.classList.add('show-text');
+  }, 100);
+  setTimeout(() => {
+    introText2.classList.add('show-text');
+  }, 6000);
+  setTimeout(() => {
+    introOverlay.classList.add('fade-out-overlay');
+  }, 13000);
+  setTimeout(() => {
+    introOverlay.remove();
+    header.classList.remove('hidden');
+  }, 18000);
+});
 
 // Change button text on mobile
 if (window.matchMedia('(max-width: 600px)').matches) {
