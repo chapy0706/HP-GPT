@@ -20,6 +20,9 @@ window.addEventListener('DOMContentLoaded', () => {
     introOverlay.classList.add('fade-out-overlay');
     introText1.classList.add('fade-out-text');
     introText2.classList.add('fade-out-text');
+    setTimeout(() => {
+      introOverlay.style.pointerEvents = 'none';
+    }, 1000);
   }, 7100);
   setTimeout(() => {
     introOverlay.remove();
