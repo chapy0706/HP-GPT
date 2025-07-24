@@ -173,7 +173,11 @@ header {
 }
 
 .fade-out-overlay {
-  animation: fadeOutSlow 5s forwards;
+  animation: fadeOutSlow 3s forwards;
+}
+
+.fade-out-text {
+  animation: fadeOutSlow 2s forwards;
 }
 
 @keyframes fadeInSlow {
