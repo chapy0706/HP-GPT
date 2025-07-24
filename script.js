@@ -18,10 +18,12 @@ window.addEventListener('DOMContentLoaded', () => {
   }, 3100);
   setTimeout(() => {
     introOverlay.classList.add('fade-out-overlay');
+    introText1.classList.add('fade-out-text');
+    introText2.classList.add('fade-out-text');
   }, 7100);
   setTimeout(() => {
     introOverlay.remove();
-  }, 12100);
+  }, 10100);
 });
 
 // Change button text on mobile
