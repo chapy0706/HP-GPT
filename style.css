@@ -169,7 +169,7 @@ header {
 }
 
 .show-text {
-  animation: fadeInSlow 5s forwards;
+  animation: fadeInSlow 3s forwards;
 }
 
 .fade-out-overlay {

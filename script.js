@@ -10,20 +10,18 @@ const introText1 = document.getElementById('intro-text1');
 const introText2 = document.getElementById('intro-text2');
 
 window.addEventListener('DOMContentLoaded', () => {
-  header.classList.add('hidden');
   setTimeout(() => {
     introText1.classList.add('show-text');
   }, 100);
   setTimeout(() => {
     introText2.classList.add('show-text');
-  }, 6000);
+  }, 3100);
   setTimeout(() => {
     introOverlay.classList.add('fade-out-overlay');
-  }, 13000);
+  }, 7100);
   setTimeout(() => {
     introOverlay.remove();
-    header.classList.remove('hidden');
-  }, 18000);
+  }, 12100);
 });
 
 // Change button text on mobile
