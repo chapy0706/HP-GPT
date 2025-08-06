@@ -175,7 +175,7 @@ header {
     pointer-events: none;
   }
 
-.show-card {
+#intro-card.show-card {
   animation: fadeInCard 2s forwards;
   pointer-events: auto;
 }
