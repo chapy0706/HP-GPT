@@ -102,7 +102,7 @@ function prepareCards() {
   const vh = window.innerHeight;
   images.forEach(card => {
     const img = card.querySelector('img');
-    img.dataset.front = img.src;
+    img.dataset.front = `images/${img.alt}.jpg`;
     img.src = 'images/card.png';
     gsap.set(card, {
       x: (Math.random() - 0.5) * vw,
@@ -256,6 +256,7 @@ images.forEach(img => {
       });
       header.classList.add('hidden');
       window.scrollTo(0, 0);
+      img.style.transform = '';
       img.classList.add('expanded');
       img.appendChild(closeBtn);
       closeBtn.classList.remove('hidden');
