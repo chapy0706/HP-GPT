@@ -9,6 +9,7 @@ const randomOrder = orderings[Math.floor(Math.random() * orderings.length)];
 randomOrder.forEach(i => gallery.appendChild(containers[i]));
 
 const images = document.querySelectorAll('.image-container');
+let cardsClickable = false;
 const details = document.querySelector('.details');
 const descriptionDiv = document.querySelector('.description');
 const closeBtn = document.querySelector('.close-btn');
@@ -20,6 +21,7 @@ const introText1 = document.getElementById('intro-text1');
 const introText2 = document.getElementById('intro-text2');
 const introCard = document.getElementById('intro-card');
 const clickTip = document.getElementById('click-tip');
+let introPlayed = false;
 const additionalData = {
   '1image': {
     color: 'rgb(174, 198, 207)',
@@ -112,7 +114,11 @@ function prepareCards() {
 }
 
 function animateCards() {
-  const tl = gsap.timeline();
+  const tl = gsap.timeline({
+    onComplete: () => {
+      cardsClickable = true;
+    }
+  });
   tl.to(images, {
     x: 0,
     y: 0,
@@ -124,15 +130,17 @@ function animateCards() {
   tl.to(images, {
     rotateY: 0,
     duration: 0.8,
-    stagger: 0.5,
-    ease: 'power2.out',
-    onStart: function () {
-      const img = this.targets()[0].querySelector('img');
-      const front = img.dataset.front;
-      gsap.delayedCall(0.4, () => {
-        img.src = front;
-      });
-    }
+    stagger: {
+      each: 0.5,
+      onStart: (index, target) => {
+        const img = target.querySelector('img');
+        const front = img.dataset.front;
+        gsap.delayedCall(0.4, () => {
+          img.src = front;
+        });
+      }
+    },
+    ease: 'power2.out'
   });
 }
 
@@ -201,6 +209,9 @@ introOverlay.addEventListener('click', (e) => {
 });
 
 introCard.addEventListener('click', () => {
+  if (introPlayed) return;
+  introPlayed = true;
+  introCard.style.pointerEvents = 'none';
   prepareCards();
   playCardBurst(animateCards);
   introOverlay.classList.add('fade-out-overlay');
@@ -230,7 +241,7 @@ let currentImg = null;
 
 images.forEach(img => {
   img.addEventListener('click', () => {
-    if (currentImg) return;
+    if (!cardsClickable || currentImg) return;
     currentImg = img;
     images.forEach(i => {
       if (i !== img) {
