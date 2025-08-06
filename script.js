@@ -20,6 +20,20 @@ const introText1 = document.getElementById('intro-text1');
 const introText2 = document.getElementById('intro-text2');
 const introCard = document.getElementById('intro-card');
 const clickTip = document.getElementById('click-tip');
+const additionalData = {
+  '1image': {
+    color: 'rgb(174, 198, 207)',
+    text: `からだを止めて身を守る\n急ブレーキの役割\n背側迷走神経\n止まってるのが\n不安に感じることはありません\n安心して休んで下さい`
+  },
+  '2image': {
+    color: 'rgb(119, 221, 119)',
+    text: `笑顔が増えリラックスしている\n人と繋がろうとする\nチューニングの役割を持った\n腹側迷走神経\nバランスのとれた状態`
+  },
+  '3image': {
+    color: 'rgb(255, 105, 97)',
+    text: `からだを奮い立たせて\nアクセル全開の交感神経\nスピードオーバーに注意して\nゆっくり安心して\n動ける状態を目指します`
+  }
+};
 
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
@@ -99,4 +113,34 @@ images.forEach(img => {
 
 closeBtn.addEventListener('click', () => {
   window.location.href = 'index.html';
+});
+
+let detailStage = 'initial';
+moreButton.addEventListener('click', (e) => {
+  if (detailStage !== 'initial') return;
+  e.preventDefault();
+  descriptionDiv.classList.add('fade-up-out');
+  moreButton.classList.add('fade-up-out');
+  setTimeout(() => {
+    descriptionDiv.style.display = 'none';
+    moreButton.style.display = 'none';
+  }, 1000);
+  setTimeout(() => {
+    const imgAlt = currentImg.querySelector('img').alt;
+    const data = additionalData[imgAlt];
+    body.classList.remove('fade-bg');
+    body.style.backgroundColor = data.color;
+    descriptionDiv.innerHTML = data.text.replace(/\n/g, '<br>');
+    descriptionDiv.style.display = 'block';
+    descriptionDiv.classList.remove('fade-up-out');
+    descriptionDiv.classList.add('fade-in-quick');
+    setTimeout(() => {
+      moreButton.textContent = '次へ';
+      moreButton.href = 'index.html';
+      moreButton.style.display = 'inline-block';
+      moreButton.classList.remove('fade-up-out');
+      moreButton.classList.add('fade-in-quick');
+      detailStage = 'next';
+    }, 1000);
+  }, 2000);
 });
