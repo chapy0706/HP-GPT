@@ -1,3 +1,13 @@
+const gallery = document.querySelector('.gallery');
+const orderings = [
+  [0, 1, 2],
+  [1, 2, 0],
+  [2, 0, 1]
+];
+const containers = Array.from(gallery.children);
+const randomOrder = orderings[Math.floor(Math.random() * orderings.length)];
+randomOrder.forEach(i => gallery.appendChild(containers[i]));
+
 const images = document.querySelectorAll('.image-container');
 const details = document.querySelector('.details');
 const descriptionDiv = document.querySelector('.description');
