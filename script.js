@@ -35,21 +35,68 @@ const additionalData = {
   }
 };
 
+// Intro sequence with skip-on-click functionality
+const introSequence = [
+  {
+    start: () => introText1.classList.add('show-text'),
+    finish: () => {
+      introText1.style.animation = 'none';
+      introText1.style.opacity = '1';
+    },
+    delay: 3000
+  },
+  {
+    start: () => introText2.classList.add('show-text'),
+    finish: () => {
+      introText2.style.animation = 'none';
+      introText2.style.opacity = '1';
+    },
+    delay: 2000
+  },
+  {
+    start: () => introCard.classList.add('show-card'),
+    finish: () => {
+      introCard.style.animation = 'none';
+      introCard.style.opacity = '1';
+      introCard.style.pointerEvents = 'auto';
+    },
+    delay: 5000
+  },
+  {
+    start: () => {
+      const tipText = window.matchMedia('(max-width: 600px)').matches ? '※画像をタップ' : '※画像をクリック';
+      clickTip.textContent = tipText;
+      clickTip.classList.add('blink');
+    },
+    finish: () => {},
+    delay: 0
+  }
+];
+
+let introStep = 0;
+let introTimer = null;
+
+function playIntroStep() {
+  if (introStep >= introSequence.length) return;
+  const step = introSequence[introStep];
+  step.start();
+  introTimer = setTimeout(() => {
+    introStep++;
+    playIntroStep();
+  }, step.delay);
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    introText1.classList.add('show-text');
-  }, 100);
-  setTimeout(() => {
-    introText2.classList.add('show-text');
-  }, 3100);
-  setTimeout(() => {
-    introCard.classList.add('show-card');
-  }, 5100);
-  setTimeout(() => {
-    const tipText = window.matchMedia('(max-width: 600px)').matches ? '※画像をタップ' : '※画像をクリック';
-    clickTip.textContent = tipText;
-    clickTip.classList.add('blink');
-  }, 10100);
+  introTimer = setTimeout(playIntroStep, 100);
+});
+
+introOverlay.addEventListener('click', (e) => {
+  if (e.target === introCard || introStep >= introSequence.length) return;
+  clearTimeout(introTimer);
+  const step = introSequence[introStep];
+  step.finish();
+  introStep++;
+  playIntroStep();
 });
 
 introCard.addEventListener('click', () => {
