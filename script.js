@@ -35,7 +35,7 @@ const additionalData = {
   }
 };
 
-function playCardBurst() {
+function playCardBurst(onComplete) {
   const container = document.createElement('div');
   container.id = 'card-burst';
   Object.assign(container.style, {
@@ -55,7 +55,7 @@ function playCardBurst() {
   const availableWidth = window.innerWidth - cardWidth;
   const availableHeight = window.innerHeight - footerHeight - cardHeight;
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 30; i++) {
     const card = document.createElement('img');
     card.src = 'images/card.png';
     card.className = 'burst-card';
@@ -86,9 +86,53 @@ function playCardBurst() {
       onComplete: () => {
         if (index === cards.length - 1) {
           container.remove();
+          if (typeof onComplete === 'function') {
+            onComplete();
+          }
         }
       }
     });
+  });
+}
+
+function prepareCards() {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  images.forEach(card => {
+    const img = card.querySelector('img');
+    img.dataset.front = img.src;
+    img.src = 'images/card.png';
+    gsap.set(card, {
+      x: (Math.random() - 0.5) * vw,
+      y: (Math.random() - 0.5) * vh,
+      rotation: Math.random() * 360,
+      rotateY: 180
+    });
+  });
+}
+
+function animateCards() {
+  const tl = gsap.timeline();
+  tl.to(images, {
+    x: 0,
+    y: 0,
+    rotation: 0,
+    duration: 1,
+    stagger: 0.5,
+    ease: 'power2.out'
+  });
+  tl.to(images, {
+    rotateY: 0,
+    duration: 0.8,
+    stagger: 0.5,
+    ease: 'power2.out',
+    onStart: function () {
+      const img = this.targets()[0].querySelector('img');
+      const front = img.dataset.front;
+      gsap.delayedCall(0.4, () => {
+        img.src = front;
+      });
+    }
   });
 }
 
@@ -157,7 +201,8 @@ introOverlay.addEventListener('click', (e) => {
 });
 
 introCard.addEventListener('click', () => {
-  playCardBurst();
+  prepareCards();
+  playCardBurst(animateCards);
   introOverlay.classList.add('fade-out-overlay');
   introText1.classList.add('fade-out-text');
   introText2.classList.add('fade-out-text');
