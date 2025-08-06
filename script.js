@@ -8,6 +8,7 @@ const moreButton = document.querySelector('.more-button');
 const introOverlay = document.getElementById('intro-overlay');
 const introText1 = document.getElementById('intro-text1');
 const introText2 = document.getElementById('intro-text2');
+const introCard = document.getElementById('intro-card');
 
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
@@ -17,16 +18,21 @@ window.addEventListener('DOMContentLoaded', () => {
     introText2.classList.add('show-text');
   }, 3100);
   setTimeout(() => {
-    introOverlay.classList.add('fade-out-overlay');
-    introText1.classList.add('fade-out-text');
-    introText2.classList.add('fade-out-text');
-    setTimeout(() => {
-      introOverlay.style.pointerEvents = 'none';
-    }, 1000);
-  }, 7100);
+    introCard.classList.add('show-card');
+  }, 5100);
+});
+
+introCard.addEventListener('click', () => {
+  introOverlay.classList.add('fade-out-overlay');
+  introText1.classList.add('fade-out-text');
+  introText2.classList.add('fade-out-text');
+  introCard.classList.add('fade-out-text');
+  setTimeout(() => {
+    introOverlay.style.pointerEvents = 'none';
+  }, 1000);
   setTimeout(() => {
     introOverlay.remove();
-  }, 10100);
+  }, 3000);
 });
 
 // Change button text on mobile
