@@ -35,6 +35,52 @@ const additionalData = {
   }
 };
 
+function playCardBurst() {
+  const container = document.createElement('div');
+  container.id = 'card-burst';
+  Object.assign(container.style, {
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none',
+    zIndex: '150'
+  });
+  for (let i = 0; i < 20; i++) {
+    const card = document.createElement('img');
+    card.src = 'images/card.png';
+    card.className = 'burst-card';
+    Object.assign(card.style, {
+      position: 'absolute',
+      width: '100px',
+      left: Math.random() * 100 + '%',
+      top: Math.random() * 100 + '%',
+      transform: `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`
+    });
+    container.appendChild(card);
+  }
+  document.body.appendChild(container);
+  const cards = container.querySelectorAll('.burst-card');
+  cards.forEach((card, index) => {
+    gsap.to(card, {
+      opacity: 0,
+      duration: 0.5,
+      delay: index * 0.1,
+      x: () => (Math.random() - 0.5) * 200,
+      y: () => (Math.random() - 0.5) * 200,
+      rotation: () => Math.random() * 360,
+      rotateX: () => Math.random() * 360,
+      rotateY: () => Math.random() * 360,
+      onComplete: () => {
+        if (index === cards.length - 1) {
+          container.remove();
+        }
+      }
+    });
+  });
+}
+
 // Intro sequence with skip-on-click functionality
 const introSequence = [
   {
@@ -100,6 +146,7 @@ introOverlay.addEventListener('click', (e) => {
 });
 
 introCard.addEventListener('click', () => {
+  playCardBurst();
   introOverlay.classList.add('fade-out-overlay');
   introText1.classList.add('fade-out-text');
   introText2.classList.add('fade-out-text');
