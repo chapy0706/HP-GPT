@@ -127,6 +127,9 @@ function animateCards() {
     stagger: 0.5,
     ease: 'power2.out'
   });
+  tl.add(() => {
+    gallery.classList.add('centered');
+  });
   tl.to(images, {
     rotateY: 0,
     duration: 0.8,
@@ -134,10 +137,7 @@ function animateCards() {
       each: 0.5,
       onStart: (index, target) => {
         const img = target.querySelector('img');
-        const front = img.dataset.front;
-        gsap.delayedCall(0.4, () => {
-          img.src = front;
-        });
+        img.src = img.dataset.front;
       }
     },
     ease: 'power2.out'
@@ -254,11 +254,12 @@ images.forEach(img => {
           i.classList.add('hidden');
         }
       });
+      header.classList.add('hidden');
+      window.scrollTo(0, 0);
       img.classList.add('expanded');
       img.appendChild(closeBtn);
       closeBtn.classList.remove('hidden');
       body.classList.add('fade-bg');
-      header.classList.add('hidden');
       setTimeout(() => {
         img.classList.add('dim-image');
         const desc = img.getAttribute('data-desc');
