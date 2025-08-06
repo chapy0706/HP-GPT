@@ -1,3 +1,4 @@
+// GSAP-based animation script
 const gallery = document.querySelector('.gallery');
 const orderings = [
   [0, 1, 2],
@@ -20,6 +21,7 @@ const introText1 = document.getElementById('intro-text1');
 const introText2 = document.getElementById('intro-text2');
 const introCard = document.getElementById('intro-card');
 const clickTip = document.getElementById('click-tip');
+
 const additionalData = {
   '1image': {
     color: 'rgb(174, 198, 207)',
@@ -35,38 +37,43 @@ const additionalData = {
   }
 };
 
+// ------------------------------------
 // Intro sequence with skip-on-click functionality
+// Before: setTimeout + CSS animations
+// After: GSAP-powered sequence with delayedCall
+// ------------------------------------
+let tipBlinkTween = null;
 const introSequence = [
   {
-    start: () => introText1.classList.add('show-text'),
-    finish: () => {
-      introText1.style.animation = 'none';
-      introText1.style.opacity = '1';
-    },
-    delay: 3000
+    start: () => gsap.fromTo(introText1, { opacity: 0 }, { opacity: 1, duration: 3 }),
+    finish: () => gsap.set(introText1, { opacity: 1 }),
+    delay: 3
   },
   {
-    start: () => introText2.classList.add('show-text'),
-    finish: () => {
-      introText2.style.animation = 'none';
-      introText2.style.opacity = '1';
-    },
-    delay: 2000
+    start: () => gsap.fromTo(introText2, { opacity: 0 }, { opacity: 1, duration: 3 }),
+    finish: () => gsap.set(introText2, { opacity: 1 }),
+    delay: 2
   },
   {
-    start: () => introCard.classList.add('show-card'),
-    finish: () => {
-      introCard.style.animation = 'none';
-      introCard.style.opacity = '1';
-      introCard.style.pointerEvents = 'auto';
-    },
-    delay: 5000
+    start: () => gsap.fromTo(introCard, { opacity: 0 }, {
+      opacity: 1,
+      duration: 2,
+      onComplete: () => gsap.set(introCard, { pointerEvents: 'auto' })
+    }),
+    finish: () => gsap.set(introCard, { opacity: 1, pointerEvents: 'auto' }),
+    delay: 5
   },
   {
     start: () => {
       const tipText = window.matchMedia('(max-width: 600px)').matches ? '※画像をタップ' : '※画像をクリック';
       clickTip.textContent = tipText;
-      clickTip.classList.add('blink');
+      tipBlinkTween = gsap.fromTo(clickTip, { opacity: 0 }, {
+        opacity: 1,
+        duration: 1,
+        repeat: -1,
+        yoyo: true,
+        ease: 'power1.inOut'
+      });
     },
     finish: () => {},
     delay: 0
@@ -80,19 +87,21 @@ function playIntroStep() {
   if (introStep >= introSequence.length) return;
   const step = introSequence[introStep];
   step.start();
-  introTimer = setTimeout(() => {
+  introTimer = gsap.delayedCall(step.delay, () => {
     introStep++;
     playIntroStep();
-  }, step.delay);
+  });
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  introTimer = setTimeout(playIntroStep, 100);
+  gsap.delayedCall(0.1, playIntroStep);
+  // Initial slide-in for gallery images
+  gsap.from('.image-container', { x: 100, opacity: 0, duration: 1, stagger: 0.2 });
 });
 
 introOverlay.addEventListener('click', (e) => {
   if (e.target === introCard || introStep >= introSequence.length) return;
-  clearTimeout(introTimer);
+  if (introTimer) introTimer.kill();
   const step = introSequence[introStep];
   step.finish();
   introStep++;
@@ -100,61 +109,54 @@ introOverlay.addEventListener('click', (e) => {
 });
 
 introCard.addEventListener('click', () => {
-  introOverlay.classList.add('fade-out-overlay');
-  introText1.classList.add('fade-out-text');
-  introText2.classList.add('fade-out-text');
-  introCard.classList.add('fade-out-text');
-  if (clickTip.classList.contains('blink')) {
-    clickTip.classList.remove('blink');
-    clickTip.classList.add('fade-out-tip');
-    setTimeout(() => {
-      clickTip.remove();
-    }, 1000);
+  gsap.to([introText1, introText2, introCard], { opacity: 0, duration: 2 });
+  if (tipBlinkTween) {
+    tipBlinkTween.kill();
+    gsap.to(clickTip, { opacity: 0, duration: 1, onComplete: () => clickTip.remove() });
   }
-  setTimeout(() => {
-    introOverlay.style.pointerEvents = 'none';
-  }, 1000);
-  setTimeout(() => {
-    introOverlay.remove();
-  }, 3000);
+  gsap.to(introOverlay, {
+    opacity: 0,
+    duration: 3,
+    onStart: () => gsap.delayedCall(1, () => gsap.set(introOverlay, { pointerEvents: 'none' })),
+    onComplete: () => introOverlay.remove()
+  });
 });
 
 // Change button text on mobile
 if (window.matchMedia('(max-width: 600px)').matches) {
   moreButton.textContent = '詳細へ';
 }
-let currentImg = null;
 
+let currentImg = null;
 images.forEach(img => {
   img.addEventListener('click', () => {
     if (currentImg) return;
     currentImg = img;
-    images.forEach(i => {
-      if (i !== img) {
-        i.classList.add('fade-out-other');
-      }
-    });
-    setTimeout(() => {
-      images.forEach(i => {
-        if (i !== img) {
-          i.classList.add('hidden');
-        }
-      });
-      img.classList.add('expanded');
-      img.appendChild(closeBtn);
-      closeBtn.classList.remove('hidden');
-      body.classList.add('fade-bg');
-      header.classList.add('hidden');
-      setTimeout(() => {
-        img.classList.add('dim-image');
+    const others = Array.from(images).filter(i => i !== img);
+    const tl = gsap.timeline();
+
+    // Before: class toggling with setTimeout
+    // After: GSAP timeline orchestrates the sequence
+    tl.to(others, { opacity: 0, duration: 0.5 })
+      .set(others, { display: 'none' })
+      .set(img, { position: 'fixed', top: '50%', left: '50%', xPercent: -50, yPercent: -50, zIndex: 10 })
+      .to(img, { scale: 2, duration: 0.5, ease: 'power1.out' })
+      .add(() => {
+        img.appendChild(closeBtn);
+        closeBtn.classList.remove('hidden');
+        gsap.to(body, { backgroundColor: 'rgba(128,128,128,0.8)', duration: 0.5 });
+        gsap.set(header, { display: 'none' });
+      })
+      .to({}, { duration: 0.5 })
+      .add(() => {
         const desc = img.getAttribute('data-desc');
         descriptionDiv.innerHTML = desc.replace(/\n/g, '<br>');
         img.appendChild(details);
         details.classList.remove('hidden');
-        descriptionDiv.classList.add('fade-in-text');
-        moreButton.classList.add('fade-in-btn');
-      }, 500);
-    }, 500);
+      })
+      .to(img.querySelector('img'), { opacity: 0.5, duration: 3 }, '<')
+      .fromTo(descriptionDiv, { opacity: 0 }, { opacity: 1, duration: 3 }, '<')
+      .fromTo(moreButton, { opacity: 0 }, { opacity: 1, duration: 3 }, '<');
   });
 });
 
@@ -166,28 +168,25 @@ let detailStage = 'initial';
 moreButton.addEventListener('click', (e) => {
   if (detailStage !== 'initial') return;
   e.preventDefault();
-  descriptionDiv.classList.add('fade-up-out');
-  moreButton.classList.add('fade-up-out');
-  setTimeout(() => {
-    descriptionDiv.style.display = 'none';
-    moreButton.style.display = 'none';
-  }, 1000);
-  setTimeout(() => {
-    const imgAlt = currentImg.querySelector('img').alt;
-    const data = additionalData[imgAlt];
-    body.classList.remove('fade-bg');
-    body.style.backgroundColor = data.color;
-    descriptionDiv.innerHTML = data.text.replace(/\n/g, '<br>');
-    descriptionDiv.style.display = 'block';
-    descriptionDiv.classList.remove('fade-up-out');
-    descriptionDiv.classList.add('fade-in-quick');
-    setTimeout(() => {
+  const tl = gsap.timeline();
+  tl.to(descriptionDiv, { y: -20, opacity: 0, duration: 1 })
+    .to(moreButton, { y: -20, opacity: 0, duration: 1 }, '<')
+    .set([descriptionDiv, moreButton], { display: 'none' })
+    .to({}, { duration: 1 })
+    .add(() => {
+      const imgAlt = currentImg.querySelector('img').alt;
+      const data = additionalData[imgAlt];
+      gsap.to(body, { backgroundColor: data.color, duration: 1 });
+      descriptionDiv.innerHTML = data.text.replace(/\n/g, '<br>');
+      gsap.set(descriptionDiv, { display: 'block' });
+    })
+    .fromTo(descriptionDiv, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1 })
+    .add(() => {
       moreButton.textContent = '次へ';
       moreButton.href = 'index.html';
-      moreButton.style.display = 'inline-block';
-      moreButton.classList.remove('fade-up-out');
-      moreButton.classList.add('fade-in-quick');
-      detailStage = 'next';
-    }, 1000);
-  }, 2000);
+      gsap.set(moreButton, { display: 'inline-block' });
+    })
+    .fromTo(moreButton, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1 }, '<')
+    .add(() => { detailStage = 'next'; });
 });
+
