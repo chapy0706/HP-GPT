@@ -22,7 +22,6 @@ header {
   overflow: hidden;
   width: 300px;
   aspect-ratio: 528 / 682;
-  animation: slideIn 1s ease;
   cursor: pointer;
 }
 .image-container img {
@@ -30,31 +29,14 @@ header {
   height: 100%;
   object-fit: cover;
 }
-@keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
 .expanded {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(2);
+  transform: translate(-50%, -50%);
   z-index: 10;
   opacity: 1;
-  animation: zoomIn 0.5s forwards;
   overflow: visible;
-}
-@keyframes zoomIn {
-  from { transform: translate(-50%, -50%) scale(1); }
-  to { transform: translate(-50%, -50%) scale(2); }
-}
-
-@keyframes zoomInMobile {
-  from { transform: translate(-50%, -50%) scale(1); }
-  to { transform: translate(-50%, -50%) scale(2); }
-}
-.fade-bg {
-  background: rgba(128,128,128,0.8);
 }
 .details {
   position: absolute;
@@ -105,54 +87,6 @@ header {
   justify-content: center;
   cursor: pointer;
 }
-/* New animations */
-.fade-out-other {
-  animation: fadeOut 0.5s forwards;
-}
-@keyframes fadeOut {
-  to { opacity: 0; }
-}
-.dim-image {
-  opacity: 1;
-}
-
-.dim-image img {
-  animation: dimImage 3s forwards;
-}
-@keyframes dimImage {
-  from { opacity: 1; }
-  to { opacity: 0.3; }
-}
-.fade-in-text {
-  animation: fadeInText 3s forwards;
-}
-.fade-in-btn {
-  animation: fadeInText 3s forwards;
-}
-
-.fade-up-out {
-  animation: fadeUpOut 1s forwards;
-}
-
-.fade-in-quick {
-  animation: fadeInQuick 1s forwards;
-}
-
-@keyframes fadeUpOut {
-  to {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes fadeInQuick {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes fadeInText {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
 .description {
   font-size: 10px;
   font-weight: bold;
@@ -193,63 +127,12 @@ header {
     font-size: 16px;
   }
 
-  #click-tip.blink {
-    animation: blinkText 2.5s ease-in-out infinite;
-  }
-
-  #click-tip.fade-out-tip {
-    animation: fadeOutTip 1s forwards;
-  }
-
-  @keyframes blinkText {
-    0% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
-  }
-
-  @keyframes fadeOutTip {
-    from { opacity: 1; }
-    to { opacity: 0; }
-  }
-
 #intro-card {
     opacity: 0;
     margin-top: 20px;
     width: 225px;
     pointer-events: none;
   }
-
-#intro-card.show-card {
-  animation: fadeInCard 2s forwards;
-  pointer-events: auto;
-}
-
-@keyframes fadeInCard {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.show-text {
-  animation: fadeInSlow 3s forwards;
-}
-
-.fade-out-overlay {
-  animation: fadeOutSlow 3s forwards;
-}
-
-.fade-out-text {
-  animation: fadeOutSlow 2s forwards;
-}
-
-@keyframes fadeInSlow {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeOutSlow {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
 
 /* Responsive styles */
 @media (max-width: 600px) {
@@ -266,8 +149,7 @@ header {
   }
 
   .expanded {
-    transform: translate(-50%, -50%) scale(2.0);
-    animation: zoomInMobile 0.5s forwards;
+    transform: translate(-50%, -50%);
     max-width: 100vw;
     max-height: 100vh;
     overflow: visible;
