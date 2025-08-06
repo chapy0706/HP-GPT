@@ -47,15 +47,26 @@ function playCardBurst() {
     pointerEvents: 'none',
     zIndex: '150'
   });
-  for (let i = 0; i < 20; i++) {
+  const footer = document.querySelector('footer');
+  const footerHeight = footer ? footer.offsetHeight : 0;
+  const refImg = document.querySelector('.image-container');
+  const cardWidth = refImg ? refImg.offsetWidth : 100;
+  const cardHeight = refImg ? refImg.offsetHeight : 100;
+  const availableWidth = window.innerWidth - cardWidth;
+  const availableHeight = window.innerHeight - footerHeight - cardHeight;
+
+  for (let i = 0; i < 50; i++) {
     const card = document.createElement('img');
     card.src = 'images/card.png';
     card.className = 'burst-card';
+    const left = cardWidth / 2 + availableWidth * (0.25 + Math.random() * 0.5);
+    const top = cardHeight / 2 + availableHeight * (0.25 + Math.random() * 0.5);
     Object.assign(card.style, {
       position: 'absolute',
-      width: '100px',
-      left: Math.random() * 100 + '%',
-      top: Math.random() * 100 + '%',
+      width: `${cardWidth}px`,
+      height: `${cardHeight}px`,
+      left: `${left}px`,
+      top: `${top}px`,
       transform: `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`
     });
     container.appendChild(card);
