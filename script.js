@@ -93,11 +93,17 @@ function playIntroStep() {
   });
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+function startIntro() {
   gsap.delayedCall(0.1, playIntroStep);
   // Initial slide-in for gallery images
   gsap.from('.image-container', { x: 100, opacity: 0, duration: 1, stagger: 0.2 });
-});
+}
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', startIntro);
+} else {
+  startIntro();
+}
 
 introOverlay.addEventListener('click', (e) => {
   if (e.target === introCard || introStep >= introSequence.length) return;
