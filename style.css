@@ -3,6 +3,7 @@ body {
   margin: 0;
   padding: 0;
   background: #f5f5f5;
+  transition: background-color 1s;
   text-align: center;
 }
 header {
@@ -127,6 +128,26 @@ header {
 }
 .fade-in-btn {
   animation: fadeInText 3s forwards;
+}
+
+.fade-up-out {
+  animation: fadeUpOut 1s forwards;
+}
+
+.fade-in-quick {
+  animation: fadeInQuick 1s forwards;
+}
+
+@keyframes fadeUpOut {
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes fadeInQuick {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @keyframes fadeInText {
   from { opacity: 0; }
