@@ -19,6 +19,7 @@ const introOverlay = document.getElementById('intro-overlay');
 const introText1 = document.getElementById('intro-text1');
 const introText2 = document.getElementById('intro-text2');
 const introCard = document.getElementById('intro-card');
+const clickTip = document.getElementById('click-tip');
 
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
@@ -30,6 +31,11 @@ window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     introCard.classList.add('show-card');
   }, 5100);
+  setTimeout(() => {
+    const tipText = window.matchMedia('(max-width: 600px)').matches ? '※画像をタップ' : '※画像をクリック';
+    clickTip.textContent = tipText;
+    clickTip.classList.add('blink');
+  }, 10100);
 });
 
 introCard.addEventListener('click', () => {
@@ -37,6 +43,13 @@ introCard.addEventListener('click', () => {
   introText1.classList.add('fade-out-text');
   introText2.classList.add('fade-out-text');
   introCard.classList.add('fade-out-text');
+  if (clickTip.classList.contains('blink')) {
+    clickTip.classList.remove('blink');
+    clickTip.classList.add('fade-out-tip');
+    setTimeout(() => {
+      clickTip.remove();
+    }, 1000);
+  }
   setTimeout(() => {
     introOverlay.style.pointerEvents = 'none';
   }, 1000);

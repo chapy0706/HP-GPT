@@ -160,12 +160,35 @@ header {
     z-index: 100;
   }
 
-#intro-overlay p {
-    opacity: 0;
-    margin: 10px 0;
-    color: #fff;
-    font-size: 20px;
-    font-weight: bold;
+  #intro-overlay p {
+      opacity: 0;
+      margin: 10px 0;
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+  #click-tip {
+    font-size: 16px;
+  }
+
+  #click-tip.blink {
+    animation: blinkText 2.5s ease-in-out infinite;
+  }
+
+  #click-tip.fade-out-tip {
+    animation: fadeOutTip 1s forwards;
+  }
+
+  @keyframes blinkText {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes fadeOutTip {
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
 
 #intro-card {
