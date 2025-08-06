@@ -16,6 +16,7 @@ header {
   gap: 20px;
   margin: 20px;
   flex-wrap: wrap;
+  perspective: 1000px;
 }
 .image-container {
   position: relative;
@@ -24,11 +25,13 @@ header {
   aspect-ratio: 528 / 682;
   animation: slideIn 1s ease;
   cursor: pointer;
+  transform-style: preserve-3d;
 }
 .image-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  backface-visibility: hidden;
 }
 @keyframes slideIn {
   from { transform: translateX(100%); opacity: 0; }
