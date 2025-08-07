@@ -1,80 +1,80 @@
-const gallery = document.querySelector('.gallery');
+const gallery = document.querySelector(".gallery");
 const orderings = [
   [0, 1, 2],
   [1, 2, 0],
-  [2, 0, 1]
+  [2, 0, 1],
 ];
 const containers = Array.from(gallery.children);
 const randomOrder = orderings[Math.floor(Math.random() * orderings.length)];
-randomOrder.forEach(i => gallery.appendChild(containers[i]));
+randomOrder.forEach((i) => gallery.appendChild(containers[i]));
 
-const images = document.querySelectorAll('.image-container');
+const images = document.querySelectorAll(".image-container");
 let cardsClickable = false;
-const details = document.querySelector('.details');
-const descriptionDiv = document.querySelector('.description');
-const closeBtn = document.querySelector('.close-btn');
+const details = document.querySelector(".details");
+const descriptionDiv = document.querySelector(".description");
+const closeBtn = document.querySelector(".close-btn");
 const body = document.body;
-const header = document.querySelector('header');
-const moreButton = document.querySelector('.more-button');
-const introOverlay = document.getElementById('intro-overlay');
-const introText1 = document.getElementById('intro-text1');
-const introText2 = document.getElementById('intro-text2');
-const introCard = document.getElementById('intro-card');
-const clickTip = document.getElementById('click-tip');
+const header = document.querySelector("header");
+const moreButton = document.querySelector(".more-button");
+const introOverlay = document.getElementById("intro-overlay");
+const introText1 = document.getElementById("intro-text1");
+const introText2 = document.getElementById("intro-text2");
+const introCard = document.getElementById("intro-card");
+const clickTip = document.getElementById("click-tip");
 let introPlayed = false;
 const additionalData = {
-  '1image': {
-    color: 'rgb(174, 198, 207)',
-    text: `からだを止めて身を守る\n急ブレーキの役割\n背側迷走神経\n止まってるのが\n不安に感じることはありません\n安心して休んで下さい`
+  "1image": {
+    color: "rgb(174, 198, 207)",
+    text: `からだを止めて身を守る\n急ブレーキの役割\n背側迷走神経\n止まってるのが\n不安に感じることはありません\n安心して休んで下さい`,
   },
-  '2image': {
-    color: 'rgb(194, 233, 191)',
-    text: `笑顔が増えリラックスしている\n人と繋がろうとする\nチューニングの役割を持った\n腹側迷走神経\nバランスのとれた状態`
+  "2image": {
+    color: "rgb(194, 233, 191)",
+    text: `笑顔が増えリラックスしている\n人と繋がろうとする\nチューニングの役割を持った\n腹側迷走神経\nバランスのとれた状態`,
   },
-  '3image': {
-    color: 'rgb(255, 204, 203)',
-    text: `からだを奮い立たせて\nアクセル全開の交感神経\nスピードオーバーに注意して\nゆっくり安心して\n動ける状態を目指します`
-  }
+  "3image": {
+    color: "rgb(255, 204, 203)",
+    text: `からだを奮い立たせて\nアクセル全開の交感神経\nスピードオーバーに注意して\nゆっくり安心して\n動ける状態を目指します`,
+  },
 };
 
 function playCardBurst(onComplete) {
-  const container = document.createElement('div');
-  container.id = 'card-burst';
+  const container = document.createElement("div");
+  container.id = "card-burst";
   Object.assign(container.style, {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    width: '100%',
-    height: '100%',
-    pointerEvents: 'none',
-    zIndex: '150'
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    pointerEvents: "none",
+    zIndex: "150",
   });
-  const footer = document.querySelector('footer');
+  const footer = document.querySelector("footer");
   const footerHeight = footer ? footer.offsetHeight : 0;
-  const refImg = document.querySelector('.image-container');
+  const refImg = document.querySelector(".image-container");
   const cardWidth = refImg ? refImg.offsetWidth : 100;
   const cardHeight = refImg ? refImg.offsetHeight : 100;
   const availableWidth = window.innerWidth - cardWidth;
   const availableHeight = window.innerHeight - footerHeight - cardHeight;
 
   for (let i = 0; i < 30; i++) {
-    const card = document.createElement('img');
-    card.src = 'images/card.png';
-    card.className = 'burst-card';
+    const card = document.createElement("img");
+    card.src = "images/card.png";
+    card.className = "burst-card";
     const left = cardWidth / 2 + availableWidth * (0.25 + Math.random() * 0.5);
     const top = cardHeight / 2 + availableHeight * (0.25 + Math.random() * 0.5);
     Object.assign(card.style, {
-      position: 'absolute',
+      position: "absolute",
       width: `${cardWidth}px`,
       height: `${cardHeight}px`,
       left: `${left}px`,
       top: `${top}px`,
-      transform: `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`
+      transform: `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`,
     });
     container.appendChild(card);
   }
   document.body.appendChild(container);
-  const cards = container.querySelectorAll('.burst-card');
+  const cards = container.querySelectorAll(".burst-card");
   cards.forEach((card, index) => {
     gsap.to(card, {
       opacity: 0,
@@ -88,11 +88,11 @@ function playCardBurst(onComplete) {
       onComplete: () => {
         if (index === cards.length - 1) {
           container.remove();
-          if (typeof onComplete === 'function') {
+          if (typeof onComplete === "function") {
             onComplete();
           }
         }
-      }
+      },
     });
   });
 }
@@ -100,15 +100,38 @@ function playCardBurst(onComplete) {
 function prepareCards() {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
-  images.forEach(card => {
-    const img = card.querySelector('img');
+  images.forEach((card) => {
+    const img = card.querySelector("img");
     img.dataset.front = `images/${img.alt}.jpg`;
-    img.src = 'images/card.png';
+    img.src = "images/card.png";
     gsap.set(card, {
       x: (Math.random() - 0.5) * vw,
       y: (Math.random() - 0.5) * vh,
       rotation: Math.random() * 360,
-      rotateY: 180
+      rotateY: 180,
+    });
+  });
+}
+
+function flipCardsToFront() {
+  images.forEach((card, index) => {
+    const img = card.querySelector("img");
+
+    gsap.to(card, {
+      rotateY: 0,
+      duration: 1,
+      delay: index * 0.3,
+      ease: "power2.out",
+      onStart: () => {
+        img._flipped = false; // 初期化
+      },
+      onUpdate: () => {
+        const currentRotation = gsap.getProperty(card, "rotateY");
+        if (!img._flipped && currentRotation < 95 && currentRotation > 85) {
+          img.src = img.dataset.front;
+          img._flipped = true;
+        }
+      },
     });
   });
 }
@@ -117,7 +140,7 @@ function animateCards() {
   const tl = gsap.timeline({
     onComplete: () => {
       cardsClickable = true;
-    }
+    },
   });
   tl.to(images, {
     x: 0,
@@ -125,61 +148,51 @@ function animateCards() {
     rotation: 0,
     duration: 1,
     stagger: 0.5,
-    ease: 'power2.out'
+    ease: "power2.out",
   });
   tl.add(() => {
-    gallery.classList.add('centered');
-  });
-  tl.to(images, {
-    rotateY: 0,
-    duration: 0.8,
-    stagger: {
-      each: 0.5,
-      onStart: (index, target) => {
-        const img = target.querySelector('img');
-        img.src = img.dataset.front;
-      }
-    },
-    ease: 'power2.out'
+    gallery.classList.add("centered");
   });
 }
 
 // Intro sequence with skip-on-click functionality
 const introSequence = [
   {
-    start: () => introText1.classList.add('show-text'),
+    start: () => introText1.classList.add("show-text"),
     finish: () => {
-      introText1.style.animation = 'none';
-      introText1.style.opacity = '1';
+      introText1.style.animation = "none";
+      introText1.style.opacity = "1";
     },
-    delay: 3000
+    delay: 3000,
   },
   {
-    start: () => introText2.classList.add('show-text'),
+    start: () => introText2.classList.add("show-text"),
     finish: () => {
-      introText2.style.animation = 'none';
-      introText2.style.opacity = '1';
+      introText2.style.animation = "none";
+      introText2.style.opacity = "1";
     },
-    delay: 2000
+    delay: 2000,
   },
   {
-    start: () => introCard.classList.add('show-card'),
+    start: () => introCard.classList.add("show-card"),
     finish: () => {
-      introCard.style.animation = 'none';
-      introCard.style.opacity = '1';
-      introCard.style.pointerEvents = 'auto';
+      introCard.style.animation = "none";
+      introCard.style.opacity = "1";
+      introCard.style.pointerEvents = "auto";
     },
-    delay: 5000
+    delay: 5000,
   },
   {
     start: () => {
-      const tipText = window.matchMedia('(max-width: 600px)').matches ? '※画像をタップ' : '※画像をクリック';
+      const tipText = window.matchMedia("(max-width: 600px)").matches
+        ? "※画像をタップ"
+        : "※画像をクリック";
       clickTip.textContent = tipText;
-      clickTip.classList.add('blink');
+      clickTip.classList.add("blink");
     },
     finish: () => {},
-    delay: 0
-  }
+    delay: 0,
+  },
 ];
 
 let introStep = 0;
@@ -195,11 +208,11 @@ function playIntroStep() {
   }, step.delay);
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener("DOMContentLoaded", () => {
   introTimer = setTimeout(playIntroStep, 100);
 });
 
-introOverlay.addEventListener('click', (e) => {
+introOverlay.addEventListener("click", (e) => {
   if (e.target === introCard || introStep >= introSequence.length) return;
   clearTimeout(introTimer);
   const step = introSequence[introStep];
@@ -208,25 +221,28 @@ introOverlay.addEventListener('click', (e) => {
   playIntroStep();
 });
 
-introCard.addEventListener('click', () => {
+introCard.addEventListener("click", () => {
   if (introPlayed) return;
   introPlayed = true;
-  introCard.style.pointerEvents = 'none';
+  introCard.style.pointerEvents = "none";
   prepareCards();
-  playCardBurst(animateCards);
-  introOverlay.classList.add('fade-out-overlay');
-  introText1.classList.add('fade-out-text');
-  introText2.classList.add('fade-out-text');
-  introCard.classList.add('fade-out-text');
-  if (clickTip.classList.contains('blink')) {
-    clickTip.classList.remove('blink');
-    clickTip.classList.add('fade-out-tip');
+  playCardBurst(() => {
+    animateCards(); // 整列（裏向き）
+    setTimeout(flipCardsToFront, 2000); // → 表に回転＆画像切り替え
+  });
+  introOverlay.classList.add("fade-out-overlay");
+  introText1.classList.add("fade-out-text");
+  introText2.classList.add("fade-out-text");
+  introCard.classList.add("fade-out-text");
+  if (clickTip.classList.contains("blink")) {
+    clickTip.classList.remove("blink");
+    clickTip.classList.add("fade-out-tip");
     setTimeout(() => {
       clickTip.remove();
     }, 1000);
   }
   setTimeout(() => {
-    introOverlay.style.pointerEvents = 'none';
+    introOverlay.style.pointerEvents = "none";
   }, 1000);
   setTimeout(() => {
     introOverlay.remove();
@@ -234,76 +250,76 @@ introCard.addEventListener('click', () => {
 });
 
 // Change button text on mobile
-if (window.matchMedia('(max-width: 600px)').matches) {
-  moreButton.textContent = '詳細へ';
+if (window.matchMedia("(max-width: 600px)").matches) {
+  moreButton.textContent = "詳細へ";
 }
 let currentImg = null;
 
-images.forEach(img => {
-  img.addEventListener('click', () => {
+images.forEach((img) => {
+  img.addEventListener("click", () => {
     if (!cardsClickable || currentImg) return;
     currentImg = img;
-    images.forEach(i => {
+    images.forEach((i) => {
       if (i !== img) {
-        i.classList.add('fade-out-other');
+        i.classList.add("fade-out-other");
       }
     });
     setTimeout(() => {
-      images.forEach(i => {
+      images.forEach((i) => {
         if (i !== img) {
-          i.classList.add('hidden');
+          i.classList.add("hidden");
         }
       });
-      header.classList.add('hidden');
+      header.classList.add("hidden");
       window.scrollTo(0, 0);
-      img.style.transform = '';
-      img.classList.add('expanded');
+      img.style.transform = "";
+      img.classList.add("expanded");
       img.appendChild(closeBtn);
-      closeBtn.classList.remove('hidden');
-      body.classList.add('fade-bg');
+      closeBtn.classList.remove("hidden");
+      body.classList.add("fade-bg");
       setTimeout(() => {
-        img.classList.add('dim-image');
-        const desc = img.getAttribute('data-desc');
-        descriptionDiv.innerHTML = desc.replace(/\n/g, '<br>');
+        img.classList.add("dim-image");
+        const desc = img.getAttribute("data-desc");
+        descriptionDiv.innerHTML = desc.replace(/\n/g, "<br>");
         img.appendChild(details);
-        details.classList.remove('hidden');
-        descriptionDiv.classList.add('fade-in-text');
-        moreButton.classList.add('fade-in-btn');
+        details.classList.remove("hidden");
+        descriptionDiv.classList.add("fade-in-text");
+        moreButton.classList.add("fade-in-btn");
       }, 500);
     }, 500);
   });
 });
 
-closeBtn.addEventListener('click', () => {
-  window.location.href = 'index.html';
+closeBtn.addEventListener("click", () => {
+  window.location.href = "index.html";
 });
 
-let detailStage = 'initial';
-moreButton.addEventListener('click', (e) => {
-  if (detailStage !== 'initial') return;
+let detailStage = "initial";
+moreButton.addEventListener("click", (e) => {
+  if (detailStage !== "initial") return;
   e.preventDefault();
-  descriptionDiv.classList.add('fade-up-out');
-  moreButton.classList.add('fade-up-out');
+  descriptionDiv.classList.add("fade-up-out");
+  moreButton.classList.add("fade-up-out");
   setTimeout(() => {
-    descriptionDiv.style.display = 'none';
-    moreButton.style.display = 'none';
+    descriptionDiv.style.display = "none";
+    moreButton.style.display = "none";
   }, 1000);
   setTimeout(() => {
-    const imgAlt = currentImg.querySelector('img').alt;
+    const imgAlt = currentImg.querySelector("img").alt;
     const data = additionalData[imgAlt];
-    body.classList.remove('fade-bg');
+    body.classList.remove("fade-bg");
     body.style.backgroundColor = data.color;
-    descriptionDiv.innerHTML = data.text.replace(/\n/g, '<br>');
-    descriptionDiv.style.display = 'block';
-    descriptionDiv.classList.remove('fade-up-out');
-    descriptionDiv.classList.add('fade-in-quick');
+    descriptionDiv.innerHTML = data.text.replace(/\n/g, "<br>");
+    descriptionDiv.style.display = "block";
+    descriptionDiv.classList.remove("fade-up-out");
+    descriptionDiv.classList.add("fade-in-quick");
     setTimeout(() => {
-      moreButton.textContent = '次へ';
-      moreButton.href = 'index.html';
-      moreButton.style.display = 'inline-block';
-      moreButton.classList.remove('fade-up-out');
-      moreButton.classList.add('fade-in-quick');
-      detailStage = 'next';
+      moreButton.textContent = "次へ";
+      moreButton.href = "index.html";
+      moreButton.style.display = "inline-block";
+      moreButton.classList.remove("fade-up-out");
+      moreButton.classList.add("fade-in-quick");
+      detailStage = "next";
     }, 1000);
   }, 2000);
 });
