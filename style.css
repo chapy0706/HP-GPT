@@ -315,6 +315,18 @@ header {
     }
 }
 
+#white-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+}
+
 /* Responsive styles */
 @media (max-width: 600px) {
     .gallery {
@@ -370,17 +382,5 @@ header {
 
     #intro-card {
         width: 24%;
-    }
-
-    #white-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: white;
-        opacity: 0;
-        pointer-events: none;
-        z-index: 999;
     }
 }

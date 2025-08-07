@@ -25,17 +25,54 @@ let introPlayed = false;
 const additionalData = {
   "1image": {
     color: "rgb(174, 198, 207)",
-    text: `からだを止めて身を守る\n急ブレーキの役割\n背側迷走神経\n止まってるのが\n不安に感じることはありません\n安心して休んで下さい`,
+    text: `からだを止めて身を守る\n急ブレーキの役割\n止まってるのが\n不安に感じることはありません\n安心して休んで下さい`,
   },
   "2image": {
     color: "rgb(194, 233, 191)",
-    text: `笑顔が増えリラックスしている\n人と繋がろうとする\nチューニングの役割を持った\n腹側迷走神経\nバランスのとれた状態`,
+    text: `笑顔が増えリラックスしている状態\n安心と繋がり\nチューニングの役割`,
   },
   "3image": {
     color: "rgb(255, 204, 203)",
-    text: `からだを奮い立たせて\nアクセル全開の交感神経\nスピードオーバーに注意して\nゆっくり安心して\n動ける状態を目指します`,
+    text: `からだを奮い立たせる\nアクセルの役割\nスピードオーバーに注意して\nゆっくり安心して\n動ける状態を目指しましょう`,
   },
 };
+
+function createBurstCards() {
+  const container = document.createElement("div");
+  container.id = "card-burst";
+  container.style.position = "fixed";
+  container.style.top = 0;
+  container.style.left = 0;
+  container.style.width = "100vw";
+  container.style.height = "100vh";
+  container.style.pointerEvents = "none";
+  container.style.zIndex = 1000;
+
+  // 1枚目のカードのサイズを取得（参考用）
+  const firstCard = document.querySelector(".image-container img");
+  const cardWidth = firstCard ? firstCard.offsetWidth : 100;
+  const cardHeight = firstCard ? firstCard.offsetHeight : 150;
+
+  for (let i = 0; i < 30; i++) {
+    const card = document.createElement("img");
+    card.src = "images/card.png";
+    card.className = "burst-card";
+    card.style.position = "absolute";
+    card.style.top = "50%";
+    card.style.left = "50%";
+    card.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
+    card.style.width = `${cardWidth}px`;
+    card.style.height = `${cardHeight}px`;
+    container.appendChild(card);
+  }
+
+  document.body.appendChild(container);
+
+  // 表示後 1 秒で非表示（削除）
+  setTimeout(() => {
+    container.remove();
+  }, 1000);
+}
 
 function playCardBurst(onComplete) {
   const container = document.createElement("div");
@@ -97,6 +134,19 @@ function playCardBurst(onComplete) {
   });
 }
 
+function scatterCards(callback) {
+  const cards = document.querySelectorAll(".burst-card");
+
+  gsap.to(cards, {
+    duration: 1,
+    x: () => (Math.random() - 0.5) * 600,
+    y: () => (Math.random() - 0.5) * 600,
+    rotation: () => Math.random() * 360,
+    ease: "power2.out",
+    onComplete: callback,
+  });
+}
+
 function prepareCards() {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
@@ -152,6 +202,24 @@ function animateCards() {
   });
   tl.add(() => {
     gallery.classList.add("centered");
+  });
+}
+
+function showWhiteOverlay(callback) {
+  const overlay = document.getElementById("white-overlay");
+
+  const tl = gsap.timeline({ onComplete: callback });
+
+  tl.to(overlay, {
+    opacity: 1,
+    duration: 1,
+    ease: "power1.inOut",
+  });
+
+  tl.to(overlay, {
+    opacity: 0,
+    duration: 0.5,
+    ease: "power1.inOut",
   });
 }
 
@@ -225,11 +293,21 @@ introCard.addEventListener("click", () => {
   if (introPlayed) return;
   introPlayed = true;
   introCard.style.pointerEvents = "none";
-  prepareCards();
-  playCardBurst(() => {
-    animateCards(); // 整列（裏向き）
-    setTimeout(flipCardsToFront, 2000); // → 表に回転＆画像切り替え
+
+  prepareCards(); // 3枚のカードなど初期セット
+  createBurstCards(); // ← ここで30枚を生成
+
+  scatterCards(() => {
+    showWhiteOverlay(() => {
+      playCardBurst(() => {
+        // ← この段階で30枚を消す
+        animateCards(); // ← 3枚を整列
+        setTimeout(flipCardsToFront, 2000); // ← 表にめくる
+      });
+    });
   });
+
+  // 画面のテキストなどを非表示にする
   introOverlay.classList.add("fade-out-overlay");
   introText1.classList.add("fade-out-text");
   introText2.classList.add("fade-out-text");
