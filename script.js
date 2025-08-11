@@ -191,21 +191,17 @@ function flipCardsToFront() {
 }
 
 function animateCards() {
-  const tl = gsap.timeline({
-    onComplete: () => {
-      cardsClickable = true;
-    },
-  });
-  tl.to(images, {
+  gallery.classList.add("centered");
+  gsap.to(images, {
     x: 0,
     y: 0,
     rotation: 0,
     duration: 1,
     stagger: 0.5,
     ease: "power2.out",
-  });
-  tl.add(() => {
-    gallery.classList.add("centered");
+    onComplete: () => {
+      cardsClickable = true;
+    },
   });
 }
 
@@ -315,7 +311,7 @@ introCard.addEventListener("click", () => {
   introOverlay.classList.add("fade-out-overlay");
   introText1.classList.add("fade-out-text");
   introText2.classList.add("fade-out-text");
-  introCard.classList.add("fade-out-text");
+  introCard.classList.add("fade-out-quick");
   if (clickTip.classList.contains("blink")) {
     clickTip.classList.remove("blink");
     clickTip.classList.add("fade-out-tip");

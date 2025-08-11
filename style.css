@@ -297,6 +297,10 @@ header {
     animation: fadeOutSlow 2s forwards;
 }
 
+.fade-out-quick {
+    animation: fadeOutSlow 0.5s forwards;
+}
+
 @keyframes fadeInSlow {
     from {
         opacity: 0;
