@@ -294,35 +294,23 @@ introCard.addEventListener("click", () => {
   introPlayed = true;
   introCard.style.pointerEvents = "none";
 
+  // Hide intro elements to prevent them from showing through the transition
+  introOverlay.remove();
+  header.style.visibility = "hidden";
+  gallery.style.visibility = "hidden";
+
   prepareCards(); // 3枚のカードなど初期セット
   createBurstCards(); // ← ここで30枚を生成
 
   Promise.all([scatterCards(), showWhiteOverlay()]).then(() => {
     playCardBurst(() => {
       // ← この段階で30枚を消す
+      header.style.visibility = "visible";
+      gallery.style.visibility = "visible";
       animateCards(); // ← 3枚を整列
       setTimeout(flipCardsToFront, 2000); // ← 表にめくる
     });
   });
-
-  // 画面のテキストなどを非表示にする
-  introOverlay.classList.add("fade-out-overlay");
-  introText1.classList.add("fade-out-text");
-  introText2.classList.add("fade-out-text");
-  introCard.classList.add("fade-out-quick");
-  if (clickTip.classList.contains("blink")) {
-    clickTip.classList.remove("blink");
-    clickTip.classList.add("fade-out-tip");
-    setTimeout(() => {
-      clickTip.remove();
-    }, 1000);
-  }
-  setTimeout(() => {
-    introOverlay.style.pointerEvents = "none";
-  }, 1000);
-  setTimeout(() => {
-    introOverlay.remove();
-  }, 3000);
 });
 
 // Change button text on mobile
