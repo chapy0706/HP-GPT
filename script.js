@@ -53,7 +53,7 @@ function createBurstCards() {
   const cardWidth = firstCard ? firstCard.offsetWidth : 100;
   const cardHeight = firstCard ? firstCard.offsetHeight : 150;
 
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 20; i++) {
     const card = document.createElement("img");
     card.src = "images/card.png";
     card.className = "burst-card";
@@ -94,14 +94,12 @@ function playCardBurst(onComplete) {
   const availableWidth = window.innerWidth - cardWidth;
   const availableHeight = window.innerHeight - footerHeight - cardHeight;
 
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 20; i++) {
     const card = document.createElement("img");
     card.src = "images/card.png";
     card.className = "burst-card";
-    const left =
-      cardWidth / 2 + availableWidth * (0.4 + Math.random() * 0.2);
-    const top =
-      cardHeight / 2 + availableHeight * (0.4 + Math.random() * 0.2);
+    const left = cardWidth / 2 + availableWidth * (0.4 + Math.random() * 0.2);
+    const top = cardHeight / 2 + availableHeight * (0.4 + Math.random() * 0.2);
     Object.assign(card.style, {
       position: "absolute",
       width: `${cardWidth}px`,
