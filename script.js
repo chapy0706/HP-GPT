@@ -98,8 +98,10 @@ function playCardBurst(onComplete) {
     const card = document.createElement("img");
     card.src = "images/card.png";
     card.className = "burst-card";
-    const left = cardWidth / 2 + availableWidth * (0.25 + Math.random() * 0.5);
-    const top = cardHeight / 2 + availableHeight * (0.25 + Math.random() * 0.5);
+    const left =
+      cardWidth / 2 + availableWidth * (0.4 + Math.random() * 0.2);
+    const top =
+      cardHeight / 2 + availableHeight * (0.4 + Math.random() * 0.2);
     Object.assign(card.style, {
       position: "absolute",
       width: `${cardWidth}px`,
@@ -134,16 +136,18 @@ function playCardBurst(onComplete) {
   });
 }
 
-function scatterCards(callback) {
+function scatterCards() {
   const cards = document.querySelectorAll(".burst-card");
 
-  gsap.to(cards, {
-    duration: 1,
-    x: () => (Math.random() - 0.5) * 600,
-    y: () => (Math.random() - 0.5) * 600,
-    rotation: () => Math.random() * 360,
-    ease: "power2.out",
-    onComplete: callback,
+  return new Promise((resolve) => {
+    gsap.to(cards, {
+      duration: 1,
+      x: () => (Math.random() - 0.5) * 300,
+      y: () => (Math.random() - 0.5) * 300,
+      rotation: () => Math.random() * 360,
+      ease: "power2.out",
+      onComplete: resolve,
+    });
   });
 }
 
@@ -205,21 +209,23 @@ function animateCards() {
   });
 }
 
-function showWhiteOverlay(callback) {
+function showWhiteOverlay() {
   const overlay = document.getElementById("white-overlay");
 
-  const tl = gsap.timeline({ onComplete: callback });
+  return new Promise((resolve) => {
+    const tl = gsap.timeline({ onComplete: resolve });
 
-  tl.to(overlay, {
-    opacity: 1,
-    duration: 1,
-    ease: "power1.inOut",
-  });
+    tl.to(overlay, {
+      opacity: 1,
+      duration: 1,
+      ease: "power1.inOut",
+    });
 
-  tl.to(overlay, {
-    opacity: 0,
-    duration: 0.5,
-    ease: "power1.inOut",
+    tl.to(overlay, {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power1.inOut",
+    });
   });
 }
 
@@ -297,13 +303,11 @@ introCard.addEventListener("click", () => {
   prepareCards(); // 3枚のカードなど初期セット
   createBurstCards(); // ← ここで30枚を生成
 
-  scatterCards(() => {
-    showWhiteOverlay(() => {
-      playCardBurst(() => {
-        // ← この段階で30枚を消す
-        animateCards(); // ← 3枚を整列
-        setTimeout(flipCardsToFront, 2000); // ← 表にめくる
-      });
+  Promise.all([scatterCards(), showWhiteOverlay()]).then(() => {
+    playCardBurst(() => {
+      // ← この段階で30枚を消す
+      animateCards(); // ← 3枚を整列
+      setTimeout(flipCardsToFront, 2000); // ← 表にめくる
     });
   });
 
