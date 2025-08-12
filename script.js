@@ -112,6 +112,12 @@ function playCardBurst(onComplete) {
   }
   document.body.appendChild(container);
   const cards = container.querySelectorAll(".burst-card");
+
+  // ヘッダーをカードのフェードアウトと同時に表示
+  header.style.visibility = "visible";
+  header.style.opacity = 0;
+  gsap.to(header, { opacity: 1, duration: 1 });
+
   cards.forEach((card, index) => {
     gsap.to(card, {
       opacity: 0,
@@ -207,19 +213,23 @@ function showWhiteOverlay() {
   const overlay = document.getElementById("white-overlay");
 
   return new Promise((resolve) => {
-    const tl = gsap.timeline({ onComplete: resolve });
-
-    tl.to(overlay, {
-      opacity: 1,
-      duration: 1,
-      ease: "power1.inOut",
-    });
-
-    tl.to(overlay, {
-      opacity: 0,
-      duration: 0.5,
-      ease: "power1.inOut",
-    });
+    gsap.fromTo(
+      overlay,
+      { opacity: 0 },
+      {
+        opacity: 1,
+        duration: 1,
+        ease: "power1.inOut",
+        onComplete: () => {
+          gsap.to(overlay, {
+            opacity: 0,
+            duration: 0.5,
+            ease: "power1.inOut",
+            onComplete: resolve,
+          });
+        },
+      }
+    );
   });
 }
 
