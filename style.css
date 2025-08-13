@@ -344,8 +344,15 @@ header {
 @media (max-width: 600px) {
     .gallery {
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: center;
         gap: 5px;
+        margin: 20px auto;
+        width: 100%;
+    }
+
+    .gallery.centered {
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 
     .desktop-text {
