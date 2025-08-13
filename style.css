@@ -12,6 +12,14 @@ header {
     padding: 20px;
     background: #ccc;
 }
+
+.desktop-text {
+    display: inline;
+}
+
+.mobile-text {
+    display: none;
+}
 .gallery {
     display: flex;
     justify-content: center;
@@ -235,7 +243,8 @@ header {
     font-size: 16px;
 }
 
-#click-tip.blink {
+
+.blink {
     animation: blinkText 2.5s ease-in-out infinite;
 }
 
@@ -337,6 +346,14 @@ header {
         flex-direction: row;
         justify-content: space-between;
         gap: 5px;
+    }
+
+    .desktop-text {
+        display: none;
+    }
+
+    .mobile-text {
+        display: inline;
     }
 
     .image-container {
