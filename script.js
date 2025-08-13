@@ -22,6 +22,13 @@ const introText2 = document.getElementById("intro-text2");
 const introCard = document.getElementById("intro-card");
 const clickTip = document.getElementById("click-tip");
 let introPlayed = false;
+function adjustIntroOverlaySize() {
+  introOverlay.style.height = `${window.innerHeight}px`;
+  introOverlay.style.width = `${window.innerWidth}px`;
+}
+window.addEventListener("load", adjustIntroOverlaySize);
+window.addEventListener("resize", adjustIntroOverlaySize);
+adjustIntroOverlaySize();
 const additionalData = {
   "1image": {
     color: "rgb(174, 198, 207)",
