@@ -22,6 +22,7 @@ const introText1 = document.getElementById("intro-text1");
 const introText2 = document.getElementById("intro-text2");
 const introCard = document.getElementById("intro-card");
 const clickTip = document.getElementById("click-tip");
+const skipButton = document.getElementById("skip-button");
 let introPlayed = false;
 const mainMenu = document.querySelector(".main-menu");
 const mainContent = document.getElementById("main-content");
@@ -282,6 +283,8 @@ const introSequence = [
         : "※画像をクリック";
       clickTip.textContent = tipText;
       clickTip.classList.add("blink");
+      skipButton.classList.add("show-text");
+      skipButton.style.pointerEvents = "auto";
     },
     finish: () => {},
     delay: 0,
@@ -312,6 +315,14 @@ introOverlay.addEventListener("click", (e) => {
   step.finish();
   introStep++;
   playIntroStep();
+});
+
+skipButton.addEventListener("click", (e) => {
+  e.stopPropagation();
+  clearTimeout(introTimer);
+  introStep = introSequence.length;
+  introOverlay.remove();
+  showTopPage();
 });
 
 introCard.addEventListener("click", () => {
