@@ -403,6 +403,10 @@ header {
         z-index: 1001;
     }
 
+    .hamburger.hidden {
+        display: none;
+    }
+
     .main-menu {
         display: none;
         background: #ccc;
