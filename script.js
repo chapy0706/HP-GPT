@@ -32,15 +32,15 @@ window.addEventListener("resize", adjustIntroOverlaySize);
 adjustIntroOverlaySize();
 const additionalData = {
   "1image": {
-    color: "rgb(174, 198, 207)",
+    color: "rgb(102, 179, 255)",
     text: `からだを止めて身を守る\n急ブレーキの役割\n止まってるのが\n不安に感じることはありません\n安心して休んで下さい`,
   },
   "2image": {
-    color: "rgb(194, 233, 191)",
+    color: "rgb(89, 222, 140)",
     text: `笑顔が増え\nリラックスしている\n安心できて\n人と繋がろうとする\nチューニングの役割`,
   },
   "3image": {
-    color: "rgb(255, 204, 203)",
+    color: "rgb(251, 111, 123)",
     text: `からだを奮い立たせる\nアクセルの役割\nスピードオーバーに注意して\nゆっくり安心して\n動ける状態を目指しましょう`,
   },
 };
