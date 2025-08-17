@@ -12,7 +12,6 @@ const images = document.querySelectorAll(".image-container");
 let cardsClickable = false;
 const details = document.querySelector(".details");
 const descriptionDiv = document.querySelector(".description");
-const closeBtn = document.querySelector(".close-btn");
 const body = document.body;
 const header = document.querySelector("header");
 const moreButton = document.querySelector(".more-button");
@@ -346,6 +345,7 @@ introCard.addEventListener("click", () => {
     playCardBurst(() => {
       // ← この段階で30枚を消す
       header.style.visibility = "visible";
+      hamburger.classList.remove("hidden");
       animateCards(); // ← 3枚を整列
       setTimeout(flipCardsToFront, 2000); // ← 表にめくる
     });
@@ -377,8 +377,6 @@ images.forEach((img) => {
       window.scrollTo(0, 0);
       img.style.transform = "";
       img.classList.add("expanded");
-      img.appendChild(closeBtn);
-      closeBtn.classList.remove("hidden");
       body.classList.add("fade-bg");
       setTimeout(() => {
         img.classList.add("dim-image");
@@ -393,9 +391,6 @@ images.forEach((img) => {
   });
 });
 
-closeBtn.addEventListener("click", () => {
-  window.location.href = "index.html";
-});
 
 function showSection(id) {
   contentSections.forEach((sec) => {
@@ -409,7 +404,6 @@ function showSection(id) {
 
 function showTopPage() {
   details.classList.add("hidden");
-  closeBtn.classList.add("hidden");
   if (currentImg) currentImg.classList.add("hidden");
   gallery.classList.add("hidden");
   body.style.backgroundColor = "";
@@ -417,6 +411,7 @@ function showTopPage() {
   mainMenu.classList.remove("hidden");
   mainContent.classList.remove("hidden");
   header.classList.remove("hidden");
+  hamburger.classList.remove("hidden");
   window.scrollTo(0, 0);
   showSection("about");
   detailStage = "done";
