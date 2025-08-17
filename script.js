@@ -37,7 +37,7 @@ const additionalData = {
   },
   "2image": {
     color: "rgb(194, 233, 191)",
-    text: `笑顔が増えリラックスしている状態\n安心と繋がり\nチューニングの役割`,
+    text: `笑顔が増え\nリラックスしている\n安心できて\n人と繋がろうとする\nチューニングの役割`,
   },
   "3image": {
     color: "rgb(255, 204, 203)",
@@ -239,7 +239,7 @@ function showWhiteOverlay() {
             onComplete: resolve,
           });
         },
-      }
+      },
     );
   });
 }
@@ -406,6 +406,6 @@ moreButton.addEventListener("click", (e) => {
       autonomicNote.classList.remove("hidden");
       autonomicNote.classList.add("fade-in-quick");
       detailStage = "next";
-      }, 1000);
-    }, 2000);
-  });
+    }, 1000);
+  }, 2000);
+});
