@@ -83,6 +83,9 @@ function createBurstCards() {
 }
 
 function playCardBurst(onComplete) {
+  // メインの3枚のカードをバーストカードと同時に表示する
+  gallery.style.visibility = "visible";
+
   const container = document.createElement("div");
   container.id = "card-burst";
   Object.assign(container.style, {
@@ -229,8 +232,6 @@ function showWhiteOverlay() {
         duration: 1,
         ease: "power1.inOut",
         onComplete: () => {
-          // Reveal the main cards as the white screen starts to fade out
-          gallery.style.visibility = "visible";
           gsap.to(overlay, {
             opacity: 0,
             duration: 0.5,
