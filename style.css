@@ -275,7 +275,7 @@ header {
 }
 
 #skip-button {
-    font-size: 16px;
+    font-size: 10px;
     cursor: pointer;
     text-decoration: underline;
     pointer-events: none;
