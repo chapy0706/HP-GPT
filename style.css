@@ -274,6 +274,13 @@ header {
     font-size: 16px;
 }
 
+#skip-button {
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: underline;
+    pointer-events: none;
+}
+
 
 .blink {
     animation: blinkText 2.5s ease-in-out infinite;
