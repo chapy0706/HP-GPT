@@ -25,8 +25,18 @@ const skipButton = document.getElementById("skip-button");
 let introPlayed = false;
 const mainMenu = document.querySelector(".main-menu");
 const hamburger = document.querySelector(".hamburger");
+const menuOverlay = document.getElementById("menu-overlay");
 hamburger.addEventListener("click", () => {
-  mainMenu.classList.toggle("open");
+  const isOpen = mainMenu.classList.toggle("open");
+  if (isOpen) {
+    menuOverlay.classList.remove("hidden");
+  } else {
+    menuOverlay.classList.add("hidden");
+  }
+});
+menuOverlay.addEventListener("click", () => {
+  mainMenu.classList.remove("open");
+  menuOverlay.classList.add("hidden");
 });
 const mainContent = document.getElementById("main-content");
 const contentSections = document.querySelectorAll(".content-section");
@@ -408,6 +418,7 @@ function showTopPage() {
   gallery.classList.add("hidden");
   body.style.backgroundColor = "";
   subtext.style.display = "none";
+  menuOverlay.classList.add("hidden");
   mainMenu.classList.remove("hidden");
   mainContent.classList.remove("hidden");
   header.classList.remove("hidden");
@@ -422,6 +433,7 @@ mainMenu.addEventListener("click", (e) => {
   if (target.tagName !== "A") return;
   e.preventDefault();
   mainMenu.classList.remove("open");
+  menuOverlay.classList.add("hidden");
   if (target.id === "choose-images") {
     window.location.href = "index.html";
     return;
