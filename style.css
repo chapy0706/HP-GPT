@@ -11,6 +11,7 @@ body {
 header {
     padding: 20px;
     background: #ccc;
+    position: relative;
 }
 
 .desktop-text {
@@ -19,6 +20,14 @@ header {
 
 .mobile-text {
     display: none;
+}
+
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
 }
 
 .main-menu ul {
@@ -396,6 +405,38 @@ header {
 
 /* Responsive styles */
 @media (max-width: 600px) {
+    .hamburger {
+        display: block;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .main-menu {
+        display: none;
+        background: #ccc;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    .main-menu.open {
+        display: block;
+    }
+
+    .main-menu ul {
+        flex-direction: column;
+        gap: 10px;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
     .gallery {
         flex-direction: row;
         justify-content: center;

@@ -25,6 +25,10 @@ const clickTip = document.getElementById("click-tip");
 const skipButton = document.getElementById("skip-button");
 let introPlayed = false;
 const mainMenu = document.querySelector(".main-menu");
+const hamburger = document.querySelector(".hamburger");
+hamburger.addEventListener("click", () => {
+  mainMenu.classList.toggle("open");
+});
 const mainContent = document.getElementById("main-content");
 const contentSections = document.querySelectorAll(".content-section");
 const subtext = document.querySelector(".subtext");
@@ -422,6 +426,7 @@ mainMenu.addEventListener("click", (e) => {
   const target = e.target;
   if (target.tagName !== "A") return;
   e.preventDefault();
+  mainMenu.classList.remove("open");
   if (target.id === "choose-images") {
     window.location.href = "index.html";
     return;
