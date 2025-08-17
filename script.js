@@ -229,6 +229,8 @@ function showWhiteOverlay() {
         duration: 1,
         ease: "power1.inOut",
         onComplete: () => {
+          // Reveal the main cards as the white screen starts to fade out
+          gallery.style.visibility = "visible";
           gsap.to(overlay, {
             opacity: 0,
             duration: 0.5,
@@ -324,7 +326,6 @@ introCard.addEventListener("click", () => {
     playCardBurst(() => {
       // ← この段階で30枚を消す
       header.style.visibility = "visible";
-      gallery.style.visibility = "visible";
       animateCards(); // ← 3枚を整列
       setTimeout(flipCardsToFront, 2000); // ← 表にめくる
     });
