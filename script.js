@@ -23,6 +23,10 @@ const introText2 = document.getElementById("intro-text2");
 const introCard = document.getElementById("intro-card");
 const clickTip = document.getElementById("click-tip");
 let introPlayed = false;
+const mainMenu = document.querySelector(".main-menu");
+const mainContent = document.getElementById("main-content");
+const contentSections = document.querySelectorAll(".content-section");
+const subtext = document.querySelector(".subtext");
 function adjustIntroOverlaySize() {
   introOverlay.style.height = `${window.innerHeight}px`;
   introOverlay.style.width = `${window.innerWidth}px`;
@@ -378,34 +382,77 @@ closeBtn.addEventListener("click", () => {
   window.location.href = "index.html";
 });
 
+function showSection(id) {
+  contentSections.forEach((sec) => {
+    if (sec.id === id) {
+      sec.classList.remove("hidden");
+    } else {
+      sec.classList.add("hidden");
+    }
+  });
+}
+
+function showTopPage() {
+  details.classList.add("hidden");
+  closeBtn.classList.add("hidden");
+  if (currentImg) currentImg.classList.add("hidden");
+  gallery.classList.add("hidden");
+  body.style.backgroundColor = "";
+  subtext.style.display = "none";
+  mainMenu.classList.remove("hidden");
+  mainContent.classList.remove("hidden");
+  header.classList.remove("hidden");
+  window.scrollTo(0, 0);
+  showSection("about");
+  detailStage = "done";
+}
+
+mainMenu.addEventListener("click", (e) => {
+  const target = e.target;
+  if (target.tagName !== "A") return;
+  e.preventDefault();
+  if (target.id === "choose-images") {
+    window.location.href = "index.html";
+    return;
+  }
+  const section = target.dataset.section;
+  if (section) {
+    showSection(section);
+  }
+});
+
 let detailStage = "initial";
 moreButton.addEventListener("click", (e) => {
-  if (detailStage !== "initial") return;
-  e.preventDefault();
-  descriptionDiv.classList.add("fade-up-out");
-  moreButton.classList.add("fade-up-out");
-  setTimeout(() => {
-    descriptionDiv.style.display = "none";
-    moreButton.style.display = "none";
-  }, 1000);
-  setTimeout(() => {
-    const imgAlt = currentImg.querySelector("img").alt;
-    const data = additionalData[imgAlt];
-    body.classList.remove("fade-bg");
-    body.style.backgroundColor = data.color;
-    descriptionDiv.innerHTML = data.text.replace(/\n/g, "<br>");
-    descriptionDiv.style.display = "block";
-    descriptionDiv.classList.remove("fade-up-out");
-    descriptionDiv.classList.add("fade-in-quick");
+  if (detailStage === "initial") {
+    e.preventDefault();
+    descriptionDiv.classList.add("fade-up-out");
+    moreButton.classList.add("fade-up-out");
     setTimeout(() => {
-      moreButton.textContent = "次へ";
-      moreButton.href = "index.html";
-      moreButton.style.display = "inline-block";
-      moreButton.classList.remove("fade-up-out");
-      moreButton.classList.add("fade-in-quick");
-      autonomicNote.classList.remove("hidden");
-      autonomicNote.classList.add("fade-in-quick");
-      detailStage = "next";
+      descriptionDiv.style.display = "none";
+      moreButton.style.display = "none";
     }, 1000);
-  }, 2000);
+    setTimeout(() => {
+      const imgAlt = currentImg.querySelector("img").alt;
+      const data = additionalData[imgAlt];
+      body.classList.remove("fade-bg");
+      body.style.backgroundColor = data.color;
+      descriptionDiv.innerHTML = data.text.replace(/\n/g, "<br>");
+      descriptionDiv.style.display = "block";
+      descriptionDiv.classList.remove("fade-up-out");
+      descriptionDiv.classList.add("fade-in-quick");
+      setTimeout(() => {
+        moreButton.textContent = "次へ";
+        moreButton.href = "#";
+        moreButton.style.display = "inline-block";
+        moreButton.classList.remove("fade-up-out");
+        moreButton.classList.add("fade-in-quick");
+        autonomicNote.classList.remove("hidden");
+        autonomicNote.classList.add("fade-in-quick");
+        detailStage = "next";
+      }, 1000);
+    }, 2000);
+  } else if (detailStage === "next") {
+    e.preventDefault();
+    showTopPage();
+  }
 });

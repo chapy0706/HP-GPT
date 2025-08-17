@@ -20,6 +20,24 @@ header {
 .mobile-text {
     display: none;
 }
+
+.main-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.main-menu a {
+    text-decoration: none;
+    color: #333;
+}
+
+.content-section {
+    padding: 20px;
+}
 .gallery {
     display: flex;
     justify-content: center;
