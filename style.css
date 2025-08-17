@@ -168,22 +168,6 @@ header {
     white-space: nowrap;
 }
 
-.close-btn {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    z-index: 30;
-    font-size: 24px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
 /* New animations */
 .fade-out-other {
     animation: fadeOut 0.5s forwards;
@@ -259,12 +243,6 @@ header {
     text-align: center;
     word-break: break-word;
     overflow-wrap: anywhere;
-}
-.image-container .close-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    z-index: 30;
 }
 
 #intro-overlay {
@@ -503,11 +481,6 @@ header {
         padding: 3px 6px;
     }
 
-    .close-btn {
-        font-size: 10px;
-        width: 20px;
-        height: 20px;
-    }
 
     #intro-card {
         width: 24%;
