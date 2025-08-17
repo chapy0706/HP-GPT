@@ -210,6 +210,13 @@ header {
     word-break: break-word;
     overflow-wrap: anywhere;
 }
+.autonomic-note {
+    font-size: 10px;
+    margin-top: 10px;
+    text-align: center;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
 .image-container .close-btn {
     position: absolute;
     top: 5px;
@@ -397,6 +404,12 @@ header {
     }
 
     .description {
+        font-size: 7px;
+        text-align: center;
+        word-break: break-word;
+    }
+
+    .autonomic-note {
         font-size: 7px;
         text-align: center;
         word-break: break-word;
