@@ -355,7 +355,6 @@ introCard.addEventListener("click", () => {
     playCardBurst(() => {
       // ← この段階で30枚を消す
       header.style.visibility = "visible";
-      hamburger.classList.remove("hidden");
       animateCards(); // ← 3枚を整列
       setTimeout(flipCardsToFront, 2000); // ← 表にめくる
     });
