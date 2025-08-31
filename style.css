@@ -247,6 +247,7 @@ header {
 }
 .autonomic-note {
     font-size: 10px;
+    font-weight: bold;
     margin-top: 10px;
     text-align: center;
     word-break: break-word;
@@ -495,6 +496,7 @@ header {
 
     .autonomic-note {
         font-size: 7px;
+        font-weight: bold;
         text-align: center;
         word-break: break-word;
     }
