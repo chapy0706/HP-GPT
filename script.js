@@ -464,23 +464,20 @@ moreButton.addEventListener("click", (e) => {
       body.classList.remove("fade-bg");
       body.style.backgroundColor = data.color;
       descriptionDiv.innerHTML = data.text.replace(/\n/g, "<br>");
+      moreButton.textContent = "次へ";
+      moreButton.href = "#";
+      autonomicNote.classList.remove("hidden");
+      details.insertBefore(autonomicNote, moreButton);
+      details.appendChild(descriptionDiv);
+      autonomicNote.style.marginTop = "0";
+      descriptionDiv.style.marginTop = "10px";
       descriptionDiv.style.display = "block";
-      descriptionDiv.classList.remove("fade-up-out");
-      descriptionDiv.classList.add("fade-in-quick");
-      setTimeout(() => {
-        moreButton.textContent = "次へ";
-        moreButton.href = "#";
-        moreButton.style.display = "inline-block";
-        moreButton.classList.remove("fade-up-out");
-        moreButton.classList.add("fade-in-quick");
-        autonomicNote.classList.remove("hidden");
-        autonomicNote.classList.add("fade-in-quick");
-        details.insertBefore(autonomicNote, moreButton);
-        details.appendChild(descriptionDiv);
-        autonomicNote.style.marginTop = "0";
-        descriptionDiv.style.marginTop = "10px";
-        detailStage = "next";
-      }, 1000);
+      moreButton.style.display = "inline-block";
+      [descriptionDiv, moreButton, autonomicNote].forEach((el) => {
+        el.classList.remove("fade-up-out");
+        el.classList.add("fade-in-quick");
+      });
+      detailStage = "next";
     }, 2000);
   } else if (detailStage === "next") {
     e.preventDefault();
