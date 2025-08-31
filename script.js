@@ -391,6 +391,11 @@ images.forEach((img) => {
         img.classList.add("dim-image");
         const desc = img.getAttribute("data-desc");
         descriptionDiv.innerHTML = desc.replace(/\n/g, "<br>");
+        details.appendChild(descriptionDiv);
+        details.appendChild(moreButton);
+        details.appendChild(autonomicNote);
+        descriptionDiv.style.marginTop = "0";
+        autonomicNote.style.marginTop = "10px";
         img.appendChild(details);
         details.classList.remove("hidden");
         descriptionDiv.classList.add("fade-in-text");
@@ -470,6 +475,10 @@ moreButton.addEventListener("click", (e) => {
         moreButton.classList.add("fade-in-quick");
         autonomicNote.classList.remove("hidden");
         autonomicNote.classList.add("fade-in-quick");
+        details.insertBefore(autonomicNote, moreButton);
+        details.appendChild(descriptionDiv);
+        autonomicNote.style.marginTop = "0";
+        descriptionDiv.style.marginTop = "10px";
         detailStage = "next";
       }, 1000);
     }, 2000);
