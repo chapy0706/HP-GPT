@@ -390,6 +390,38 @@ header {
     z-index: 999;
 }
 
+#transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.color-circle {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    mix-blend-mode: screen;
+    opacity: 0;
+}
+
+.color-circle.red {
+    background: red;
+}
+
+.color-circle.green {
+    background: green;
+}
+
+.color-circle.blue {
+    background: blue;
+}
+
 /* Responsive styles */
 @media (max-width: 600px) {
     .hamburger {

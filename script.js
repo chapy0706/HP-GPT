@@ -262,6 +262,48 @@ function showWhiteOverlay() {
   });
 }
 
+function playTransitionAnimation() {
+  return new Promise((resolve) => {
+    const overlay = document.createElement("div");
+    overlay.id = "transition-overlay";
+    document.body.appendChild(overlay);
+
+    const colors = ["red", "green", "blue"];
+    const circles = colors.map((color) => {
+      const div = document.createElement("div");
+      div.className = `color-circle ${color}`;
+      overlay.appendChild(div);
+      return div;
+    });
+
+    const positions = [
+      { top: "50%", left: "20%" },
+      { top: "20%", left: "80%" },
+      { top: "80%", left: "80%" },
+    ];
+    positions.forEach((pos, i) => {
+      gsap.set(circles[i], { ...pos, xPercent: -50, yPercent: -50 });
+    });
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        overlay.remove();
+        resolve();
+      },
+    });
+
+    tl.to(overlay, { backgroundColor: "#808080", duration: 1 }, 0);
+    tl.to(circles, { opacity: 1, duration: 1 }, 0);
+    tl.to(circles, { top: "50%", left: "50%", duration: 1 }, ">" );
+    tl.to(overlay, { backgroundColor: "#ffffff", duration: 1 }, ">" );
+    tl.to(circles, { opacity: 0, duration: 1 }, "<");
+    tl.add(() => {
+      showTopPage();
+    });
+    tl.to(overlay, { opacity: 0, duration: 0.5 }, ">" );
+  });
+}
+
 // Intro sequence with skip-on-click functionality
 const introSequence = [
   {
@@ -481,6 +523,7 @@ moreButton.addEventListener("click", (e) => {
     }, 2000);
   } else if (detailStage === "next") {
     e.preventDefault();
-    showTopPage();
+    moreButton.style.pointerEvents = "none";
+    playTransitionAnimation();
   }
 });
