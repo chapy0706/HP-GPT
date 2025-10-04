@@ -225,8 +225,11 @@ header {
     padding: 32px 24px;
     max-width: 520px;
     width: min(100%, 520px);
+    max-height: calc(100vh - 80px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     position: relative;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .modal-text {
@@ -504,6 +507,34 @@ body.modal-open {
 
 /* Responsive styles */
 @media (max-width: 600px) {
+    .modal {
+        align-items: flex-start;
+        padding: 24px 12px 32px;
+    }
+
+    .modal-content {
+        width: 100%;
+        max-width: none;
+        max-height: calc(100dvh - 56px);
+        padding: 28px 20px;
+        border-radius: 20px;
+    }
+
+    .modal-text {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .modal-actions {
+        width: 100%;
+        gap: 12px;
+    }
+
+    .modal-actions button,
+    .modal-actions a {
+        font-size: 15px;
+    }
+
     .hamburger {
         display: block;
         position: absolute;
