@@ -123,12 +123,13 @@ function openModal(stepIndex = 0) {
   body.classList.add("modal-open");
 }
 
-function closeModal() {
-  if (!modalOverlay) return;
+function closeModal(options = {}) {
+  const { restoreFocus = true } = options;
+  if (!modalOverlay || modalOverlay.classList.contains("hidden")) return;
   modalOverlay.classList.add("hidden");
   modalOverlay.setAttribute("aria-hidden", "true");
   body.classList.remove("modal-open");
-  if (startButton) {
+  if (restoreFocus && startButton) {
     startButton.focus();
   }
 }
@@ -595,6 +596,7 @@ mainMenu.addEventListener("click", (e) => {
     window.location.href = "index.html";
     return;
   }
+  closeModal({ restoreFocus: false });
   const section = target.dataset.section;
   if (section) {
     showSection(section);
