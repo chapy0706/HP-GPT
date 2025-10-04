@@ -230,6 +230,18 @@ header {
     position: relative;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+    .modal {
+        padding: 12px;
+    }
+
+    .modal-content {
+        padding: 24px 18px;
+        width: min(100%, 520px);
+    }
 }
 
 .modal-text {
