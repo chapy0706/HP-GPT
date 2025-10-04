@@ -81,6 +81,7 @@
             <section id="about" class="content-section">
                 <h2>感じあう神経整体とは？</h2>
                     <p>↓はじまるボタンを押してみて↓</p>
+                <button id="start-journey-button" class="primary-button">はじまり</button>
                 <div class="video-container">
                     <iframe src="https://www.youtube.com/embed/8r2Id9-0Rrs?si=AE72ei4M4VvF0FEv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
@@ -94,6 +95,13 @@
                 <p>ここにお問い合わせの内容が入ります。</p>
             </section>
         </main>
+
+        <div id="journey-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-text" aria-hidden="true" tabindex="-1">
+            <div class="modal-content">
+                <div id="modal-text" class="modal-text" role="document"></div>
+                <div id="modal-actions" class="modal-actions"></div>
+            </div>
+        </div>
 
         <div id="menu-overlay" class="hidden"></div>
         <div id="white-overlay"></div>
