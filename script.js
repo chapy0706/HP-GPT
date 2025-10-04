@@ -41,6 +41,117 @@ menuOverlay.addEventListener("click", () => {
 const mainContent = document.getElementById("main-content");
 const contentSections = document.querySelectorAll(".content-section");
 const subtext = document.querySelector(".subtext");
+const startButton = document.getElementById("start-journey-button");
+const modalOverlay = document.getElementById("journey-modal");
+const modalText = document.getElementById("modal-text");
+const modalActions = document.getElementById("modal-actions");
+const pricingSection = document.getElementById("pricing");
+
+const modalSteps = [
+  {
+    text: `あなたは、何色になりましたか？<br>どれが良いか悪いかではなく、<br>今どんな状態であるのかを<br>感じあえたらと思って<br>選んでもらいました！<br><br>そして、<br>その先の答えの<br>ヒントになると思うので、<br>読んでみてください！`,
+    buttons: [{ type: "next", label: "次へ" }],
+  },
+  {
+    text: `なぜ、感じあうなのか？　<br>「痛みをとってあげたい」この想いで、整体師を続けてきた。でも、どれだけ一生懸命やっても改善できない人がいる。原因を見つけようとすればするほどうまくいかず、<br>やればやるほど、自分がどんどん疲弊していった。そして、ついに、からだが動かなくなり、僕自身が「患者」になった。何が悪かった？何々のせい？あれこれと頭で考えて、<br>答えを外へ求める。なんとかしようって頭で考えて抗うほど、複雑になっていくばかり。<br>僕は、ずっとトンネルの中にいた。1ヶ月、3ヶ月、半年、時は流れ、整体師を辞めようか考えていた。<br>そんな無力な自分にうちのめされていた僕をみて、家族は、そっとしていてくれた。お客様からも、心配と励ましの声が届いた。みんな、本当は自身も、不安だったり、辛いはずなのに。ありがたい。ほんとうにありがたい。みんなが私の痛みを感じてくれていることを知って、うれしかった。助けてあげたいと思っていたみんなに、助けてもらっていたことを知って、気づかされた。それは、当たり前すぎて忘れていた、感謝の日々。そうだった。「からだの不調は何かしらのサイン」整体をはじめて、よく言っていた言葉。患者になって、自分も出来てなかったことを知った。改めて、からだに耳を傾けてみよう。「やりたくない、もうむり、休みたい」なんとなくわかっていたけど、無視していたね。やっとからだをこころで感じられた。この時、僕は、患者でなくなった。気づけばわたしのこころが動き出し、からだを動かすのではなく、からだが動きだした。<br>この体験を活かしていこう。`,
+    buttons: [{ type: "next", label: "次へ" }],
+  },
+  {
+    text: `なぜ、神経整体なのか？<br>いままでしてきたことを、見直してるときに「神経整体」という施術に目が止まった。「これだ！」と、直観し、体験させてもらうことに。<br>「？？？」正直、理解できなかったが、からだが感じている。 「やってみよう！」 最初は半信半疑だったが、変化を感じ、喜んでくれる、お客様。<br>こちらもびっくりするような事も目の当たりにした。<br>今までと正反対。押したり揉んだりこちらが狙うんじゃなくて、触れてるか、触れていないか分からないくらいでからだが勝手に動いて教えてくれる、<br>お互い神経を感じあうことで相乗効果。こんな施術があったなんて。求めていたものはこれかもしれない。こちらがなんとかするんじゃなくて、一緒に元にもどしていく施術。<br>神経整体と一緒に、さらなる可能性を広げていきたい。<br><br>あなたは、今、どんな状態ですか？<br>そして、何かを感じました？<br><br>よかったら、おしえてください！一緒に、元に戻していけたらうれしいです。<br><br>小さなことでも構いません、お待ちしております。`,
+    buttons: [
+      { type: "link", label: "LINEへ", href: "https://line.me/", target: "_blank" },
+      { type: "pricing", label: "料金紹介ページへ" },
+    ],
+  },
+];
+
+let currentModalStep = 0;
+
+function renderModalStep() {
+  if (!modalOverlay || !modalText || !modalActions) return;
+  const step = modalSteps[currentModalStep];
+  modalText.innerHTML = step.text;
+  modalActions.innerHTML = "";
+
+  step.buttons.forEach((buttonConfig) => {
+    if (buttonConfig.type === "next") {
+      const nextButton = document.createElement("button");
+      nextButton.type = "button";
+      nextButton.className = "primary-button";
+      nextButton.textContent = buttonConfig.label || "次へ";
+      nextButton.addEventListener("click", () => {
+        currentModalStep = Math.min(currentModalStep + 1, modalSteps.length - 1);
+        renderModalStep();
+      });
+      modalActions.appendChild(nextButton);
+    } else if (buttonConfig.type === "link") {
+      const linkButton = document.createElement("a");
+      linkButton.className = "primary-button";
+      linkButton.textContent = buttonConfig.label;
+      linkButton.href = buttonConfig.href;
+      if (buttonConfig.target) {
+        linkButton.target = buttonConfig.target;
+        linkButton.rel = "noopener noreferrer";
+      }
+      modalActions.appendChild(linkButton);
+    } else if (buttonConfig.type === "pricing") {
+      const pricingButton = document.createElement("button");
+      pricingButton.type = "button";
+      pricingButton.className = "primary-button";
+      pricingButton.textContent = buttonConfig.label;
+      pricingButton.addEventListener("click", () => {
+        closeModal();
+        showSection("pricing");
+        if (pricingSection) {
+          setTimeout(() => {
+            pricingSection.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 100);
+        }
+      });
+      modalActions.appendChild(pricingButton);
+    }
+  });
+}
+
+function openModal(stepIndex = 0) {
+  if (!modalOverlay) return;
+  currentModalStep = stepIndex;
+  renderModalStep();
+  modalOverlay.classList.remove("hidden");
+  modalOverlay.setAttribute("aria-hidden", "false");
+  modalOverlay.focus();
+  body.classList.add("modal-open");
+}
+
+function closeModal() {
+  if (!modalOverlay) return;
+  modalOverlay.classList.add("hidden");
+  modalOverlay.setAttribute("aria-hidden", "true");
+  body.classList.remove("modal-open");
+  if (startButton) {
+    startButton.focus();
+  }
+}
+
+if (startButton) {
+  startButton.addEventListener("click", () => {
+    openModal(0);
+  });
+}
+
+if (modalOverlay) {
+  modalOverlay.addEventListener("click", (event) => {
+    if (event.target === modalOverlay) {
+      closeModal();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !modalOverlay.classList.contains("hidden")) {
+      closeModal();
+    }
+  });
+}
+
 function adjustIntroOverlaySize() {
   introOverlay.style.height = `${window.innerHeight}px`;
   introOverlay.style.width = `${window.innerWidth}px`;
