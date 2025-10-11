@@ -15,7 +15,6 @@ const descriptionDiv = document.querySelector(".description");
 const body = document.body;
 const header = document.querySelector("header");
 const moreButton = document.querySelector(".more-button");
-const autonomicNote = document.getElementById("autonomic-note");
 const introOverlay = document.getElementById("intro-overlay");
 const introText1 = document.getElementById("intro-text1");
 const introText2 = document.getElementById("intro-text2");
@@ -564,9 +563,7 @@ images.forEach((img) => {
         descriptionDiv.innerHTML = desc.replace(/\n/g, "<br>");
         details.appendChild(descriptionDiv);
         details.appendChild(moreButton);
-        details.appendChild(autonomicNote);
         descriptionDiv.style.marginTop = "0";
-        autonomicNote.style.marginTop = "10px";
         img.appendChild(details);
         details.classList.remove("hidden");
         descriptionDiv.classList.add("fade-in-text");
@@ -638,14 +635,11 @@ moreButton.addEventListener("click", (e) => {
       descriptionDiv.innerHTML = data.text.replace(/\n/g, "<br>");
       moreButton.textContent = "次へ";
       moreButton.href = "#";
-      autonomicNote.classList.remove("hidden");
-      details.insertBefore(autonomicNote, moreButton);
-      details.appendChild(descriptionDiv);
-      autonomicNote.style.marginTop = "0";
+      details.insertBefore(descriptionDiv, moreButton);
       descriptionDiv.style.marginTop = "10px";
       descriptionDiv.style.display = "block";
       moreButton.style.display = "inline-block";
-      [descriptionDiv, moreButton, autonomicNote].forEach((el) => {
+      [descriptionDiv, moreButton].forEach((el) => {
         el.classList.remove("fade-up-out");
         el.classList.add("fade-in-quick");
       });
