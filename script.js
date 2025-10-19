@@ -84,11 +84,11 @@ const modalSteps = [
 
 let currentModalStep = 0;
 
-function appendMessage(content, type = "received") {
+function appendMessage(content, type = "received", stepIndex = currentModalStep) {
   if (!modalText) return;
   const message = document.createElement("div");
   message.className = `chat-message ${type}`;
-  message.dataset.step = `${currentModalStep}-${type}-${modalText.children.length}`;
+  message.dataset.step = `${stepIndex}-${type}-${modalText.children.length}`;
 
   const bubble = document.createElement("div");
   bubble.className = "chat-bubble";
@@ -104,13 +104,27 @@ function appendUserResponse(label) {
   appendMessage(label, "sent");
 }
 
-function renderModalStep() {
+function renderModalStep(options = {}) {
   if (!modalOverlay || !modalText || !modalActions) return;
+  const { delay = 0 } = options;
   const step = modalSteps[currentModalStep];
+  const stepIndex = currentModalStep;
 
-  if (!displayedSteps.has(currentModalStep)) {
-    appendMessage(step.text, "received");
-    displayedSteps.add(currentModalStep);
+  if (!displayedSteps.has(stepIndex)) {
+    displayedSteps.add(stepIndex);
+    const showMessage = () => {
+      if (!modalOverlay || modalOverlay.classList.contains("hidden")) {
+        displayedSteps.delete(stepIndex);
+        return;
+      }
+      appendMessage(step.text, "received", stepIndex);
+    };
+
+    if (delay > 0) {
+      setTimeout(showMessage, delay);
+    } else {
+      showMessage();
+    }
   }
 
   modalActions.innerHTML = "";
@@ -124,7 +138,7 @@ function renderModalStep() {
       nextButton.addEventListener("click", () => {
         appendUserResponse(buttonConfig.label || "次へ");
         currentModalStep = Math.min(currentModalStep + 1, modalSteps.length - 1);
-        renderModalStep();
+        renderModalStep({ delay: 500 });
       });
       modalActions.appendChild(nextButton);
     } else if (buttonConfig.type === "link") {
