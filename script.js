@@ -181,11 +181,16 @@ function openModal(stepIndex = 0) {
   if (modalText) {
     modalText.innerHTML = "";
   }
-  renderModalStep();
   modalOverlay.classList.remove("hidden");
   modalOverlay.setAttribute("aria-hidden", "false");
-  modalOverlay.focus();
   body.classList.add("modal-open");
+
+  // Ensure the modal content is rendered after it becomes visible so the first message
+  // appears immediately when the "はじまり" button is clicked.
+  requestAnimationFrame(() => {
+    renderModalStep();
+    modalOverlay.focus();
+  });
 }
 
 function closeModal(options = {}) {
