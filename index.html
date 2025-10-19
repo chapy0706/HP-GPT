@@ -101,9 +101,18 @@
         </main>
 
         <div id="journey-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-text" aria-hidden="true" tabindex="-1">
-            <div class="modal-content">
-                <div id="modal-text" class="modal-text" role="document"></div>
-                <div id="modal-actions" class="modal-actions"></div>
+            <div class="modal-content chat-modal">
+                <div class="chat-header">
+                    <div class="chat-header-avatar" aria-hidden="true">f</div>
+                    <div class="chat-header-info">
+                        <span class="chat-header-title">found 別府院</span>
+                        <span class="chat-header-status">LINEメッセージ</span>
+                    </div>
+                </div>
+                <div id="modal-text" class="modal-text chat-body" role="document"></div>
+                <div class="chat-input-area">
+                    <div id="modal-actions" class="modal-actions"></div>
+                </div>
             </div>
         </div>
 

@@ -45,6 +45,7 @@ const modalOverlay = document.getElementById("journey-modal");
 const modalText = document.getElementById("modal-text");
 const modalActions = document.getElementById("modal-actions");
 const pricingSection = document.getElementById("pricing");
+const displayedSteps = new Set();
 
 const modalSteps = [
   {
@@ -83,39 +84,69 @@ const modalSteps = [
 
 let currentModalStep = 0;
 
+function appendMessage(content, type = "received") {
+  if (!modalText) return;
+  const message = document.createElement("div");
+  message.className = `chat-message ${type}`;
+  message.dataset.step = `${currentModalStep}-${type}-${modalText.children.length}`;
+
+  const bubble = document.createElement("div");
+  bubble.className = "chat-bubble";
+  bubble.innerHTML = content;
+
+  message.appendChild(bubble);
+  modalText.appendChild(message);
+  modalText.scrollTop = modalText.scrollHeight;
+}
+
+function appendUserResponse(label) {
+  if (!label) return;
+  appendMessage(label, "sent");
+}
+
 function renderModalStep() {
   if (!modalOverlay || !modalText || !modalActions) return;
   const step = modalSteps[currentModalStep];
-  modalText.innerHTML = step.text;
+
+  if (!displayedSteps.has(currentModalStep)) {
+    appendMessage(step.text, "received");
+    displayedSteps.add(currentModalStep);
+  }
+
   modalActions.innerHTML = "";
 
   step.buttons.forEach((buttonConfig) => {
     if (buttonConfig.type === "next") {
       const nextButton = document.createElement("button");
       nextButton.type = "button";
-      nextButton.className = "primary-button";
+      nextButton.className = "primary-button chat-action-button";
       nextButton.textContent = buttonConfig.label || "次へ";
       nextButton.addEventListener("click", () => {
+        appendUserResponse(buttonConfig.label || "次へ");
         currentModalStep = Math.min(currentModalStep + 1, modalSteps.length - 1);
         renderModalStep();
       });
       modalActions.appendChild(nextButton);
     } else if (buttonConfig.type === "link") {
       const linkButton = document.createElement("a");
-      linkButton.className = "primary-button";
+      linkButton.className = "primary-button chat-action-button";
       linkButton.textContent = buttonConfig.label;
       linkButton.href = buttonConfig.href;
       if (buttonConfig.target) {
         linkButton.target = buttonConfig.target;
         linkButton.rel = "noopener noreferrer";
       }
+      linkButton.addEventListener("click", () => {
+        appendUserResponse(buttonConfig.label);
+      });
       modalActions.appendChild(linkButton);
     } else if (buttonConfig.type === "pricing") {
       const pricingButton = document.createElement("button");
       pricingButton.type = "button";
-      pricingButton.className = "primary-button";
+      pricingButton.className = "primary-button chat-action-button";
       pricingButton.textContent = buttonConfig.label;
       pricingButton.addEventListener("click", () => {
+        appendUserResponse(buttonConfig.label);
         closeModal();
         showSection("pricing");
         if (pricingSection) {
@@ -132,6 +163,10 @@ function renderModalStep() {
 function openModal(stepIndex = 0) {
   if (!modalOverlay) return;
   currentModalStep = stepIndex;
+  displayedSteps.clear();
+  if (modalText) {
+    modalText.innerHTML = "";
+  }
   renderModalStep();
   modalOverlay.classList.remove("hidden");
   modalOverlay.setAttribute("aria-hidden", "false");
