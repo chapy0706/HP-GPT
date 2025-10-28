@@ -55,13 +55,14 @@ const modalSteps = [
     buttons: [{ type: "next", label: "次へ" }],
   },
   {
-    text: `なぜ、感じあうなのか？
-      <br>「痛みをとってあげたい」この想いで、整体師を続けてきた。でも、どれだけ一生懸命やっても改善できない人がいる。原因を見つけようとすればするほどうまくいかず、やればやるほど、自分がどんどん疲弊していった。そして、ついに、からだが動かなくなり、僕自身が「患者」になった。
-      <br>何が悪かった？何々のせい？あれこれと頭で考えて、答えを外へ求める。なんとかしようって頭で考えて抗うほど、複雑になっていくばかり。僕は、ずっとトンネルの中にいた。1ヶ月、3ヶ月、半年、時は流れ、整体師を辞めようか考えていた。
-      <br>そんな無力な自分にうちのめされていた僕をみて、家族は、そっとしていてくれた。お客様からも、心配と励ましの声が届いた。みんな、本当は自身も、不安だったり、辛いはずなのに。ありがたい。ほんとうにありがたい。みんなが私の痛みを感じてくれていることを知って、うれしかった。助けてあげたいと思っていたみんなに、助けてもらっていたことを知って、気づかされた。
-      <br>それは、当たり前すぎて忘れていた、感謝の日々。そうだった。「からだの不調は何かしらのサイン」整体をはじめて、よく言っていた言葉。患者になって、自分も出来てなかったことを知った。改めて、からだに耳を傾けてみよう。「やりたくない、もうむり、休みたい」なんとなくわかっていたけど、無視していたね。
-      <br>やっとからだをこころで感じられた。この時、僕は、患者でなくなった。気づけばわたしのこころが動き出し、からだを動かすのではなく、からだが動きだした。
-      <br>この体験を活かしていこう。`,
+    chunks: [
+      `なぜ、感じあうなのか？<br>「痛みをとってあげたい」この想いで、整体師を続けてきた。でも、どれだけ一生懸命やっても改善できない人がいる。原因を見つけようとすればするほどうまくいかず、やればやるほど、自分がどんどん疲弊していった。そして、ついに、からだが動かなくなり、僕自身が「患者」になった。`,
+      `何が悪かった？何々のせい？あれこれと頭で考えて、答えを外へ求める。なんとかしようって頭で考えて抗うほど、複雑になっていくばかり。僕は、ずっとトンネルの中にいた。1ヶ月、3ヶ月、半年、時は流れ、整体師を辞めようか考えていた。`,
+      `そんな無力な自分にうちのめされていた僕をみて、家族は、そっとしていてくれた。お客様からも、心配と励ましの声が届いた。みんな、本当は自身も、不安だったり、辛いはずなのに。ありがたい。ほんとうにありがたい。みんなが私の痛みを感じてくれていることを知って、うれしかった。助けてあげたいと思っていたみんなに、助けてもらっていたことを知って、気づかされた。`,
+      `それは、当たり前すぎて忘れていた、感謝の日々。そうだった。「からだの不調は何かしらのサイン」整体をはじめて、よく言っていた言葉。患者になって、自分も出来てなかったことを知った。改めて、からだに耳を傾けてみよう。「やりたくない、もうむり、休みたい」なんとなくわかっていたけど、無視していたね。`,
+      `やっとからだをこころで感じられた。この時、僕は、患者でなくなった。気づけばわたしのこころが動き出し、からだを動かすのではなく、からだが動きだした。<br>この体験を活かしていこう。`,
+    ],
+    staggerDelay: 300,
     buttons: [{ type: "next", label: "次へ" }],
   },
   {
@@ -112,18 +113,62 @@ function renderModalStep(options = {}) {
 
   if (!displayedSteps.has(stepIndex)) {
     displayedSteps.add(stepIndex);
-    const showMessage = () => {
-      if (!modalOverlay || modalOverlay.classList.contains("hidden")) {
-        displayedSteps.delete(stepIndex);
-        return;
-      }
-      appendMessage(step.text, "received", stepIndex);
-    };
 
-    if (delay > 0) {
-      setTimeout(showMessage, delay);
+    const hasChunks = Array.isArray(step.chunks) && step.chunks.length > 0;
+
+    if (hasChunks) {
+      const message = document.createElement("div");
+      message.className = "chat-message received";
+      message.dataset.step = `${stepIndex}-received-${modalText.children.length}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble";
+      message.appendChild(bubble);
+      modalText.appendChild(message);
+      modalText.scrollTop = modalText.scrollHeight;
+
+      const baseDelay = typeof delay === "number" && delay > 0 ? delay : 0;
+      const stagger =
+        typeof step.staggerDelay === "number" && step.staggerDelay > 0
+          ? step.staggerDelay
+          : 0;
+
+      step.chunks.forEach((chunk, chunkIndex) => {
+        const showChunk = () => {
+          if (!modalOverlay || modalOverlay.classList.contains("hidden")) {
+            displayedSteps.delete(stepIndex);
+            return;
+          }
+          if (chunkIndex > 0) {
+            bubble.innerHTML += "<br><br>";
+          }
+          bubble.innerHTML += chunk;
+          modalText.scrollTop = modalText.scrollHeight;
+        };
+
+        const chunkDelay = baseDelay + chunkIndex * stagger;
+        if (chunkDelay > 0) {
+          setTimeout(showChunk, chunkDelay);
+        } else {
+          showChunk();
+        }
+      });
     } else {
-      showMessage();
+      const showMessage = () => {
+        if (!modalOverlay || modalOverlay.classList.contains("hidden")) {
+          displayedSteps.delete(stepIndex);
+          return;
+        }
+        if (typeof step.text === "string" && step.text.length > 0) {
+          appendMessage(step.text, "received", stepIndex);
+        }
+      };
+
+      if (delay > 0) {
+        setTimeout(showMessage, delay);
+      } else {
+        showMessage();
+      }
     }
   }
 
