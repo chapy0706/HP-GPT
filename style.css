@@ -236,6 +236,7 @@ header {
     flex-direction: column;
     overflow: hidden;
     box-sizing: border-box;
+    margin-inline: auto;
 }
 
 @media (max-width: 600px) {
@@ -630,16 +631,18 @@ body.modal-open {
 /* Responsive styles */
 @media (max-width: 600px) {
     .modal {
-        align-items: flex-start;
+        align-items: center;
         padding: 24px 12px 32px;
+        box-sizing: border-box;
     }
 
     .modal-content {
         width: 100%;
-        max-width: none;
+        max-width: 480px;
         max-height: calc(100dvh - 56px);
         padding: 28px 20px;
         border-radius: 20px;
+        margin-inline: auto;
     }
 
     .modal-text {
