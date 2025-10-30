@@ -55,6 +55,16 @@ header {
 .content-section {
     padding: 20px;
 }
+
+.pricing-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pricing-list li {
+    margin-bottom: 8px;
+}
 .video-container {
     position: relative;
     width: 100%;
