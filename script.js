@@ -46,6 +46,17 @@ const modalText = document.getElementById("modal-text");
 const modalActions = document.getElementById("modal-actions");
 const pricingSection = document.getElementById("pricing");
 const displayedSteps = new Set();
+let lineInfoDisplayed = false;
+
+const lineFollowUpDelay = 500;
+const lineContactMessageHtml = [
+  "電話•LINEで受け付けておりますので、利用しやすいほうをお選びになり、お悩みや質問などお気軽にご相談下さい",
+  "0977-21-8695",
+  "",
+  "※電話は、営業時間内(店休日、施術中は出られない時がございます)",
+  "※LINEは友達追加後メッセージをお送り下さい",
+  "常時受け付けておりますが、すぐに返信できない場合がございます。ご了承ください",
+].join("<br>");
 
 const modalSteps = [
   {
@@ -75,7 +86,7 @@ const modalSteps = [
     ],
     staggerDelay: 500,
     buttons: [
-      { type: "link", label: "LINEへ", href: "https://line.me/", target: "_blank" },
+      { type: "link", label: "LINEへ", href: "https://line.me/R/ti/p/@754ryuvm/", target: "_blank" },
       { type: "pricing", label: "料金紹介ページへ" },
     ],
   },
@@ -195,6 +206,7 @@ function renderModalStep(options = {}) {
       }
       linkButton.addEventListener("click", () => {
         appendUserResponse(buttonConfig.label);
+        showLineFollowUp(buttonConfig.href);
       });
       modalActions.appendChild(linkButton);
     } else if (buttonConfig.type === "pricing") {
@@ -221,6 +233,7 @@ function openModal(stepIndex = 0) {
   if (!modalOverlay) return;
   currentModalStep = stepIndex;
   displayedSteps.clear();
+  lineInfoDisplayed = false;
   if (modalText) {
     modalText.innerHTML = "";
   }
@@ -234,6 +247,49 @@ function openModal(stepIndex = 0) {
     renderModalStep();
     modalOverlay.focus();
   });
+}
+
+function isMobileDevice() {
+  return (
+    window.matchMedia("(max-width: 768px)").matches ||
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+  );
+}
+
+function showLineFollowUp(href) {
+  if (lineInfoDisplayed) {
+    return;
+  }
+  lineInfoDisplayed = true;
+
+  setTimeout(() => {
+    if (!modalOverlay || modalOverlay.classList.contains("hidden")) {
+      return;
+    }
+
+    const message = document.createElement("div");
+    message.className = "chat-message received";
+
+    const bubble = document.createElement("div");
+    bubble.className = "chat-bubble line-followup-bubble";
+
+    const contactText = `<div class="line-followup-text">${lineContactMessageHtml}</div>`;
+
+    if (isMobileDevice()) {
+      const linkHtml = href
+        ? `<a class="line-followup-button" href="${href}" target="_blank" rel="noopener noreferrer">LINEはこちら</a>`
+        : "";
+      bubble.innerHTML = `${linkHtml}${contactText}`;
+    } else {
+      bubble.innerHTML = `<img src="images/QR.png" alt="LINE QRコード" class="line-followup-qr" />${contactText}`;
+    }
+
+    message.appendChild(bubble);
+    modalText.appendChild(message);
+    modalText.scrollTop = modalText.scrollHeight;
+  }, lineFollowUpDelay);
 }
 
 function closeModal(options = {}) {
