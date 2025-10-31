@@ -44,9 +44,11 @@ const startButton = document.getElementById("start-journey-button");
 const modalOverlay = document.getElementById("journey-modal");
 const modalText = document.getElementById("modal-text");
 const modalActions = document.getElementById("modal-actions");
+const journeyCloseButton = document.getElementById("journey-close-button");
 const pricingSection = document.getElementById("pricing");
 const displayedSteps = new Set();
 let lineInfoDisplayed = false;
+let hamburgerWasHidden = hamburger ? hamburger.classList.contains("hidden") : true;
 
 const lineFollowUpDelay = 500;
 const lineContactMessageHtml = [
@@ -240,6 +242,10 @@ function openModal(stepIndex = 0) {
   modalOverlay.classList.remove("hidden");
   modalOverlay.setAttribute("aria-hidden", "false");
   body.classList.add("modal-open");
+  if (hamburger) {
+    hamburgerWasHidden = hamburger.classList.contains("hidden");
+    hamburger.classList.add("hidden");
+  }
 
   // Ensure the modal content is rendered after it becomes visible so the first message
   // appears immediately when the "はじまり" button is clicked.
@@ -298,9 +304,19 @@ function closeModal(options = {}) {
   modalOverlay.classList.add("hidden");
   modalOverlay.setAttribute("aria-hidden", "true");
   body.classList.remove("modal-open");
+  if (hamburger && !hamburgerWasHidden) {
+    hamburger.classList.remove("hidden");
+  }
   if (restoreFocus && startButton) {
     startButton.focus();
   }
+}
+
+if (journeyCloseButton) {
+  journeyCloseButton.addEventListener("click", () => {
+    closeModal({ restoreFocus: false });
+    showTopPage();
+  });
 }
 
 if (startButton) {
