@@ -65,18 +65,40 @@ const modalSteps = [
     text: `あなたは、何色になりましたか？<br>どれが良いか悪いかではなく、
       <br>今どんな状態であるのかを<br>感じあえたらと思って<br>選んでもらいました！
       <br><br>そして、<br>その先の答えの<br>ヒントになると思うので、<br>読んでみてください！`,
-    buttons: [{ type: "next", label: "次へ" }],
+    buttons: [{ type: "next", label: "なぜ、感じあうなのか？" }],
   },
   {
-    chunks: [
-      `なぜ、感じあうなのか？<br>「痛みをとってあげたい」この想いで、整体師を続けてきた。でも、どれだけ一生懸命やっても改善できない人がいる。原因を見つけようとすればするほどうまくいかず、やればやるほど、自分がどんどん疲弊していった。そして、ついに、からだが動かなくなり、僕自身が「患者」になった。`,
-      `何が悪かった？何々のせい？あれこれと頭で考えて、答えを外へ求める。なんとかしようって頭で考えて抗うほど、複雑になっていくばかり。僕は、ずっとトンネルの中にいた。1ヶ月、3ヶ月、半年、時は流れ、整体師を辞めようか考えていた。`,
-      `そんな無力な自分にうちのめされていた僕をみて、家族は、そっとしていてくれた。お客様からも、心配と励ましの声が届いた。みんな、本当は自身も、不安だったり、辛いはずなのに。ありがたい。ほんとうにありがたい。みんなが私の痛みを感じてくれていることを知って、うれしかった。助けてあげたいと思っていたみんなに、助けてもらっていたことを知って、気づかされた。`,
-      `それは、当たり前すぎて忘れていた、感謝の日々。そうだった。「からだの不調は何かしらのサイン」整体をはじめて、よく言っていた言葉。患者になって、自分も出来てなかったことを知った。改めて、からだに耳を傾けてみよう。「やりたくない、もうむり、休みたい」なんとなくわかっていたけど、無視していたね。`,
-      `やっとからだをこころで感じられた。この時、僕は、患者でなくなった。気づけばわたしのこころが動き出し、からだを動かすのではなく、からだが動きだした。<br>この体験を活かしていこう。`,
+    typewriterGroups: [
+      `なぜ、感じあうなのか？
+「痛みをとってあげたい」この想いで、整体師を続けてきた。
+でも、どれだけ一生懸命やっても改善できない人がいる。
+原因を見つけようとすればするほどうまくいかず、やればやるほど、自分がどんどん疲弊していった。
+そして、ついに、からだが動かなくなり、僕自身が「患者」になった。
+
+何が悪かった？何々のせい？あれこれと頭で考えて、答えを外へ求める。
+なんとかしようって頭で考えて抗うほど、複雑になっていくばかり。
+僕は、ずっとトンネルの中にいた。
+1ヶ月、3ヶ月、半年、時は流れ、整体師を辞めようか考えていた。`,
+      `そんな無力な自分にうちのめされていた僕をみて、家族は、そっとしていてくれた。
+お客様からも、心配と励ましの声が届いた。
+みんな、本当は自身も、不安だったり、辛いはずなのに。
+ありがたい。ほんとうにありがたい。
+みんなが私の痛みを感じてくれていることを知って、うれしかった。
+助けてあげたいと思っていたみんなに、助けてもらっていたことを知って、気づかされた。`,
+      `それは、当たり前すぎて忘れていた、感謝の日々。
+そうだった。「からだの不調は何かしらのサイン」整体をはじめて、よく言っていた言葉。
+患者になって、自分も出来てなかったことを知った。
+改めて、からだに耳を傾けてみよう。
+「やりたくない、もうむり、休みたい」なんとなくわかっていたけど、無視していたね。
+
+やっとからだをこころで感じられた。
+この時、僕は、患者でなくなった。
+気づけばわたしのこころが動き出し、からだを動かすのではなく、からだが動きだした。
+この体験を活かしていこう。`,
     ],
-    staggerDelay: 700,
-    buttons: [{ type: "next", label: "次へ" }],
+    typewriterSpeed: 45,
+    groupButtonLabel: "次へ",
+    finalButtonLabel: "次へ",
   },
   {
     chunks: [
@@ -95,6 +117,8 @@ const modalSteps = [
 ];
 
 let currentModalStep = 0;
+const typewriterStates = new Map();
+const TYPEWRITER_DEFAULT_SPEED = 45;
 
 function appendMessage(content, type = "received", stepIndex = currentModalStep) {
   if (!modalText) return;
@@ -116,11 +140,194 @@ function appendUserResponse(label) {
   appendMessage(label, "sent");
 }
 
+function clearTypewriterTimers(state) {
+  if (!state || !Array.isArray(state.timers)) {
+    return;
+  }
+  state.timers.forEach((timerId) => clearTimeout(timerId));
+  state.timers.length = 0;
+}
+
+function clearTypewriterState(stepIndex) {
+  const state = typewriterStates.get(stepIndex);
+  if (!state) {
+    return;
+  }
+  state.cancelled = true;
+  clearTypewriterTimers(state);
+  typewriterStates.delete(stepIndex);
+}
+
+function resetTypewriterStates() {
+  const indices = Array.from(typewriterStates.keys());
+  indices.forEach((stepIndex) => {
+    clearTypewriterState(stepIndex);
+  });
+}
+
+function createTypewriterTokens(text, includeLeadingBreak) {
+  const tokens = [];
+  if (includeLeadingBreak) {
+    tokens.push("<br>", "<br>");
+  }
+  const lines = String(text || "").split("\n");
+  lines.forEach((line, lineIndex) => {
+    for (const char of line) {
+      tokens.push(char);
+    }
+    if (lineIndex < lines.length - 1) {
+      tokens.push("<br>");
+    }
+  });
+  return tokens;
+}
+
+function typewriterAnimate(state, tokens, step, onComplete) {
+  if (!state || !state.container) {
+    return;
+  }
+  const speed =
+    typeof step.typewriterSpeed === "number" && step.typewriterSpeed > 0
+      ? step.typewriterSpeed
+      : TYPEWRITER_DEFAULT_SPEED;
+
+  clearTypewriterTimers(state);
+
+  let index = 0;
+
+  const typeNext = () => {
+    if (state.cancelled || !modalOverlay || modalOverlay.classList.contains("hidden")) {
+      return;
+    }
+    if (index >= tokens.length) {
+      if (typeof onComplete === "function") {
+        onComplete();
+      }
+      return;
+    }
+
+    const token = tokens[index];
+    if (token === "<br>") {
+      state.container.innerHTML += "<br>";
+    } else {
+      state.container.innerHTML += token;
+    }
+
+    modalText.scrollTop = modalText.scrollHeight;
+    index += 1;
+
+    const timerId = setTimeout(typeNext, speed);
+    state.timers.push(timerId);
+  };
+
+  typeNext();
+}
+
+function renderTypewriterStep(step, stepIndex) {
+  if (!modalText || !modalActions) {
+    return;
+  }
+
+  let state = typewriterStates.get(stepIndex);
+  if (!state) {
+    const message = document.createElement("div");
+    message.className = "chat-message received";
+    message.dataset.step = `${stepIndex}-received-${modalText.children.length}`;
+
+    const bubble = document.createElement("div");
+    bubble.className = "chat-bubble typing-bubble";
+
+    const container = document.createElement("div");
+    container.className = "typing-effect";
+    bubble.appendChild(container);
+
+    message.appendChild(bubble);
+    modalText.appendChild(message);
+    modalText.scrollTop = modalText.scrollHeight;
+
+    state = {
+      groupIndex: 0,
+      container,
+      timers: [],
+      cancelled: false,
+      isTyping: false,
+    };
+    typewriterStates.set(stepIndex, state);
+    displayedSteps.add(stepIndex);
+  }
+
+  if (state.isTyping) {
+    return;
+  }
+
+  const groups = Array.isArray(step.typewriterGroups) ? step.typewriterGroups : [];
+  if (state.groupIndex >= groups.length) {
+    return;
+  }
+
+  modalActions.innerHTML = "";
+  const tokens = createTypewriterTokens(groups[state.groupIndex], state.groupIndex > 0);
+  state.isTyping = true;
+  state.container.classList.remove("typing-complete");
+
+  typewriterAnimate(state, tokens, step, () => {
+    if (state.cancelled) {
+      return;
+    }
+    state.isTyping = false;
+    const isLastGroup = state.groupIndex === groups.length - 1;
+    const label = isLastGroup
+      ? step.finalButtonLabel || "次へ"
+      : step.groupButtonLabel || "次へ";
+
+    const nextButton = document.createElement("button");
+    nextButton.type = "button";
+    nextButton.className = "primary-button chat-action-button";
+    nextButton.textContent = label;
+    nextButton.addEventListener("click", () => {
+      appendUserResponse(label);
+      modalActions.innerHTML = "";
+      if (isLastGroup) {
+        clearTypewriterState(stepIndex);
+        currentModalStep = Math.min(currentModalStep + 1, modalSteps.length - 1);
+        renderModalStep({ delay: 500 });
+      } else {
+        state.groupIndex += 1;
+        renderTypewriterStep(step, stepIndex);
+      }
+    });
+
+    modalActions.appendChild(nextButton);
+
+    if (isLastGroup) {
+      state.container.classList.add("typing-complete");
+    }
+  });
+}
+
 function renderModalStep(options = {}) {
   if (!modalOverlay || !modalText || !modalActions) return;
   const { delay = 0 } = options;
   const step = modalSteps[currentModalStep];
   const stepIndex = currentModalStep;
+
+  if (Array.isArray(step.typewriterGroups) && step.typewriterGroups.length > 0) {
+    const showStep = () => {
+      renderTypewriterStep(step, stepIndex);
+    };
+
+    if (delay > 0) {
+      setTimeout(() => {
+        if (!modalOverlay || modalOverlay.classList.contains("hidden")) {
+          return;
+        }
+        showStep();
+      }, delay);
+    } else {
+      showStep();
+    }
+    return;
+  }
 
   if (!displayedSteps.has(stepIndex)) {
     displayedSteps.add(stepIndex);
@@ -235,6 +442,7 @@ function openModal(stepIndex = 0) {
   if (!modalOverlay) return;
   currentModalStep = stepIndex;
   displayedSteps.clear();
+  resetTypewriterStates();
   lineInfoDisplayed = false;
   if (modalText) {
     modalText.innerHTML = "";
@@ -301,6 +509,7 @@ function showLineFollowUp(href) {
 function closeModal(options = {}) {
   const { restoreFocus = true } = options;
   if (!modalOverlay || modalOverlay.classList.contains("hidden")) return;
+  resetTypewriterStates();
   modalOverlay.classList.add("hidden");
   modalOverlay.setAttribute("aria-hidden", "true");
   body.classList.remove("modal-open");
