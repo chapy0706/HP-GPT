@@ -68,7 +68,7 @@ header {
 .video-container {
     position: relative;
     width: 100%;
-    max-width: 800px;
+    max-width: 500px;
     margin: 20px auto;
     aspect-ratio: 16 / 9;
 }
