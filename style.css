@@ -92,14 +92,16 @@ header {
 }
 
 .pricing-list li::before {
-    font-family: "Font Awesome 5 Free";
-    content: "\f138";
-    font-weight: 900;
+    content: "";
     position: absolute;
-    left: 1em;
+    left: 0.9em;
     top: 50%;
     transform: translateY(-50%);
-    color: skyblue;
+    width: 0.65em;
+    height: 0.65em;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffffff 0%, #87ceeb 60%, #1c75bc 100%);
+    box-shadow: 0 0 6px rgba(135, 206, 235, 0.6);
 }
 
 .salon-list {
@@ -142,15 +144,15 @@ header {
 }
 
 .salon-list li::before {
-    font-family: "Font Awesome 5 Free";
-    content: "\f005";
-    font-weight: 900;
+    content: "";
     position: absolute;
     left: 1.4em;
     top: 50%;
-    transform: translate(-50%, -50%);
-    color: #d4af37;
-    text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 0.75em;
+    height: 0.75em;
+    background: linear-gradient(135deg, #fff9db, #d4af37);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
 }
 .video-container {
     position: relative;
