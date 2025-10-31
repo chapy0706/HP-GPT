@@ -460,6 +460,31 @@ body.modal-open {
     color: #1f2933;
 }
 
+.typing-bubble {
+    position: relative;
+}
+
+.typing-effect {
+    display: inline-block;
+    white-space: pre-wrap;
+    overflow: hidden;
+    border-right: 2px solid currentColor;
+    animation: typewriter-caret 0.8s step-end infinite;
+    font-family: inherit;
+    word-break: break-word;
+}
+
+.typing-effect.typing-complete {
+    border-right: none;
+    animation: none;
+}
+
+@keyframes typewriter-caret {
+    50% {
+        border-color: transparent;
+    }
+}
+
 .chat-input-area {
     padding: 16px 20px;
     background: #f5f7fa;
