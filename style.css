@@ -449,6 +449,28 @@ body.modal-open {
     border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
+.chat-bubble.action-bubble {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.action-bubble-text {
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.bubble-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bubble-actions .chat-action-button {
+    width: 100%;
+}
+
 .chat-message.sent .chat-bubble {
     background: #c7f5cb;
     border-color: rgba(6, 199, 85, 0.25);

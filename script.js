@@ -130,6 +130,7 @@ const modalSteps = [
       { type: "link", label: "LINEへ", href: "https://line.me/R/ti/p/@754ryuvm/", target: "_blank" },
       { type: "pricing", label: "料金紹介ページへ" },
     ],
+    showButtonsInBubble: true,
   },
 ];
 
@@ -329,6 +330,7 @@ function renderModalStep(options = {}) {
   const { delay = 0 } = options;
   const step = modalSteps[currentModalStep];
   const stepIndex = currentModalStep;
+  const isFirstRender = !displayedSteps.has(stepIndex);
 
   if (Array.isArray(step.typewriterGroups) && step.typewriterGroups.length > 0) {
     const showStep = () => {
@@ -348,7 +350,7 @@ function renderModalStep(options = {}) {
     return;
   }
 
-  if (!displayedSteps.has(stepIndex)) {
+  if (isFirstRender) {
     displayedSteps.add(stepIndex);
 
     const hasChunks = Array.isArray(step.chunks) && step.chunks.length > 0;
@@ -396,7 +398,11 @@ function renderModalStep(options = {}) {
           displayedSteps.delete(stepIndex);
           return;
         }
-        if (typeof step.text === "string" && step.text.length > 0) {
+        if (
+          typeof step.text === "string" &&
+          step.text.length > 0 &&
+          !step.showButtonsInBubble
+        ) {
           appendMessage(step.text, "received", stepIndex);
         }
       };
@@ -410,6 +416,82 @@ function renderModalStep(options = {}) {
   }
 
   modalActions.innerHTML = "";
+
+  if (step.showButtonsInBubble) {
+    if (isFirstRender) {
+      const message = document.createElement("div");
+      message.className = "chat-message received";
+      message.dataset.step = `${stepIndex}-received-${modalText.children.length}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble action-bubble";
+
+      if (typeof step.text === "string" && step.text.length > 0) {
+        const textContainer = document.createElement("div");
+        textContainer.className = "action-bubble-text";
+        textContainer.innerHTML = step.text;
+        bubble.appendChild(textContainer);
+      }
+
+      const actionsContainer = document.createElement("div");
+      actionsContainer.className = "bubble-actions";
+
+      step.buttons.forEach((buttonConfig) => {
+        if (buttonConfig.type === "link") {
+          const linkButton = document.createElement("a");
+          linkButton.className = "primary-button chat-action-button";
+          linkButton.textContent = buttonConfig.label;
+          linkButton.href = buttonConfig.href;
+          if (buttonConfig.target) {
+            linkButton.target = buttonConfig.target;
+            linkButton.rel = "noopener noreferrer";
+          }
+          linkButton.addEventListener("click", () => {
+            appendUserResponse(buttonConfig.label);
+            showLineFollowUp(buttonConfig.href);
+          });
+          actionsContainer.appendChild(linkButton);
+        } else if (buttonConfig.type === "pricing") {
+          const pricingButton = document.createElement("button");
+          pricingButton.type = "button";
+          pricingButton.className = "primary-button chat-action-button";
+          pricingButton.textContent = buttonConfig.label;
+          pricingButton.addEventListener("click", () => {
+            appendUserResponse(buttonConfig.label);
+            closeModal();
+            showSection("pricing");
+            if (pricingSection) {
+              setTimeout(() => {
+                pricingSection.scrollIntoView({ behavior: "smooth", block: "start" });
+              }, 100);
+            }
+          });
+          actionsContainer.appendChild(pricingButton);
+        } else if (buttonConfig.type === "next") {
+          const nextButton = document.createElement("button");
+          nextButton.type = "button";
+          nextButton.className = "primary-button chat-action-button";
+          nextButton.textContent = buttonConfig.label || "次へ";
+          nextButton.addEventListener("click", () => {
+            appendUserResponse(buttonConfig.label || "次へ");
+            currentModalStep = Math.min(currentModalStep + 1, modalSteps.length - 1);
+            renderModalStep({ delay: 500 });
+          });
+          actionsContainer.appendChild(nextButton);
+        }
+      });
+
+      if (actionsContainer.children.length > 0) {
+        bubble.appendChild(actionsContainer);
+      }
+
+      message.appendChild(bubble);
+      modalText.appendChild(message);
+      modalText.scrollTop = modalText.scrollHeight;
+    }
+
+    return;
+  }
 
   step.buttons.forEach((buttonConfig) => {
     if (buttonConfig.type === "next") {
