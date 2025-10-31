@@ -641,6 +641,9 @@ function renderModalStep(options = {}) {
       nextButton.textContent = buttonConfig.label || "次へ";
       nextButton.addEventListener("click", () => {
         appendUserResponse(buttonConfig.label || "次へ");
+        if (buttonConfig.music) {
+          playModalMusic(buttonConfig.music);
+        }
         currentModalStep = Math.min(currentModalStep + 1, modalSteps.length - 1);
         renderModalStep({ delay: 500 });
       });
