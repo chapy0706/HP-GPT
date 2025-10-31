@@ -356,15 +356,23 @@ header {
 
 .modal-actions {
     display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
     flex-wrap: wrap;
     gap: 12px;
     justify-content: flex-end;
-    width: 100%;
+    align-items: center;
 }
 
 .modal-actions button,
 .modal-actions a {
     width: auto;
+}
+
+.chat-input-area .primary-button,
+.chat-input-area .modal-close-button {
+    min-width: auto;
+    white-space: nowrap;
 }
 
 body.modal-open {
@@ -522,12 +530,14 @@ body.modal-open {
     background: #f5f7fa;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
     gap: 12px;
 }
 
 .modal-close-button {
-    align-self: flex-start;
     display: inline-flex;
     align-items: center;
     justify-content: center;
