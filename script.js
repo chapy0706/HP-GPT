@@ -186,6 +186,7 @@ function typewriterAnimate(state, tokens, step, onComplete) {
   if (!state || !state.container) {
     return;
   }
+  const container = state.container;
   const speed =
     typeof step.typewriterSpeed === "number" && step.typewriterSpeed > 0
       ? step.typewriterSpeed
@@ -208,9 +209,9 @@ function typewriterAnimate(state, tokens, step, onComplete) {
 
     const token = tokens[index];
     if (token === "<br>") {
-      state.container.innerHTML += "<br>";
+      container.innerHTML += "<br>";
     } else {
-      state.container.innerHTML += token;
+      container.innerHTML += token;
     }
 
     modalText.scrollTop = modalText.scrollHeight;
@@ -230,24 +231,8 @@ function renderTypewriterStep(step, stepIndex) {
 
   let state = typewriterStates.get(stepIndex);
   if (!state) {
-    const message = document.createElement("div");
-    message.className = "chat-message received";
-    message.dataset.step = `${stepIndex}-received-${modalText.children.length}`;
-
-    const bubble = document.createElement("div");
-    bubble.className = "chat-bubble typing-bubble";
-
-    const container = document.createElement("div");
-    container.className = "typing-effect";
-    bubble.appendChild(container);
-
-    message.appendChild(bubble);
-    modalText.appendChild(message);
-    modalText.scrollTop = modalText.scrollHeight;
-
     state = {
       groupIndex: 0,
-      container,
       timers: [],
       cancelled: false,
       isTyping: false,
@@ -266,9 +251,28 @@ function renderTypewriterStep(step, stepIndex) {
   }
 
   modalActions.innerHTML = "";
-  const tokens = createTypewriterTokens(groups[state.groupIndex], state.groupIndex > 0);
+  const message = document.createElement("div");
+  message.className = "chat-message received";
+  message.dataset.step = `${stepIndex}-received-${modalText.children.length}`;
+
+  const bubble = document.createElement("div");
+  bubble.className = "chat-bubble typing-bubble";
+
+  const container = document.createElement("div");
+  container.className = "typing-effect";
+  bubble.appendChild(container);
+
+  message.appendChild(bubble);
+  modalText.appendChild(message);
+  modalText.scrollTop = modalText.scrollHeight;
+
+  clearTypewriterTimers(state);
+  state.container = container;
+  state.cancelled = false;
   state.isTyping = true;
-  state.container.classList.remove("typing-complete");
+  container.classList.remove("typing-complete");
+
+  const tokens = createTypewriterTokens(groups[state.groupIndex], false);
 
   typewriterAnimate(state, tokens, step, () => {
     if (state.cancelled) {
@@ -279,6 +283,8 @@ function renderTypewriterStep(step, stepIndex) {
     const label = isLastGroup
       ? step.finalButtonLabel || "次へ"
       : step.groupButtonLabel || "次へ";
+
+    container.classList.add("typing-complete");
 
     const nextButton = document.createElement("button");
     nextButton.type = "button";
@@ -298,10 +304,6 @@ function renderTypewriterStep(step, stepIndex) {
     });
 
     modalActions.appendChild(nextButton);
-
-    if (isLastGroup) {
-      state.container.classList.add("typing-complete");
-    }
   });
 }
 
