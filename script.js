@@ -594,7 +594,7 @@ function showLineFollowUp(href) {
 
     if (isMobileDevice()) {
       const linkHtml = href
-        ? `<a class="line-followup-button" href="${href}" target="_blank" rel="noopener noreferrer">LINEはこちら</a>`
+        ? `<a class="primary-button chat-action-button line-followup-button" href="${href}" target="_blank" rel="noopener noreferrer">LINEはこちら</a>`
         : "";
       bubble.innerHTML = `${linkHtml}${contactText}`;
     } else {

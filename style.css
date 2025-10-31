@@ -578,23 +578,8 @@ body.modal-open {
 }
 
 .line-followup-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: #06c755;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 999px;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    box-shadow: 0 8px 20px rgba(6, 199, 85, 0.35);
-}
-
-.line-followup-button:hover {
-    background: #05a647;
-    box-shadow: 0 10px 24px rgba(6, 199, 85, 0.45);
+    width: min(260px, 100%);
+    text-align: center;
 }
 
 .line-followup-qr {
