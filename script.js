@@ -190,8 +190,7 @@ const lineContactMessageHtml = [
 const modalSteps = [
   {
     text: `あなたは、何色になりましたか？<br>どれが良いか悪いかではなく、
-      <br>今どんな状態であるのかを<br>感じあえたらと思って<br>選んでもらいました！
-      <br><br>そして、<br>その先の答えの<br>ヒントになると思うので、<br>読んでみてください！`,
+      <br>今どんな状態であるのかを<br>感じあえたらと思って<br>選んでもらいました！`,
     buttons: [
       { type: "next", label: "なぜ感じあうなの？", music: "musics/feel.mp4" },
     ],
