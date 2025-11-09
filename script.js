@@ -27,7 +27,7 @@ const hamburger = document.querySelector(".hamburger");
 const menuOverlay = document.getElementById("menu-overlay");
 
 const MUSIC_FADE_DURATION = 1200;
-const MUSIC_TARGET_VOLUME = 1;
+const MUSIC_DEFAULT_TARGET_VOLUME = 1;
 let currentModalAudio = null;
 
 function cancelAudioFade(audio) {
@@ -94,28 +94,38 @@ function fadeOutCurrentMusic() {
   });
 }
 
-function playModalMusic(src) {
+function resolveMusicVolume(volume) {
+  if (typeof volume !== "number" || Number.isNaN(volume)) {
+    return MUSIC_DEFAULT_TARGET_VOLUME;
+  }
+  return Math.max(0, Math.min(1, volume));
+}
+
+function playModalMusic(src, targetVolume = MUSIC_DEFAULT_TARGET_VOLUME) {
   if (!src) {
     return;
   }
 
+  const resolvedVolume = resolveMusicVolume(targetVolume);
+
   if (currentModalAudio && currentModalAudio._managedSrc === src) {
+    currentModalAudio._targetVolume = resolvedVolume;
     if (currentModalAudio.paused) {
       try {
         currentModalAudio.currentTime = 0;
         const playPromise = currentModalAudio.play();
         if (playPromise && typeof playPromise.then === "function") {
           playPromise.then(() => {
-            fadeAudio(currentModalAudio, MUSIC_TARGET_VOLUME, MUSIC_FADE_DURATION);
+            fadeAudio(currentModalAudio, resolvedVolume, MUSIC_FADE_DURATION);
           });
         } else {
-          fadeAudio(currentModalAudio, MUSIC_TARGET_VOLUME, MUSIC_FADE_DURATION);
+          fadeAudio(currentModalAudio, resolvedVolume, MUSIC_FADE_DURATION);
         }
       } catch (error) {
         // Ignore playback errors triggered by browser policies.
       }
     } else {
-      fadeAudio(currentModalAudio, MUSIC_TARGET_VOLUME, MUSIC_FADE_DURATION);
+      fadeAudio(currentModalAudio, resolvedVolume, MUSIC_FADE_DURATION);
     }
     return;
   }
@@ -126,6 +136,7 @@ function playModalMusic(src) {
   newAudio.volume = 0;
   newAudio.preload = "auto";
   newAudio._managedSrc = src;
+  newAudio._targetVolume = resolvedVolume;
   currentModalAudio = newAudio;
 
   try {
@@ -133,13 +144,13 @@ function playModalMusic(src) {
     if (playPromise && typeof playPromise.then === "function") {
       playPromise
         .then(() => {
-          fadeAudio(newAudio, MUSIC_TARGET_VOLUME, MUSIC_FADE_DURATION);
+          fadeAudio(newAudio, resolvedVolume, MUSIC_FADE_DURATION);
         })
         .catch(() => {
           // Playback might fail due to browser restrictions; safely ignore.
         });
     } else {
-      fadeAudio(newAudio, MUSIC_TARGET_VOLUME, MUSIC_FADE_DURATION);
+      fadeAudio(newAudio, resolvedVolume, MUSIC_FADE_DURATION);
     }
   } catch (error) {
     // Ignore synchronous playback errors triggered by browser policies.
@@ -192,7 +203,12 @@ const modalSteps = [
     text: `あなたは、何色になりましたか？<br>どれが良いか悪いかではなく、
       <br>今どんな状態であるのかを<br>感じあえたらと思って<br>選んでもらいました！`,
     buttons: [
-      { type: "next", label: "なぜ感じあうなの？", music: "musics/feel.mp4" },
+      {
+        type: "next",
+        label: "なぜ感じあうなの？",
+        music: "musics/feel.mp4",
+        musicVolume: 0.5,
+      },
     ],
   },
   {
@@ -227,6 +243,7 @@ const modalSteps = [
     groupButtonLabel: "次へ",
     finalButtonLabel: "なぜ神経整体なの？",
     finalButtonMusic: "musics/nerve.mp4",
+    finalButtonMusicVolume: 0.5,
   },
   {
     typewriterGroups: [
@@ -440,10 +457,10 @@ function renderTypewriterStep(step, stepIndex) {
       modalActions.innerHTML = "";
       if (isLastGroup) {
         if (step.finalButtonMusic) {
-          playModalMusic(step.finalButtonMusic);
+          playModalMusic(step.finalButtonMusic, step.finalButtonMusicVolume);
         }
       } else if (step.groupButtonMusic) {
-        playModalMusic(step.groupButtonMusic);
+        playModalMusic(step.groupButtonMusic, step.groupButtonMusicVolume);
       }
       if (isLastGroup) {
         clearTypewriterState(stepIndex);
@@ -611,7 +628,7 @@ function renderModalStep(options = {}) {
           nextButton.addEventListener("click", () => {
             appendUserResponse(buttonConfig.label || "次へ");
             if (buttonConfig.music) {
-              playModalMusic(buttonConfig.music);
+              playModalMusic(buttonConfig.music, buttonConfig.musicVolume);
             }
             currentModalStep = Math.min(currentModalStep + 1, modalSteps.length - 1);
             renderModalStep({ delay: 500 });
@@ -641,7 +658,7 @@ function renderModalStep(options = {}) {
       nextButton.addEventListener("click", () => {
         appendUserResponse(buttonConfig.label || "次へ");
         if (buttonConfig.music) {
-          playModalMusic(buttonConfig.music);
+          playModalMusic(buttonConfig.music, buttonConfig.musicVolume);
         }
         currentModalStep = Math.min(currentModalStep + 1, modalSteps.length - 1);
         renderModalStep({ delay: 500 });
