@@ -507,35 +507,17 @@ body.modal-open {
     position: relative;
 }
 
-
-.typing-effect {
-    display: inline;
+.typing-chunk {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 1s ease, transform 1s ease;
     white-space: pre-wrap;
-    font-family: inherit;
     word-break: break-word;
-    position: relative;
 }
 
-.typing-effect::after {
-    content: "";
-    display: inline-block;
-    width: 2px;
-    height: 1em;
-    margin-left: 1px;
-    background-color: currentColor;
-    animation: typewriter-caret 0.8s step-end infinite;
-    vertical-align: bottom;
-}
-
-.typing-effect.typing-complete::after {
-    content: none;
-    animation: none;
-}
-
-@keyframes typewriter-caret {
-    50% {
-        border-color: transparent;
-    }
+.typing-chunk.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .modal-close-button {

@@ -280,7 +280,8 @@ const modalSteps = [
 
 let currentModalStep = 0;
 const typewriterStates = new Map();
-const TYPEWRITER_DEFAULT_SPEED = 45;
+const CHUNK_FADE_DURATION = 1000;
+const CHUNK_BUTTON_DELAY = 200;
 
 function appendMessage(content, type = "received", stepIndex = currentModalStep) {
   if (!modalText) return;
@@ -327,65 +328,6 @@ function resetTypewriterStates() {
   });
 }
 
-function createTypewriterTokens(text, includeLeadingBreak) {
-  const tokens = [];
-  if (includeLeadingBreak) {
-    tokens.push("<br>", "<br>");
-  }
-  const lines = String(text || "").split("\n");
-  lines.forEach((line, lineIndex) => {
-    for (const char of line) {
-      tokens.push(char);
-    }
-    if (lineIndex < lines.length - 1) {
-      tokens.push("<br>");
-    }
-  });
-  return tokens;
-}
-
-function typewriterAnimate(state, tokens, step, onComplete) {
-  if (!state || !state.container) {
-    return;
-  }
-  const container = state.container;
-  const speed =
-    typeof step.typewriterSpeed === "number" && step.typewriterSpeed > 0
-      ? step.typewriterSpeed
-      : TYPEWRITER_DEFAULT_SPEED;
-
-  clearTypewriterTimers(state);
-
-  let index = 0;
-
-  const typeNext = () => {
-    if (state.cancelled || !modalOverlay || modalOverlay.classList.contains("hidden")) {
-      return;
-    }
-    if (index >= tokens.length) {
-      if (typeof onComplete === "function") {
-        onComplete();
-      }
-      return;
-    }
-
-    const token = tokens[index];
-    if (token === "<br>") {
-      container.innerHTML += "<br>";
-    } else {
-      container.innerHTML += token;
-    }
-
-    modalText.scrollTop = modalText.scrollHeight;
-    index += 1;
-
-    const timerId = setTimeout(typeNext, speed);
-    state.timers.push(timerId);
-  };
-
-  typeNext();
-}
-
 function renderTypewriterStep(step, stepIndex) {
   if (!modalText || !modalActions) {
     return;
@@ -413,6 +355,8 @@ function renderTypewriterStep(step, stepIndex) {
   }
 
   modalActions.innerHTML = "";
+  clearTypewriterTimers(state);
+
   const message = document.createElement("div");
   message.className = "chat-message received";
   message.dataset.step = `${stepIndex}-received-${modalText.children.length}`;
@@ -421,32 +365,66 @@ function renderTypewriterStep(step, stepIndex) {
   bubble.className = "chat-bubble typing-bubble";
 
   const container = document.createElement("div");
-  container.className = "typing-effect";
-  bubble.appendChild(container);
+  container.className = "typing-chunk";
+  const groupText =
+    typeof groups[state.groupIndex] === "string" ? groups[state.groupIndex] : "";
+  container.textContent = groupText;
 
+  bubble.appendChild(container);
   message.appendChild(bubble);
   modalText.appendChild(message);
-  modalText.scrollTop = modalText.scrollHeight;
 
-  clearTypewriterTimers(state);
   state.container = container;
   state.cancelled = false;
   state.isTyping = true;
-  container.classList.remove("typing-complete");
 
-  const tokens = createTypewriterTokens(groups[state.groupIndex], false);
+  const ensureMessageVisible = () => {
+    if (!modalText || !message) {
+      return;
+    }
+    if (typeof message.scrollIntoView === "function") {
+      try {
+        message.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (error) {
+        message.scrollIntoView();
+      }
+    } else if (typeof message.offsetTop === "number") {
+      modalText.scrollTop = message.offsetTop;
+    }
+    if (typeof message.offsetTop === "number") {
+      modalText.scrollTop = message.offsetTop;
+    }
+  };
 
-  typewriterAnimate(state, tokens, step, () => {
+  ensureMessageVisible();
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      container.classList.add("visible");
+    });
+  });
+
+  const registerTimer = (callback, delay) => {
+    const timerId = setTimeout(() => {
+      state.timers = state.timers.filter((id) => id !== timerId);
+      callback();
+    }, delay);
+    state.timers.push(timerId);
+  };
+
+  registerTimer(() => {
     if (state.cancelled) {
       return;
     }
-    state.isTyping = false;
+
+    ensureMessageVisible();
+
     const isLastGroup = state.groupIndex === groups.length - 1;
     const label = isLastGroup
       ? step.finalButtonLabel || "次へ"
       : step.groupButtonLabel || "次へ";
 
-    container.classList.add("typing-complete");
+    state.isTyping = false;
 
     const nextButton = document.createElement("button");
     nextButton.type = "button";
@@ -473,7 +451,7 @@ function renderTypewriterStep(step, stepIndex) {
     });
 
     modalActions.appendChild(nextButton);
-  });
+  }, CHUNK_FADE_DURATION + CHUNK_BUTTON_DELAY);
 }
 
 function renderModalStep(options = {}) {
