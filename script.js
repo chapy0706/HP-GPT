@@ -282,8 +282,14 @@ let currentModalStep = 0;
 const typewriterStates = new Map();
 const CHUNK_FADE_DURATION = 1000;
 const CHUNK_BUTTON_DELAY = 200;
+const AUTO_REVEAL_NEXT_BUTTON_DELAY = 5000;
 
-function appendMessage(content, type = "received", stepIndex = currentModalStep) {
+function appendMessage(
+  content,
+  type = "received",
+  stepIndex = currentModalStep,
+  options = {}
+) {
   if (!modalText) return;
   const message = document.createElement("div");
   message.className = `chat-message ${type}`;
@@ -295,12 +301,14 @@ function appendMessage(content, type = "received", stepIndex = currentModalStep)
 
   message.appendChild(bubble);
   modalText.appendChild(message);
-  modalText.scrollTop = modalText.scrollHeight;
+  if (options.autoScroll !== false) {
+    modalText.scrollTop = modalText.scrollHeight;
+  }
 }
 
 function appendUserResponse(label) {
   if (!label) return;
-  appendMessage(label, "sent");
+  appendMessage(label, "sent", currentModalStep, { autoScroll: false });
 }
 
 function clearTypewriterTimers(state) {
@@ -420,6 +428,7 @@ function renderTypewriterStep(step, stepIndex) {
       callback();
     }, delay);
     state.timers.push(timerId);
+    return timerId;
   };
 
   registerTimer(() => {
@@ -464,6 +473,22 @@ function renderTypewriterStep(step, stepIndex) {
       }
     });
 
+    modalActions.appendChild(nextButton);
+
+    if (!isMobileDevice()) {
+      nextButton.style.display = "";
+      ensureMessageVisible();
+      return;
+    }
+
+    const revealButton = () => {
+      if (nextButton.style.display === "") {
+        return;
+      }
+      nextButton.style.display = "";
+      cleanupScrollListeners();
+    };
+
     const revealButtonIfNeeded = () => {
       if (!modalText || !message || !message.isConnected) {
         return false;
@@ -472,38 +497,29 @@ function renderTypewriterStep(step, stepIndex) {
       const scrollBottom = modalText.scrollTop + modalText.clientHeight;
       const messageBottom = message.offsetTop + message.offsetHeight;
       if (scrollBottom + threshold >= messageBottom) {
-        nextButton.style.display = "";
-        if (typeof state.scrollCleanup === "function") {
-          state.scrollCleanup();
-          state.scrollCleanup = null;
-        }
+        revealButton();
         return true;
       }
       return false;
     };
 
     const handleScroll = () => {
-      if (revealButtonIfNeeded()) {
-        if (modalText) {
-          modalText.removeEventListener("scroll", handleScroll);
-          modalText.removeEventListener("touchmove", handleScroll);
-        }
-      }
+      revealButtonIfNeeded();
     };
 
-    const cleanupScrollListeners = () => {
+    function cleanupScrollListeners() {
       if (!modalText) {
+        state.scrollCleanup = null;
         return;
       }
       modalText.removeEventListener("scroll", handleScroll);
       modalText.removeEventListener("touchmove", handleScroll);
       state.scrollCleanup = null;
-    };
+    }
 
     state.scrollCleanup = cleanupScrollListeners;
 
     nextButton.style.display = "none";
-    modalActions.appendChild(nextButton);
 
     if (modalText) {
       modalText.addEventListener("scroll", handleScroll, { passive: true });
@@ -517,6 +533,12 @@ function renderTypewriterStep(step, stepIndex) {
         }
       });
     });
+
+    registerTimer(() => {
+      if (nextButton.style.display === "none") {
+        revealButton();
+      }
+    }, AUTO_REVEAL_NEXT_BUTTON_DELAY);
   }, CHUNK_FADE_DURATION + CHUNK_BUTTON_DELAY);
 }
 
