@@ -564,6 +564,12 @@ body.modal-open {
     box-shadow: 0 10px 24px rgba(6, 199, 85, 0.45);
 }
 
+.found-u-logo {
+    width: min(220px, 60vw);
+    height: auto;
+    border-radius: 8px;
+}
+
 .line-followup-bubble {
     display: flex;
     flex-direction: column;
