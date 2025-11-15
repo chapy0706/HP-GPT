@@ -182,6 +182,27 @@ const startButton = document.getElementById("start-journey-button");
 const modalOverlay = document.getElementById("journey-modal");
 const modalText = document.getElementById("modal-text");
 const modalActions = document.getElementById("modal-actions");
+
+function scrollMessageIntoView(message, { behavior = "auto" } = {}) {
+  if (!modalText || !message) {
+    return;
+  }
+
+  const alignToTop = () => {
+    if (typeof message.scrollIntoView === "function") {
+      try {
+        message.scrollIntoView({ behavior, block: "start", inline: "nearest" });
+      } catch (error) {
+        message.scrollIntoView();
+      }
+    }
+    if (typeof message.offsetTop === "number") {
+      modalText.scrollTop = message.offsetTop;
+    }
+  };
+
+  alignToTop();
+}
 const journeyCloseButton = document.getElementById("journey-close-button");
 const pricingSection = document.getElementById("pricing");
 const displayedSteps = new Set();
@@ -302,7 +323,7 @@ function appendMessage(
   message.appendChild(bubble);
   modalText.appendChild(message);
   if (options.autoScroll !== false) {
-    modalText.scrollTop = modalText.scrollHeight;
+    scrollMessageIntoView(message, { behavior: options.scrollBehavior || "auto" });
   }
 }
 
@@ -396,21 +417,7 @@ function renderTypewriterStep(step, stepIndex) {
   state.isTyping = true;
 
   const ensureMessageVisible = () => {
-    if (!modalText || !message) {
-      return;
-    }
-    if (typeof message.scrollIntoView === "function") {
-      try {
-        message.scrollIntoView({ behavior: "smooth", block: "start" });
-      } catch (error) {
-        message.scrollIntoView();
-      }
-    } else if (typeof message.offsetTop === "number") {
-      modalText.scrollTop = message.offsetTop;
-    }
-    if (typeof message.offsetTop === "number") {
-      modalText.scrollTop = message.offsetTop;
-    }
+    scrollMessageIntoView(message, { behavior: "smooth" });
   };
 
   ensureMessageVisible();
@@ -581,7 +588,7 @@ function renderModalStep(options = {}) {
       bubble.className = "chat-bubble";
       message.appendChild(bubble);
       modalText.appendChild(message);
-      modalText.scrollTop = modalText.scrollHeight;
+      scrollMessageIntoView(message);
 
       const baseDelay = typeof delay === "number" && delay > 0 ? delay : 0;
       const stagger =
@@ -599,7 +606,7 @@ function renderModalStep(options = {}) {
             bubble.innerHTML += "<br><br>";
           }
           bubble.innerHTML += chunk;
-          modalText.scrollTop = modalText.scrollHeight;
+          scrollMessageIntoView(message);
         };
 
         const chunkDelay = baseDelay + chunkIndex * stagger;
@@ -709,7 +716,7 @@ function renderModalStep(options = {}) {
 
       message.appendChild(bubble);
       modalText.appendChild(message);
-      modalText.scrollTop = modalText.scrollHeight;
+      scrollMessageIntoView(message);
     }
 
     return;
@@ -830,7 +837,7 @@ function showLineFollowUp(href) {
 
     message.appendChild(bubble);
     modalText.appendChild(message);
-    modalText.scrollTop = modalText.scrollHeight;
+    scrollMessageIntoView(message);
   }, lineFollowUpDelay);
 }
 
