@@ -189,15 +189,29 @@ function scrollMessageIntoView(message, { behavior = "auto" } = {}) {
   }
 
   const alignToTop = () => {
-    if (typeof message.scrollIntoView === "function") {
-      try {
-        message.scrollIntoView({ behavior, block: "start", inline: "nearest" });
-      } catch (error) {
-        message.scrollIntoView();
-      }
+    if (typeof message.offsetTop !== "number") {
+      return;
     }
-    if (typeof message.offsetTop === "number") {
-      modalText.scrollTop = message.offsetTop;
+
+    let paddingTop = 0;
+    try {
+      if (typeof window !== "undefined" && typeof window.getComputedStyle === "function") {
+        const styles = window.getComputedStyle(modalText);
+        paddingTop = parseFloat(styles.paddingTop) || 0;
+      }
+    } catch (error) {
+      paddingTop = 0;
+    }
+
+    const targetTop = Math.max(0, message.offsetTop - paddingTop);
+
+    if (
+      typeof modalText.scrollTo === "function" &&
+      (behavior === "smooth" || behavior === "auto")
+    ) {
+      modalText.scrollTo({ top: targetTop, behavior });
+    } else {
+      modalText.scrollTop = targetTop;
     }
   };
 
