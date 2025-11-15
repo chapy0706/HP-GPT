@@ -188,34 +188,48 @@ function scrollMessageIntoView(message, { behavior = "auto" } = {}) {
     return;
   }
 
-  const alignToTop = () => {
-    if (typeof message.offsetTop !== "number") {
-      return;
+  if (typeof message.offsetTop !== "number") {
+    return;
+  }
+
+  let paddingTop = 0;
+  let paddingBottom = 0;
+
+  try {
+    if (typeof window !== "undefined" && typeof window.getComputedStyle === "function") {
+      const styles = window.getComputedStyle(modalText);
+      paddingTop = parseFloat(styles.paddingTop) || 0;
+      paddingBottom = parseFloat(styles.paddingBottom) || 0;
     }
+  } catch (error) {
+    paddingTop = 0;
+    paddingBottom = 0;
+  }
 
-    let paddingTop = 0;
-    try {
-      if (typeof window !== "undefined" && typeof window.getComputedStyle === "function") {
-        const styles = window.getComputedStyle(modalText);
-        paddingTop = parseFloat(styles.paddingTop) || 0;
-      }
-    } catch (error) {
-      paddingTop = 0;
-    }
+  const visibleTop = modalText.scrollTop;
+  const visibleBottom = visibleTop + modalText.clientHeight;
+  const messageTop = message.offsetTop;
+  const messageBottom = messageTop + message.offsetHeight;
+  const desiredTop = Math.max(0, messageTop - paddingTop);
+  const maxScrollTop = Math.max(0, modalText.scrollHeight - modalText.clientHeight);
 
-    const targetTop = Math.max(0, message.offsetTop - paddingTop);
+  const shouldScrollUp = messageTop - paddingTop < visibleTop;
+  const shouldScrollDown = messageBottom + paddingBottom > visibleBottom;
 
-    if (
-      typeof modalText.scrollTo === "function" &&
-      (behavior === "smooth" || behavior === "auto")
-    ) {
-      modalText.scrollTo({ top: targetTop, behavior });
-    } else {
-      modalText.scrollTop = targetTop;
-    }
-  };
+  if (!shouldScrollUp && !shouldScrollDown) {
+    return;
+  }
 
-  alignToTop();
+  const targetTop = Math.min(desiredTop, maxScrollTop);
+
+  if (
+    typeof modalText.scrollTo === "function" &&
+    (behavior === "smooth" || behavior === "auto")
+  ) {
+    modalText.scrollTo({ top: targetTop, behavior });
+  } else {
+    modalText.scrollTop = targetTop;
+  }
 }
 const journeyCloseButton = document.getElementById("journey-close-button");
 const pricingSection = document.getElementById("pricing");
