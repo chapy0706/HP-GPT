@@ -1237,7 +1237,7 @@ function showTopPage() {
   header.classList.remove("hidden");
   hamburger.classList.remove("hidden");
   window.scrollTo(0, 0);
-  showSection("about");
+  showSection("top");
   detailStage = "done";
 }
 
