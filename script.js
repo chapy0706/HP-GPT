@@ -318,6 +318,9 @@ function clearTypewriterState(stepIndex) {
   }
   state.cancelled = true;
   clearTypewriterTimers(state);
+  if (typeof state.scrollCleanup === "function") {
+    state.scrollCleanup();
+  }
   typewriterStates.delete(stepIndex);
 }
 
@@ -340,6 +343,7 @@ function renderTypewriterStep(step, stepIndex) {
       timers: [],
       cancelled: false,
       isTyping: false,
+      scrollCleanup: null,
     };
     typewriterStates.set(stepIndex, state);
     displayedSteps.add(stepIndex);
@@ -347,6 +351,11 @@ function renderTypewriterStep(step, stepIndex) {
 
   if (state.isTyping) {
     return;
+  }
+
+  if (typeof state.scrollCleanup === "function") {
+    state.scrollCleanup();
+    state.scrollCleanup = null;
   }
 
   const groups = Array.isArray(step.typewriterGroups) ? step.typewriterGroups : [];
@@ -400,6 +409,7 @@ function renderTypewriterStep(step, stepIndex) {
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
+      ensureMessageVisible();
       container.classList.add("visible");
     });
   });
@@ -433,6 +443,10 @@ function renderTypewriterStep(step, stepIndex) {
     nextButton.addEventListener("click", () => {
       appendUserResponse(label);
       modalActions.innerHTML = "";
+      if (typeof state.scrollCleanup === "function") {
+        state.scrollCleanup();
+        state.scrollCleanup = null;
+      }
       if (isLastGroup) {
         if (step.finalButtonMusic) {
           playModalMusic(step.finalButtonMusic, step.finalButtonMusicVolume);
@@ -450,7 +464,59 @@ function renderTypewriterStep(step, stepIndex) {
       }
     });
 
+    const revealButtonIfNeeded = () => {
+      if (!modalText || !message || !message.isConnected) {
+        return false;
+      }
+      const threshold = 24;
+      const scrollBottom = modalText.scrollTop + modalText.clientHeight;
+      const messageBottom = message.offsetTop + message.offsetHeight;
+      if (scrollBottom + threshold >= messageBottom) {
+        nextButton.style.display = "";
+        if (typeof state.scrollCleanup === "function") {
+          state.scrollCleanup();
+          state.scrollCleanup = null;
+        }
+        return true;
+      }
+      return false;
+    };
+
+    const handleScroll = () => {
+      if (revealButtonIfNeeded()) {
+        if (modalText) {
+          modalText.removeEventListener("scroll", handleScroll);
+          modalText.removeEventListener("touchmove", handleScroll);
+        }
+      }
+    };
+
+    const cleanupScrollListeners = () => {
+      if (!modalText) {
+        return;
+      }
+      modalText.removeEventListener("scroll", handleScroll);
+      modalText.removeEventListener("touchmove", handleScroll);
+      state.scrollCleanup = null;
+    };
+
+    state.scrollCleanup = cleanupScrollListeners;
+
+    nextButton.style.display = "none";
     modalActions.appendChild(nextButton);
+
+    if (modalText) {
+      modalText.addEventListener("scroll", handleScroll, { passive: true });
+      modalText.addEventListener("touchmove", handleScroll, { passive: true });
+    }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!revealButtonIfNeeded()) {
+          ensureMessageVisible();
+        }
+      });
+    });
   }, CHUNK_FADE_DURATION + CHUNK_BUTTON_DELAY);
 }
 
