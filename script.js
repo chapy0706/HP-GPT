@@ -25,6 +25,49 @@ let introPlayed = false;
 const mainMenu = document.querySelector(".main-menu");
 const hamburger = document.querySelector(".hamburger");
 const menuOverlay = document.getElementById("menu-overlay");
+const mobileMenuMediaQuery = window.matchMedia("(max-width: 600px)");
+
+function syncMenuAccessibilityState() {
+  if (!mainMenu) {
+    return;
+  }
+  const isMobileViewport = mobileMenuMediaQuery.matches;
+  const isMenuOpen = mainMenu.classList.contains("open");
+  mainMenu.setAttribute("aria-hidden", isMobileViewport && !isMenuOpen ? "true" : "false");
+  if (hamburger) {
+    hamburger.setAttribute("aria-expanded", isMobileViewport && isMenuOpen ? "true" : "false");
+  }
+}
+
+function closeMobileMenu() {
+  if (!mainMenu || !menuOverlay) {
+    return;
+  }
+  mainMenu.classList.remove("open");
+  menuOverlay.classList.add("hidden");
+  syncMenuAccessibilityState();
+}
+
+const handleMobileMenuChange = () => {
+  if (!mainMenu) {
+    return;
+  }
+  if (!mobileMenuMediaQuery.matches) {
+    mainMenu.classList.remove("open");
+    if (menuOverlay) {
+      menuOverlay.classList.add("hidden");
+    }
+  }
+  syncMenuAccessibilityState();
+};
+
+if (typeof mobileMenuMediaQuery.addEventListener === "function") {
+  mobileMenuMediaQuery.addEventListener("change", handleMobileMenuChange);
+} else if (typeof mobileMenuMediaQuery.addListener === "function") {
+  mobileMenuMediaQuery.addListener(handleMobileMenuChange);
+}
+
+syncMenuAccessibilityState();
 
 const MUSIC_FADE_DURATION = 1200;
 const MUSIC_DEFAULT_TARGET_VOLUME = 1;
@@ -163,18 +206,21 @@ function playModalMusic(src, targetVolume = MUSIC_DEFAULT_TARGET_VOLUME) {
     });
   }
 }
-hamburger.addEventListener("click", () => {
-  const isOpen = mainMenu.classList.toggle("open");
-  if (isOpen) {
-    menuOverlay.classList.remove("hidden");
-  } else {
-    menuOverlay.classList.add("hidden");
-  }
-});
-menuOverlay.addEventListener("click", () => {
-  mainMenu.classList.remove("open");
-  menuOverlay.classList.add("hidden");
-});
+if (hamburger && mainMenu && menuOverlay) {
+  hamburger.addEventListener("click", () => {
+    const isOpen = mainMenu.classList.toggle("open");
+    if (isOpen) {
+      menuOverlay.classList.remove("hidden");
+    } else {
+      menuOverlay.classList.add("hidden");
+    }
+    syncMenuAccessibilityState();
+  });
+
+  menuOverlay.addEventListener("click", () => {
+    closeMobileMenu();
+  });
+}
 const mainContent = document.getElementById("main-content");
 const contentSections = document.querySelectorAll(".content-section");
 const subtext = document.querySelector(".subtext");
@@ -1332,11 +1378,12 @@ function showTopPage() {
   gallery.classList.add("hidden");
   body.style.backgroundColor = "";
   subtext.style.display = "none";
-  menuOverlay.classList.add("hidden");
+  closeMobileMenu();
   mainMenu.classList.remove("hidden");
   mainContent.classList.remove("hidden");
   header.classList.remove("hidden");
   hamburger.classList.remove("hidden");
+  syncMenuAccessibilityState();
   window.scrollTo(0, 0);
   showSection("top");
   detailStage = "done";
@@ -1346,8 +1393,7 @@ mainMenu.addEventListener("click", (e) => {
   const target = e.target;
   if (target.tagName !== "A") return;
   e.preventDefault();
-  mainMenu.classList.remove("open");
-  menuOverlay.classList.add("hidden");
+  closeMobileMenu();
   if (target.id === "choose-images") {
     window.location.href = "index.html";
     return;
