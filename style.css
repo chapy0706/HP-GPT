@@ -486,10 +486,12 @@ body.modal-open {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    align-items: center;
+    width: 100%;
 }
 
 .bubble-actions .chat-action-button {
-    width: 100%;
+    width: min(260px, 100%);
 }
 
 .chat-message.sent .chat-bubble {
