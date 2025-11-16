@@ -302,7 +302,7 @@ const modalSteps = [
         type: "next",
         label: "なぜ感じあうなの？",
         music: "musics/feel.mp4",
-        musicVolume: 0.5,
+        musicVolume: 0.05,
       },
     ],
   },
@@ -338,7 +338,7 @@ const modalSteps = [
     groupButtonLabel: "次へ",
     finalButtonLabel: "なぜ神経整体なの？",
     finalButtonMusic: "musics/nerve.mp4",
-    finalButtonMusicVolume: 0.5,
+    finalButtonMusicVolume: 0.05,
   },
   {
     typewriterGroups: [
