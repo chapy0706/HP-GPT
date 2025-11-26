@@ -697,13 +697,19 @@ body.modal-open {
 }
 
 #intro-overlay p {
-    opacity: 0;
     margin: 10px 0;
     color: #fff;
     font-size: 20px;
     font-weight: bold;
     position: relative;
     z-index: 1;
+}
+
+#intro-text1,
+#intro-text2,
+#click-tip,
+#skip-button {
+    opacity: 0;
 }
 
 #intro-banner {
