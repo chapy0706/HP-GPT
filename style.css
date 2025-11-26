@@ -720,6 +720,7 @@ body.modal-open {
     margin: 0;
     font-size: 18px;
     opacity: 1;
+    color: #fff;
 }
 
 #click-tip {
