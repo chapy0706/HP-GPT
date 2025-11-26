@@ -687,7 +687,7 @@ body.modal-open {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 100;
+    z-index: 1200;
 }
 
 @supports (height: 100dvh) {
@@ -702,6 +702,8 @@ body.modal-open {
     color: #fff;
     font-size: 20px;
     font-weight: bold;
+    position: relative;
+    z-index: 1;
 }
 
 #intro-banner {
@@ -714,6 +716,8 @@ body.modal-open {
     text-align: center;
     margin-bottom: 8px;
     opacity: 1;
+    position: relative;
+    z-index: 1;
 }
 
 .intro-banner-line {
