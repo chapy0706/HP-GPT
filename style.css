@@ -276,6 +276,7 @@ header {
 
 .primary-button,
 .modal-actions a {
+    width: 100%;             /* ← 横幅を完全統一 */
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -290,6 +291,7 @@ header {
     cursor: pointer;
     text-decoration: none;
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    box-sizing: border-box;  /* ← パディングでズレない */
     min-width: 180px;
 }
 
@@ -302,6 +304,7 @@ header {
 
 #start-journey-button {
     margin-top: 16px;
+    width: 180px;
 }
 
 .modal {
@@ -379,7 +382,7 @@ header {
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
-    gap: 12px;
+    gap: 8px;
 }
 
 .chat-input-area .primary-button,
