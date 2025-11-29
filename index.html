@@ -198,6 +198,10 @@
 
         <div id="journey-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-text" aria-hidden="true" tabindex="-1">
             <div class="modal-content chat-modal">
+                <script>
+                const bgm = document.getElementById('bgm');
+                bgm.volume = 0.05; // 0.0〜1.0（ここでは10%の音量で再生開始）
+                </script>
                 <div class="chat-header">
                     <div class="chat-header-avatar" aria-hidden="true">f</div>
                     <div class="chat-header-info">
