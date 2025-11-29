@@ -301,7 +301,7 @@ const modalSteps = [
       {
         type: "next",
         label: "なぜ感じあうなの？",
-        music: "musics/voice.mp4",
+        music: "musics/feel.mp4",
         musicVolume: 0.05,
       },
     ],
