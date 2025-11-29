@@ -1054,37 +1054,45 @@ body.modal-open {
   margin-bottom: 24px;
 }
 
+/* U の外枠自体も少し丸く、カードっぽく */
 .logo-u-grid {
   --rows: 10;
   --cols: 10;
   display: grid;
   grid-template-columns: repeat(var(--cols), minmax(20px, 1fr));
-  gap: 4px;
+  gap: 6px;
   max-width: 480px;
   aspect-ratio: 1 / 1;
+  padding: 12px;
+  border-radius: 24px;
+  background: #ffffff; /* 後述の「背景を揃える」にも関係 */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
+/* ロゴセルを丸く */
 .logo-cell {
   display: flex;
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  border-radius: 4px;
+  border-radius: 999px; /* 極端に大きくすると丸に近づく */
   overflow: hidden;
   cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease;
+  transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
 }
 
 .logo-cell img {
   max-width: 100%;
   max-height: 100%;
 }
-
+/* ホバー時の立体感 */
 .logo-cell:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+  background-color: #fdfdfd;
 }
 
+/* 空マスは影なし＆透明 */
 .logo-cell--empty {
   background: transparent;
   cursor: default;
@@ -1103,10 +1111,13 @@ body.modal-open {
   color: #777;
 }
 
+/* 詳細パネル全体を縦並びに */
 .logo-detail-content {
   display: flex;
+  flex-direction: column;   /* ← これを追加 */
+  align-items: center;       /* 中央揃え */
+  text-align: center;        /* テキストの中央寄せ */
   gap: 16px;
-  margin-top: 8px;
 }
 
 .logo-detail-content.is-hidden {
