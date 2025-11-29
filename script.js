@@ -293,85 +293,37 @@ const lineContactMessageHtml = [
   "常時受け付けておりますが、すぐに返信できない場合がございます。ご了承ください",
 ].join("<br>");
 
-const modalSteps = [
-  {
-    text: `あなたは、何色になりましたか？<br>どれが良いか悪いかではなく、
-      <br>今どんな状態であるのかを<br>感じあえたらと思って<br>選んでもらいました！`,
-    buttons: [
-      {
-        type: "next",
-        label: "なぜ感じあうなの？",
-        music: "musics/feel.mp4",
-        musicVolume: 0.05,
-      },
-    ],
-  },
-  {
-    typewriterGroups: [
-      `「痛みをとってあげたい」この想いで、整体師を続けてきた。
-でも、どれだけ一生懸命やっても改善できない人がいる。
-原因を見つけようとすればするほどうまくいかず、やればやるほど、自分がどんどん疲弊していった。
-そして、ついに、からだが動かなくなり、僕自身が「患者」になった。
+// LINE メッセージ用　JSON から読み込んだデータをここに入れる
+let modalSteps = [];
 
-何が悪かった？何々のせい？あれこれと頭で考えて、答えを外へ求める。
-なんとかしようって頭で考えて抗うほど、複雑になっていくばかり。
-僕は、ずっとトンネルの中にいた。
-1ヶ月、3ヶ月、半年、時は流れ、整体師を辞めようか考えていた。`,
-      `そんな無力な自分にうちのめされていた僕をみて、家族は、そっとしていてくれた。
-お客様からも、心配と励ましの声が届いた。
-みんな、本当は自身も、不安だったり、辛いはずなのに。
-ありがたい。ほんとうにありがたい。
-みんなが私の痛みを感じてくれていることを知って、うれしかった。
-助けてあげたいと思っていたみんなに、助けてもらっていたことを知って、気づかされた。`,
-      `それは、当たり前すぎて忘れていた、感謝の日々。
-そうだった。「からだの不調は何かしらのサイン」整体をはじめて、よく言っていた言葉。
-患者になって、自分も出来てなかったことを知った。
-改めて、からだに耳を傾けてみよう。
-「やりたくない、もうむり、休みたい」なんとなくわかっていたけど、無視していたね。
+// JSON 読み込み
+async function loadModalSteps() {
+  const res = await fetch("data/modal-steps.json");
+  if (!res.ok) {
+    throw new Error("modal-steps.json の読み込みに失敗しました");
+  }
+  const data = await res.json();
+  modalSteps = data;
+}
 
-やっとからだをこころで感じられた。
-この時、僕は、患者でなくなった。
-気づけばわたしのこころが動き出し、からだを動かすのではなく、からだが動きだした。
-この体験を活かしていこう。`,
-    ],
-    typewriterSpeed: 45,
-    groupButtonLabel: "次へ",
-    finalButtonLabel: "なぜ神経整体なの？",
-    finalButtonMusic: "musics/nerve.mp4",
-    finalButtonMusicVolume: 0.05,
-  },
-  {
-    typewriterGroups: [
-      `いままでしてきたことを、見直してるときに「神経整体」という施術に目が止まった。
-「これだ！」と、直観し、体験させてもらうことに。
+// 既存のモーダル初期化関数（名前は仮）
+// 今まで modalSteps を使っていたところを、そのまま使えるようにする
+function initModalFlow() {
+  // 例:
+  // setupModal(modalSteps);
+  // runModal(modalSteps);
+}
 
-「？？？」正直、理解できなかったが、からだが感じている。
-「やってみよう！」 最初は半信半疑だったが、変化を感じ、喜んでくれる、お客様。`,
-      `こちらもびっくりするような事も目の当たりにした。
-今までと正反対。押したり揉んだりこちらが狙うんじゃなくて、触れてるか、触れていないか分からないくらいでからだが勝手に動いて教えてくれる、
-お互い神経を感じあうことで相乗効果。こんな施術があったなんて。
+// ページ読み込み時に JSON 読込 → 初期化
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    await loadModalSteps();
+    initModalFlow();
+  } catch (e) {
+    console.error(e);
+  }
+});
 
-求めていたものはこれかもしれない。
-こちらがなんとかするんじゃなくて、一緒に元にもどしていく施術。
-
-神経整体と一緒に、さらなる可能性を広げていきたい。
-あなたは、いまどんな状態ですか？
-どうなりたいですか？
-一緒に、お手伝いできたら嬉しいです`,
-    ],
-    typewriterSpeed: 45,
-    groupButtonLabel: "次へ",
-    finalButtonLabel: "次へ",
-  },
-  {
-    text: "",
-    buttons: [
-      { type: "link", label: "LINEへ", href: "https://line.me/R/ti/p/@754ryuvm/", target: "_blank" },
-      { type: "pricing", label: "料金紹介ページへ" },
-    ],
-    showButtonsInBubble: true,
-  },
-];
 
 let currentModalStep = 0;
 const typewriterStates = new Map();
