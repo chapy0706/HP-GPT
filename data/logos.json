@@ -1,0 +1,23 @@
+[
+  {
+    "id": "logo01",
+    "name": "サンプルロゴ A",
+    "author": "にっくねーむA",
+    "description": "シンプルさと温かさをイメージしたロゴです。",
+    "imageSrc": "images/logo.JPG"
+  },
+  {
+    "id": "logo02",
+    "name": "サンプルロゴ B",
+    "author": "にっくねーむB",
+    "description": "力強さと前進するイメージを込めています。",
+    "imageSrc": "images/FOUND U.PNG"
+  },
+  {
+    "id": "logo03",
+    "name": "サンププログロ C",
+    "author": "にっくねーむC",
+    "description": "つながりとコミュニティをテーマにしています。",
+    "imageSrc": "images/logo.JPG"
+  }
+]

@@ -1439,3 +1439,123 @@ moreButton.addEventListener("click", (e) => {
     playTransitionAnimation();
   }
 });
+
+// ----------------------
+// ロゴ生成ロジック：設定値
+// ----------------------
+const GRID_ROWS = 10;
+const GRID_COLS = 10;
+
+// U の形にしたいマスの index（50 個前後にする）
+const U_ACTIVE_INDICES = [
+  // 左縦棒
+  0, 10, 20, 30, 40, 50, 60, 70,
+  // 右縦棒
+  9, 19, 29, 39, 49, 59, 69, 79,
+  // 下横棒
+  81, 82, 83, 84, 85, 86, 87, 88
+];
+
+const MAX_TILES = U_ACTIVE_INDICES.length;
+
+// ----------------------
+// JSON 読み込み
+// ----------------------
+async function loadLogos() {
+  const response = await fetch("data/logos.json");
+  if (!response.ok) {
+    console.error("JSON の読み込みに失敗しました");
+    return [];
+  }
+  return response.json();
+}
+
+// ----------------------
+// ロゴ選択ロジック
+// ----------------------
+function createLogoTileOrder(logos, maxTiles) {
+  const result = [];
+
+  if (logos.length >= maxTiles) {
+    // 50 個以上 → シャッフルしてランダム抽出
+    const shuffled = [...logos];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.slice(0, maxTiles);
+  }
+
+  // 50 個未満 → 繰り返し配置
+  let idx = 0;
+  while (result.length < maxTiles) {
+    result.push(logos[idx]);
+    idx = (idx + 1) % logos.length;
+  }
+
+  return result;
+}
+
+// ----------------------
+// U グリッド生成
+// ----------------------
+async function initGallery() {
+  const gridEl = document.getElementById("logo-u-grid");
+  if (!gridEl) return;
+
+  // JSON 読み込み
+  const logos = await loadLogos();
+
+  gridEl.style.setProperty("--rows", GRID_ROWS);
+  gridEl.style.setProperty("--cols", GRID_COLS);
+
+  const tileLogos = createLogoTileOrder(logos, MAX_TILES);
+  const indexToLogo = new Map();
+
+  U_ACTIVE_INDICES.forEach((cellIndex, i) => {
+    indexToLogo.set(cellIndex, tileLogos[i]);
+  });
+
+  // 全マス生成
+  const total = GRID_ROWS * GRID_COLS;
+  for (let i = 0; i < total; i++) {
+    const cell = document.createElement("div");
+
+    const logo = indexToLogo.get(i);
+    if (logo) {
+      cell.className = "logo-cell";
+      const img = document.createElement("img");
+      img.src = logo.imageSrc;
+      img.alt = logo.name;
+      cell.appendChild(img);
+
+      cell.addEventListener("click", () => showDetail(logo));
+    } else {
+      cell.className = "logo-cell logo-cell--empty";
+    }
+
+    gridEl.appendChild(cell);
+  }
+}
+
+// ----------------------
+// 詳細表示
+// ----------------------
+function showDetail(logo) {
+  const placeholder = document.querySelector(".logo-detail-placeholder");
+  const content = document.querySelector(".logo-detail-content");
+  const thumb = document.getElementById("detail-thumbnail");
+  const author = document.getElementById("detail-author");
+  const desc = document.getElementById("detail-description");
+
+  if (placeholder) placeholder.style.display = "none";
+
+  content.classList.remove("is-hidden");
+
+  thumb.src = logo.imageSrc;
+  thumb.alt = logo.name;
+  author.textContent = logo.author;
+  desc.textContent = logo.description;
+}
+
+document.addEventListener("DOMContentLoaded", initGallery);
