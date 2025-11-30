@@ -1106,6 +1106,9 @@ body.modal-open {
 .logo-detail-section {
   background: #fff;
   border-radius: 8px;
+  max-width: 480px;
+  /* 追加：横方向の中央寄せ */
+  margin: 0 auto;
   padding: 16px 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
