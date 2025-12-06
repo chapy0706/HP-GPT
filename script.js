@@ -1,13 +1,21 @@
+// ========================================================
+// 1. ギャラリー（3枚カード）の初期並び替え
+//    - .gallery 内の .image-container をランダム順に並べる
+// ========================================================
 const gallery = document.querySelector(".gallery");
 const orderings = [
   [0, 1, 2],
   [1, 2, 0],
   [2, 0, 1],
 ];
+
 const containers = Array.from(gallery.children);
 const randomOrder = orderings[Math.floor(Math.random() * orderings.length)];
 randomOrder.forEach((i) => gallery.appendChild(containers[i]));
 
+// ========================================================
+// 2. グローバルで使う DOM 要素の取得
+// ========================================================
 const images = document.querySelectorAll(".image-container");
 let cardsClickable = false;
 const details = document.querySelector(".details");
@@ -15,6 +23,8 @@ const descriptionDiv = document.querySelector(".description");
 const body = document.body;
 const header = document.querySelector("header");
 const moreButton = document.querySelector(".more-button");
+
+// イントロ用オーバーレイ要素
 const introOverlay = document.getElementById("intro-overlay");
 const introText1 = document.getElementById("intro-text1");
 const introText2 = document.getElementById("intro-text2");
@@ -22,11 +32,20 @@ const introCard = document.getElementById("intro-card");
 const clickTip = document.getElementById("click-tip");
 const skipButton = document.getElementById("skip-button");
 let introPlayed = false;
+
+// ナビゲーション（ハンバーガーメニュー関連）
 const mainMenu = document.querySelector(".main-menu");
 const hamburger = document.querySelector(".hamburger");
 const menuOverlay = document.getElementById("menu-overlay");
 const mobileMenuMediaQuery = window.matchMedia("(max-width: 600px)");
 
+// ========================================================
+// 3. モバイルメニュー（ハンバーガー） & アクセシビリティ
+// ========================================================
+
+/**
+ * メニューの open / close 状態に応じて aria 属性を同期する
+ */
 function syncMenuAccessibilityState() {
   if (!mainMenu) {
     return;
@@ -39,6 +58,9 @@ function syncMenuAccessibilityState() {
   }
 }
 
+/**
+ * モバイルメニューを閉じる
+ */
 function closeMobileMenu() {
   if (!mainMenu || !menuOverlay) {
     return;
@@ -48,11 +70,15 @@ function closeMobileMenu() {
   syncMenuAccessibilityState();
 }
 
+/**
+ * 画面幅が 600px をまたぐ時に、メニュー状態をリセットする
+ */
 const handleMobileMenuChange = () => {
   if (!mainMenu) {
     return;
   }
   if (!mobileMenuMediaQuery.matches) {
+    // PC 表示に戻ったらメニューを閉じておく
     mainMenu.classList.remove("open");
     if (menuOverlay) {
       menuOverlay.classList.add("hidden");
@@ -64,15 +90,23 @@ const handleMobileMenuChange = () => {
 if (typeof mobileMenuMediaQuery.addEventListener === "function") {
   mobileMenuMediaQuery.addEventListener("change", handleMobileMenuChange);
 } else if (typeof mobileMenuMediaQuery.addListener === "function") {
+  // 古いブラウザ向け
   mobileMenuMediaQuery.addListener(handleMobileMenuChange);
 }
 
+// 初期状態の aria を同期
 syncMenuAccessibilityState();
 
+// ========================================================
+// 4. モーダル内 BGM のフェード制御
+// ========================================================
 const MUSIC_FADE_DURATION = 1200;
 const MUSIC_DEFAULT_TARGET_VOLUME = 1;
 let currentModalAudio = null;
 
+/**
+ * 進行中の requestAnimationFrame ベースのフェードをキャンセルする
+ */
 function cancelAudioFade(audio) {
   if (!audio) {
     return;
@@ -83,6 +117,9 @@ function cancelAudioFade(audio) {
   }
 }
 
+/**
+ * BGM の音量を targetVolume まで duration(ms) かけて線形にフェードする
+ */
 function fadeAudio(audio, targetVolume, duration, onComplete) {
   if (!audio) {
     if (typeof onComplete === "function") {
@@ -125,6 +162,9 @@ function fadeAudio(audio, targetVolume, duration, onComplete) {
   audio._fadeFrame = requestAnimationFrame(step);
 }
 
+/**
+ * 現在再生中のモーダル BGM をフェードアウトして停止
+ */
 function fadeOutCurrentMusic() {
   if (!currentModalAudio) {
     return;
@@ -137,6 +177,9 @@ function fadeOutCurrentMusic() {
   });
 }
 
+/**
+ * volume が Number でない場合の安全な補正
+ */
 function resolveMusicVolume(volume) {
   if (typeof volume !== "number" || Number.isNaN(volume)) {
     return MUSIC_DEFAULT_TARGET_VOLUME;
@@ -144,6 +187,11 @@ function resolveMusicVolume(volume) {
   return Math.max(0, Math.min(1, volume));
 }
 
+/**
+ * モーダル用 BGM を指定ソースで再生
+ * - 同じ src を繰り返し指定した場合はフェードのみ調整
+ * - 前の音はフェードアウトさせてから止める
+ */
 function playModalMusic(src, targetVolume = MUSIC_DEFAULT_TARGET_VOLUME) {
   if (!src) {
     return;
@@ -151,6 +199,7 @@ function playModalMusic(src, targetVolume = MUSIC_DEFAULT_TARGET_VOLUME) {
 
   const resolvedVolume = resolveMusicVolume(targetVolume);
 
+  // 既に同じソースの BGM がある場合の再利用
   if (currentModalAudio && currentModalAudio._managedSrc === src) {
     currentModalAudio._targetVolume = resolvedVolume;
     if (currentModalAudio.paused) {
@@ -165,7 +214,7 @@ function playModalMusic(src, targetVolume = MUSIC_DEFAULT_TARGET_VOLUME) {
           fadeAudio(currentModalAudio, resolvedVolume, MUSIC_FADE_DURATION);
         }
       } catch (error) {
-        // Ignore playback errors triggered by browser policies.
+        // ブラウザの自動再生制限などは握りつぶす
       }
     } else {
       fadeAudio(currentModalAudio, resolvedVolume, MUSIC_FADE_DURATION);
@@ -173,6 +222,7 @@ function playModalMusic(src, targetVolume = MUSIC_DEFAULT_TARGET_VOLUME) {
     return;
   }
 
+  // 新しいオーディオを生成
   const previousAudio = currentModalAudio;
   const newAudio = new Audio(src);
   newAudio.loop = true;
@@ -190,15 +240,16 @@ function playModalMusic(src, targetVolume = MUSIC_DEFAULT_TARGET_VOLUME) {
           fadeAudio(newAudio, resolvedVolume, MUSIC_FADE_DURATION);
         })
         .catch(() => {
-          // Playback might fail due to browser restrictions; safely ignore.
+          // 自動再生制限などによるエラーは無視
         });
     } else {
       fadeAudio(newAudio, resolvedVolume, MUSIC_FADE_DURATION);
     }
   } catch (error) {
-    // Ignore synchronous playback errors triggered by browser policies.
+    // 同上
   }
 
+  // 以前の BGM はフェードアウトして停止
   if (previousAudio && previousAudio !== newAudio) {
     fadeAudio(previousAudio, 0, MUSIC_FADE_DURATION, () => {
       previousAudio.pause();
@@ -206,6 +257,8 @@ function playModalMusic(src, targetVolume = MUSIC_DEFAULT_TARGET_VOLUME) {
     });
   }
 }
+
+// ハンバーガーメニューのクリック挙動
 if (hamburger && mainMenu && menuOverlay) {
   hamburger.addEventListener("click", () => {
     const isOpen = mainMenu.classList.toggle("open");
@@ -221,6 +274,10 @@ if (hamburger && mainMenu && menuOverlay) {
     closeMobileMenu();
   });
 }
+
+// ========================================================
+// 5. メインコンテンツ & チャットモーダル関連
+// ========================================================
 const mainContent = document.getElementById("main-content");
 const contentSections = document.querySelectorAll(".content-section");
 const subtext = document.querySelector(".subtext");
@@ -228,13 +285,19 @@ const startButton = document.getElementById("start-journey-button");
 const modalOverlay = document.getElementById("journey-modal");
 const modalText = document.getElementById("modal-text");
 const modalActions = document.getElementById("modal-actions");
+
 /** 最後に送信したメッセージ（自分側の吹き出し） */
 let anchorMessage = null;
-/** JS が今まさにスクロール中かどうかのフラグ */
+/** JS が今まさにスクロール中かどうかのフラグ（ユーザー操作との判別用） */
 let isProgrammaticScroll = false;
 /** 「ユーザーがまだ画面をいじっていない間だけ」アンカー固定を効かせるフラグ */
 let anchorLockEnabled = true;
 
+/**
+ * 指定メッセージを chat-body 内で見える位置にスクロールする
+ * - 自動スクロール時にアンカー（最後の送信メッセージ）が
+ *   ヘッダーの下から消えないようにスクロール量を制限する
+ */
 function scrollMessageIntoView(message, { behavior = "auto" } = {}) {
   if (!modalText || !message) {
     return;
@@ -269,6 +332,7 @@ function scrollMessageIntoView(message, { behavior = "auto" } = {}) {
   const shouldScrollUp = messageTop - paddingTop < visibleTop;
   const shouldScrollDown = messageBottom + paddingBottom > visibleBottom;
 
+  // すでに視界に入っているなら何もしない
   if (!shouldScrollUp && !shouldScrollDown) {
     return;
   }
@@ -276,7 +340,7 @@ function scrollMessageIntoView(message, { behavior = "auto" } = {}) {
   let targetTop = Math.min(desiredTop, maxScrollTop);
 
   // ============================
-  // ここから「アンカー固定」処理
+  // アンカー（自分の送信メッセージ）をヘッダー下に残すための制限
   // ============================
   if (anchorLockEnabled && anchorMessage && anchorMessage.isConnected) {
     const anchorTop = anchorMessage.offsetTop;
@@ -284,15 +348,15 @@ function scrollMessageIntoView(message, { behavior = "auto" } = {}) {
     // アンカーがヘッダー（paddingTop）より上に行かないようにする
     const maxScrollToKeepAnchorVisible = Math.max(0, anchorTop - paddingTop);
 
-    // 自動スクロールの目標値がこの制限を超えないように clamp
+    // 目標スクロール位置を制限
     targetTop = Math.min(targetTop, maxScrollToKeepAnchorVisible);
   }
 
-  // JS によるスクロール中フラグを立てる
+  // JS によるスクロール中フラグを立てる（ユーザー操作との区別）
   isProgrammaticScroll = true;
 
   const finishProgrammatic = () => {
-    // 少し遅らせてフラグを戻す（scroll イベント発火後）
+    // scroll イベント発火後にフラグを戻す
     setTimeout(() => {
       isProgrammaticScroll = false;
     }, 0);
@@ -310,6 +374,9 @@ function scrollMessageIntoView(message, { behavior = "auto" } = {}) {
   }
 }
 
+/**
+ * ユーザーが手でスクロールしたタイミングでアンカー固定を解除
+ */
 if (modalText) {
   modalText.addEventListener(
     "scroll",
@@ -322,12 +389,14 @@ if (modalText) {
     { passive: true },
   );
 }
+
 const journeyCloseButton = document.getElementById("journey-close-button");
 const pricingSection = document.getElementById("pricing");
 const displayedSteps = new Set();
 let lineInfoDisplayed = false;
 let hamburgerWasHidden = hamburger ? hamburger.classList.contains("hidden") : true;
 
+// LINE 追いメッセージ表示用
 const lineFollowUpDelay = 500;
 const lineContactMessageHtml = [
   "電話•LINEで受け付けておりますので、利用しやすいほうをお選びになり、お悩みや質問などお気軽にご相談下さい",
@@ -338,10 +407,12 @@ const lineContactMessageHtml = [
   "常時受け付けておりますが、すぐに返信できない場合がございます。ご了承ください",
 ].join("<br>");
 
-// LINE メッセージ用　JSON から読み込んだデータをここに入れる
+// LINE 風メッセージシナリオ（JSON）をここに読み込む
 let modalSteps = [];
 
-// JSON 読み込み
+/**
+ * data/modal-steps.json を読み込み、modalSteps に格納
+ */
 async function loadModalSteps() {
   const res = await fetch("data/modal-steps.json");
   if (!res.ok) {
@@ -351,8 +422,9 @@ async function loadModalSteps() {
   modalSteps = data;
 }
 
-// 既存のモーダル初期化関数（名前は仮）
-// 今まで modalSteps を使っていたところを、そのまま使えるようにする
+/**
+ * 将来、モーダルフローの初期化処理をここで行う想定のプレースホルダ
+ */
 function initModalFlow() {
   // 例:
   // setupModal(modalSteps);
@@ -369,18 +441,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-
+// ----------------------
+// チャットステップ管理用のステート
+// ----------------------
 let currentModalStep = 0;
 const typewriterStates = new Map();
 const CHUNK_FADE_DURATION = 1000;
 const CHUNK_BUTTON_DELAY = 200;
 const AUTO_REVEAL_NEXT_BUTTON_DELAY = 5000;
 
+/**
+ * チャットメッセージ（送受信バブル）を生成して追加する
+ * - type: "received" | "sent"
+ * - options.autoScroll を false にするとスクロールしない
+ */
 function appendMessage(
   content,
   type = "received",
   stepIndex = currentModalStep,
-  options = {}
+  options = {},
 ) {
   if (!modalText) return null;
 
@@ -402,11 +481,13 @@ function appendMessage(
   return message;
 }
 
+/**
+ * ユーザー側の発話（ボタンラベル）をバブルとして追加し、
+ * そのメッセージをアンカーとして覚えておく
+ */
 function appendUserResponse(label) {
   if (!label) return;
-  // 自分の送信メッセージを追加
   const message = appendMessage(label, "sent", currentModalStep, { autoScroll: false });
-  // このメッセージを「アンカー」として記憶
   anchorMessage = message;
   anchorLockEnabled = true; // 次の自動スクロールまではロック有効
 }
@@ -432,6 +513,9 @@ function clearTypewriterState(stepIndex) {
   typewriterStates.delete(stepIndex);
 }
 
+/**
+ * 全ステップのタイピング状態をリセット
+ */
 function resetTypewriterStates() {
   const indices = Array.from(typewriterStates.keys());
   indices.forEach((stepIndex) => {
@@ -439,6 +523,10 @@ function resetTypewriterStates() {
   });
 }
 
+/**
+ * typewriterGroups（1ステップ内の複数グループのテキスト）を
+ * 1つずつ表示していく処理
+ */
 function renderTypewriterStep(step, stepIndex) {
   if (!modalText || !modalActions) {
     return;
@@ -501,6 +589,7 @@ function renderTypewriterStep(step, stepIndex) {
 
   ensureMessageVisible();
 
+  // CSS のトランジション発火のために 2 回 requestAnimationFrame
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       ensureMessageVisible();
@@ -517,6 +606,7 @@ function renderTypewriterStep(step, stepIndex) {
     return timerId;
   };
 
+  // 表示完了後、ボタンを表示するまでの処理
   registerTimer(() => {
     if (state.cancelled) {
       return;
@@ -561,12 +651,15 @@ function renderTypewriterStep(step, stepIndex) {
 
     modalActions.appendChild(nextButton);
 
+    // PC の場合はそのままボタン表示でよい
     if (!isMobileDevice()) {
       nextButton.style.display = "";
       ensureMessageVisible();
       return;
     }
 
+    // モバイルの場合：
+    // 「自分でスクロールして最後まで読んだらボタン表示」
     const revealButton = () => {
       if (nextButton.style.display === "") {
         return;
@@ -620,6 +713,7 @@ function renderTypewriterStep(step, stepIndex) {
       });
     });
 
+    // 自動でも 5秒後にはボタンを表示する逃げ道
     registerTimer(() => {
       if (nextButton.style.display === "none") {
         revealButton();
@@ -628,6 +722,9 @@ function renderTypewriterStep(step, stepIndex) {
   }, CHUNK_FADE_DURATION + CHUNK_BUTTON_DELAY);
 }
 
+/**
+ * 1ステップ分のメッセージ・ボタン表示を制御するメイン関数
+ */
 function renderModalStep(options = {}) {
   if (!modalOverlay || !modalText || !modalActions) return;
   const { delay = 0 } = options;
@@ -635,6 +732,7 @@ function renderModalStep(options = {}) {
   const stepIndex = currentModalStep;
   const isFirstRender = !displayedSteps.has(stepIndex);
 
+  // typewriterGroups 形式のステップ
   if (Array.isArray(step.typewriterGroups) && step.typewriterGroups.length > 0) {
     const showStep = () => {
       renderTypewriterStep(step, stepIndex);
@@ -653,11 +751,13 @@ function renderModalStep(options = {}) {
     return;
   }
 
+  // 初回だけメッセージ本体を描画
   if (isFirstRender) {
     displayedSteps.add(stepIndex);
 
     const hasChunks = Array.isArray(step.chunks) && step.chunks.length > 0;
 
+    // chunks による段階的表示
     if (hasChunks) {
       const message = document.createElement("div");
       message.className = "chat-message received";
@@ -696,6 +796,7 @@ function renderModalStep(options = {}) {
         }
       });
     } else {
+      // 普通のテキスト 1発表示
       const showMessage = () => {
         if (!modalOverlay || modalOverlay.classList.contains("hidden")) {
           displayedSteps.delete(stepIndex);
@@ -718,8 +819,10 @@ function renderModalStep(options = {}) {
     }
   }
 
+  // ボタンエリアの描画
   modalActions.innerHTML = "";
 
+  // バブルの中にボタンを入れるモード
   if (step.showButtonsInBubble) {
     if (isFirstRender) {
       const message = document.createElement("div");
@@ -741,6 +844,7 @@ function renderModalStep(options = {}) {
 
       step.buttons.forEach((buttonConfig) => {
         if (buttonConfig.type === "link") {
+          // LINE へのリンクボタン
           const linkButton = document.createElement("a");
           linkButton.className = "primary-button chat-action-button";
           linkButton.textContent = buttonConfig.label;
@@ -756,6 +860,7 @@ function renderModalStep(options = {}) {
           });
           actionsContainer.appendChild(linkButton);
         } else if (buttonConfig.type === "pricing") {
+          // 料金表セクションへ遷移
           const pricingButton = document.createElement("button");
           pricingButton.type = "button";
           pricingButton.className = "primary-button chat-action-button";
@@ -773,6 +878,7 @@ function renderModalStep(options = {}) {
           });
           actionsContainer.appendChild(pricingButton);
         } else if (buttonConfig.type === "next") {
+          // 次のステップへ
           const nextButton = document.createElement("button");
           nextButton.type = "button";
           nextButton.className = "primary-button chat-action-button";
@@ -801,6 +907,7 @@ function renderModalStep(options = {}) {
     return;
   }
 
+  // フッター側にボタンを並べる通常モード
   step.buttons.forEach((buttonConfig) => {
     if (buttonConfig.type === "next") {
       const nextButton = document.createElement("button");
@@ -852,6 +959,9 @@ function renderModalStep(options = {}) {
   });
 }
 
+/**
+ * チャットモーダルを開き、ステップ 0 から開始
+ */
 function openModal(stepIndex = 0) {
   if (!modalOverlay) return;
   currentModalStep = stepIndex;
@@ -869,23 +979,29 @@ function openModal(stepIndex = 0) {
     hamburger.classList.add("hidden");
   }
 
-  // Ensure the modal content is rendered after it becomes visible so the first message
-  // appears immediately when the "はじまり" button is clicked.
+  // 「はじまり」ボタンを押した瞬間にメッセージが見えるよう、
+  // 表示後のフレームでレンダリング開始
   requestAnimationFrame(() => {
     renderModalStep();
     modalOverlay.focus();
   });
 }
 
+/**
+ * シンプルなモバイル判定
+ */
 function isMobileDevice() {
   return (
     window.matchMedia("(max-width: 768px)").matches ||
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
+      navigator.userAgent,
     )
   );
 }
 
+/**
+ * LINE 友だち追加後の案内メッセージを、条件付きで 1 回だけ出す
+ */
 function showLineFollowUp(href) {
   if (lineInfoDisplayed) {
     return;
@@ -920,6 +1036,10 @@ function showLineFollowUp(href) {
   }, lineFollowUpDelay);
 }
 
+/**
+ * モーダルを閉じる
+ * - restoreFocus が true の場合、開始ボタンにフォーカスを戻す
+ */
 function closeModal(options = {}) {
   const { restoreFocus = true } = options;
   if (!modalOverlay || modalOverlay.classList.contains("hidden")) return;
@@ -936,6 +1056,7 @@ function closeModal(options = {}) {
   }
 }
 
+// モーダルのクローズボタン
 if (journeyCloseButton) {
   journeyCloseButton.addEventListener("click", () => {
     closeModal({ restoreFocus: false });
@@ -943,12 +1064,14 @@ if (journeyCloseButton) {
   });
 }
 
+// 「はじまり」ボタンでモーダルを開く
 if (startButton) {
   startButton.addEventListener("click", () => {
     openModal(0);
   });
 }
 
+// 背景クリック・Esc キーでモーダルを閉じる
 if (modalOverlay) {
   modalOverlay.addEventListener("click", (event) => {
     if (event.target === modalOverlay) {
@@ -962,6 +1085,13 @@ if (modalOverlay) {
   });
 }
 
+// ========================================================
+// 6. イントロオーバーレイ・カード演出関連
+// ========================================================
+
+/**
+ * イントロオーバーレイを viewport サイズに合わせる
+ */
 function adjustIntroOverlaySize() {
   introOverlay.style.height = `${window.innerHeight}px`;
   introOverlay.style.width = `${window.innerWidth}px`;
@@ -969,6 +1099,8 @@ function adjustIntroOverlaySize() {
 window.addEventListener("load", adjustIntroOverlaySize);
 window.addEventListener("resize", adjustIntroOverlaySize);
 adjustIntroOverlaySize();
+
+// カード演出で使う本文カラー/説明テキスト
 const additionalData = {
   "1image": {
     color: "rgb(102, 179, 255)",
@@ -984,6 +1116,10 @@ const additionalData = {
   },
 };
 
+/**
+ * カード画像を 30枚ほど一瞬ばらまく演出（古いバージョン）
+ * - playCardBurst のほうが現行
+ */
 function createBurstCards() {
   const container = document.createElement("div");
   container.id = "card-burst";
@@ -1015,12 +1151,15 @@ function createBurstCards() {
 
   document.body.appendChild(container);
 
-  // 表示後 1 秒で非表示（削除）
+  // 表示後 1秒でコンテナごと削除
   setTimeout(() => {
     container.remove();
   }, 1000);
 }
 
+/**
+ * 20枚のカードを画面のあちこちに散らしつつフェードアウトさせる演出
+ */
 function playCardBurst(onComplete) {
   // メインの3枚のカードをバーストカードと同時に表示する
   gallery.style.visibility = "visible";
@@ -1090,6 +1229,9 @@ function playCardBurst(onComplete) {
   });
 }
 
+/**
+ * 雑に散らばっている .burst-card 達をさらに飛び散らせる演出
+ */
 function scatterCards() {
   const cards = document.querySelectorAll(".burst-card");
 
@@ -1105,6 +1247,9 @@ function scatterCards() {
   });
 }
 
+/**
+ * 3枚のカードを、裏面でランダムな位置にばらまいておく
+ */
 function prepareCards() {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
@@ -1121,6 +1266,9 @@ function prepareCards() {
   });
 }
 
+/**
+ * カードをクルッと表に返すアニメーション
+ */
 function flipCardsToFront() {
   images.forEach((card, index) => {
     const img = card.querySelector("img");
@@ -1144,6 +1292,9 @@ function flipCardsToFront() {
   });
 }
 
+/**
+ * カード 3枚を中央に寄せて整列させる
+ */
 function animateCards() {
   gallery.classList.add("centered");
   gsap.to(images, {
@@ -1159,6 +1310,9 @@ function animateCards() {
   });
 }
 
+/**
+ * 白いオーバーレイを一瞬挟むトランジション
+ */
 function showWhiteOverlay() {
   const overlay = document.getElementById("white-overlay");
 
@@ -1183,6 +1337,10 @@ function showWhiteOverlay() {
   });
 }
 
+/**
+ * RGB の円を動かしながら画面遷移する演出
+ * - 最後に showTopPage() を呼んでトップに戻す
+ */
 function playTransitionAnimation() {
   return new Promise((resolve) => {
     const overlay = document.createElement("div");
@@ -1215,17 +1373,26 @@ function playTransitionAnimation() {
 
     tl.to(overlay, { backgroundColor: "#808080", duration: 1 }, 0);
     tl.to(circles, { opacity: 1, duration: 1 }, 0);
-    tl.to(circles, { top: "50%", left: "50%", duration: 1 }, ">" );
-    tl.to(overlay, { backgroundColor: "#ffffff", duration: 1 }, ">" );
+    tl.to(circles, { top: "50%", left: "50%", duration: 1 }, ">");
+    tl.to(overlay, { backgroundColor: "#ffffff", duration: 1 }, ">");
     tl.to(circles, { opacity: 0, duration: 1 }, "<");
     tl.add(() => {
       showTopPage();
     });
-    tl.to(overlay, { opacity: 0, duration: 0.5 }, ">" );
+    tl.to(overlay, { opacity: 0, duration: 0.5 }, ">");
   });
 }
 
-// Intro sequence with skip-on-click functionality
+// ========================================================
+// 7. イントロシーケンス（テキスト → カード）
+// ========================================================
+
+/**
+ * イントロ演出の各ステップ定義
+ * - start: 開始時の処理
+ * - finish: スキップ時に強制完了させる処理
+ * - delay: 次のステップまでの時間(ms)
+ */
 const introSequence = [
   {
     start: () => introText1.classList.add("show-text"),
@@ -1270,6 +1437,9 @@ const introSequence = [
 let introStep = 0;
 let introTimer = null;
 
+/**
+ * introSequence[introStep] を実行し、一定時間後に次へ進む
+ */
 function playIntroStep() {
   if (introStep >= introSequence.length) return;
   const step = introSequence[introStep];
@@ -1280,10 +1450,12 @@ function playIntroStep() {
   }, step.delay);
 }
 
+// DOM 準備完了後にイントロを開始
 window.addEventListener("DOMContentLoaded", () => {
   introTimer = setTimeout(playIntroStep, 100);
 });
 
+// イントロオーバーレイをクリックすると、次のステップにスキップ
 introOverlay.addEventListener("click", (e) => {
   if (e.target === introCard || introStep >= introSequence.length) return;
   clearTimeout(introTimer);
@@ -1293,6 +1465,7 @@ introOverlay.addEventListener("click", (e) => {
   playIntroStep();
 });
 
+// 「スキップ」クリックでイントロを完全に飛ばしてトップへ
 skipButton.addEventListener("click", (e) => {
   e.stopPropagation();
   clearTimeout(introTimer);
@@ -1301,35 +1474,38 @@ skipButton.addEventListener("click", (e) => {
   showTopPage();
 });
 
+// 中央のカードをクリックしたときのメイン演出開始
 introCard.addEventListener("click", () => {
   if (introPlayed) return;
   introPlayed = true;
   introCard.style.pointerEvents = "none";
 
-  // Hide intro elements to prevent them from showing through the transition
+  // イントロ要素を消してからトランジションに入る
   introOverlay.remove();
   header.style.visibility = "hidden";
   gallery.style.visibility = "hidden";
 
   prepareCards(); // 3枚のカードなど初期セット
-  createBurstCards(); // ← ここで30枚を生成
+  createBurstCards(); // 一瞬だけ 30枚生成
 
   Promise.all([scatterCards(), showWhiteOverlay()]).then(() => {
     playCardBurst(() => {
-      // ← この段階で30枚を消す
+      // カードバースト終了後に 3枚を整列 → 表にめくる
       header.style.visibility = "visible";
-      animateCards(); // ← 3枚を整列
-      setTimeout(flipCardsToFront, 2000); // ← 表にめくる
+      animateCards();
+      setTimeout(flipCardsToFront, 2000);
     });
   });
 });
 
-// Change button text on mobile
+// モバイル時は「もっと見る」ボタンのラベルを短く
 if (window.matchMedia("(max-width: 600px)").matches) {
   moreButton.textContent = "詳細へ";
 }
+
 let currentImg = null;
 
+// 3枚カードのクリックで詳細表示へ
 images.forEach((img) => {
   img.addEventListener("click", () => {
     if (!cardsClickable || currentImg) return;
@@ -1366,7 +1542,13 @@ images.forEach((img) => {
   });
 });
 
+// ========================================================
+// 8. セクション切り替え・トップページ制御
+// ========================================================
 
+/**
+ * id を指定して該当セクションだけ表示する
+ */
 function showSection(id) {
   contentSections.forEach((sec) => {
     if (sec.id === id) {
@@ -1377,6 +1559,9 @@ function showSection(id) {
   });
 }
 
+/**
+ * 詳細表示やチャットから TOP セクションに戻る
+ */
 function showTopPage() {
   details.classList.add("hidden");
   if (currentImg) currentImg.classList.add("hidden");
@@ -1394,12 +1579,14 @@ function showTopPage() {
   detailStage = "done";
 }
 
+// メインメニュークリックでページ内遷移 & モーダルクローズ
 mainMenu.addEventListener("click", (e) => {
   const target = e.target;
   if (target.tagName !== "A") return;
   e.preventDefault();
   closeMobileMenu();
   if (target.id === "choose-images") {
+    // 画像選択ページへ
     window.location.href = "index.html";
     return;
   }
@@ -1410,9 +1597,11 @@ mainMenu.addEventListener("click", (e) => {
   }
 });
 
+// 「もっと見る」ボタンからのシナリオ進行
 let detailStage = "initial";
 moreButton.addEventListener("click", (e) => {
   if (detailStage === "initial") {
+    // 第一段階：カード説明 → 体の状態テキストへ遷移
     e.preventDefault();
     descriptionDiv.classList.add("fade-up-out");
     moreButton.classList.add("fade-up-out");
@@ -1439,11 +1628,16 @@ moreButton.addEventListener("click", (e) => {
       detailStage = "next";
     }, 2000);
   } else if (detailStage === "next") {
+    // 第二段階：「次へ」でページ遷移演出
     e.preventDefault();
     moreButton.style.pointerEvents = "none";
     playTransitionAnimation();
   }
 });
+
+// ========================================================
+// 9. ロゴグリッド（U ロゴ）の生成
+// ========================================================
 
 // ----------------------
 // ロゴ生成ロジック：設定値
@@ -1467,7 +1661,7 @@ const U_ACTIVE_INDICES = [
   61, 62, 63, 66, 67, 68,
   71, 72, 73, 74, 75, 76, 77, 78,
   82, 83, 84, 85, 86, 87,
-  93, 94, 95, 96
+  93, 94, 95, 96,
 ];
 
 const MAX_TILES = U_ACTIVE_INDICES.length;
@@ -1553,7 +1747,7 @@ async function initGallery() {
 }
 
 // ----------------------
-// 詳細表示
+// 詳細表示（ロゴをクリックした時）
 // ----------------------
 function showDetail(logo) {
   const placeholder = document.querySelector(".logo-detail-placeholder");
@@ -1572,4 +1766,5 @@ function showDetail(logo) {
   desc.textContent = logo.description;
 }
 
+// ロゴグリッド初期化
 document.addEventListener("DOMContentLoaded", initGallery);
