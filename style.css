@@ -19,6 +19,77 @@ header {
     position: relative;
 }
 
+/* ========== Mini shadcn-like 基本トークン & 汎用コンポーネント ========== */
+:root {
+  --u-radius-lg: 20px;
+  --u-radius-full: 999px;
+  --u-shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.18);
+  --u-shadow-soft-sm: 0 8px 20px rgba(15, 23, 42, 0.16);
+
+  --u-grad-green: linear-gradient(135deg, #16a34a, #22c55e);
+  --u-grad-blue: linear-gradient(135deg, #2563eb, #38bdf8);
+}
+
+/* カード（shadcn の Card 的なもの） */
+.u-card {
+  border-radius: var(--u-radius-lg);
+  background: #ffffff;
+  box-shadow: var(--u-shadow-soft);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+/* ガラス感カード */
+.u-card-glass {
+  border-radius: var(--u-radius-lg);
+  background: rgba(248, 250, 252, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--u-shadow-soft);
+}
+
+/* 汎用ボタン */
+.u-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--u-radius-full);
+  padding: 10px 18px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease,
+    opacity 0.18s ease;
+}
+
+/* 緑系プライマリボタン */
+.u-btn-primary {
+  background: var(--u-grad-green);
+  color: #ffffff;
+  box-shadow: var(--u-shadow-soft-sm);
+}
+
+.u-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(34, 197, 94, 0.35);
+}
+
+/* ゴーストボタン（枠だけ） */
+.u-btn-ghost {
+  background: transparent;
+  color: #0f172a;
+  border: 1px solid rgba(15, 23, 42, 0.18);
+}
+
+.u-btn-ghost:hover {
+  background: rgba(15, 23, 42, 0.03);
+}
+
 /* デスクトップ時とモバイル時の表示テキスト切り替え */
 .desktop-text {
     display: inline;
