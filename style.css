@@ -1177,6 +1177,47 @@ body.modal-open {
     }
 }
 
+/* =========================================
+   モバイル時の LINE 風チャットレイアウト調整
+   - journey-modal だけ「上からフル画面」にする
+   ========================================= */
+@media (max-width: 600px) {
+  /* モーダル全体を「中央」ではなく「上から」伸ばす */
+  #journey-modal.modal {
+    align-items: stretch;  /* ← ここが一番重要 */
+    justify-content: flex-start;
+    padding: env(safe-area-inset-top, 0px)
+             0
+             env(safe-area-inset-bottom, 0px);
+  }
+
+  /* チャット用カードを画面いっぱいにフィットさせる */
+  #journey-modal .modal-content.chat-modal {
+    height: 100dvh;        /* 画面の実表示領域の高さ */
+    max-height: 100dvh;
+    border-radius: 0;      /* アプリっぽくフルスクリーンにする */
+    padding: 0;            /* 余白は header / body / input に任せる */
+  }
+
+  /* ヘッダー部分はそのまま上に固定されて見える */
+  #journey-modal .chat-header {
+    border-radius: 0;
+  }
+
+  /* 本文は余った領域を全部使ってスクロール */
+  #journey-modal .chat-body {
+    flex: 1;
+    /* ここは前に入れた padding-top のままでOK
+       必要なら少し小さくするくらい */
+    overflow-y: auto;
+  }
+
+  /* 入力エリアは下部に固定されて見える（現状どおり） */
+  #journey-modal .chat-input-area {
+    flex-shrink: 0;
+  }
+}
+
 /* =========================================================
    U ロゴのグリッド表示
    ========================================================= */

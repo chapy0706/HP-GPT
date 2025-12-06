@@ -228,6 +228,12 @@ const startButton = document.getElementById("start-journey-button");
 const modalOverlay = document.getElementById("journey-modal");
 const modalText = document.getElementById("modal-text");
 const modalActions = document.getElementById("modal-actions");
+/** 最後に送信したメッセージ（自分側の吹き出し） */
+let anchorMessage = null;
+/** JS が今まさにスクロール中かどうかのフラグ */
+let isProgrammaticScroll = false;
+/** 「ユーザーがまだ画面をいじっていない間だけ」アンカー固定を効かせるフラグ */
+let anchorLockEnabled = true;
 
 function scrollMessageIntoView(message, { behavior = "auto" } = {}) {
   if (!modalText || !message) {
@@ -256,6 +262,7 @@ function scrollMessageIntoView(message, { behavior = "auto" } = {}) {
   const visibleBottom = visibleTop + modalText.clientHeight;
   const messageTop = message.offsetTop;
   const messageBottom = messageTop + message.offsetHeight;
+
   const desiredTop = Math.max(0, messageTop - paddingTop);
   const maxScrollTop = Math.max(0, modalText.scrollHeight - modalText.clientHeight);
 
@@ -266,16 +273,54 @@ function scrollMessageIntoView(message, { behavior = "auto" } = {}) {
     return;
   }
 
-  const targetTop = Math.min(desiredTop, maxScrollTop);
+  let targetTop = Math.min(desiredTop, maxScrollTop);
+
+  // ============================
+  // ここから「アンカー固定」処理
+  // ============================
+  if (anchorLockEnabled && anchorMessage && anchorMessage.isConnected) {
+    const anchorTop = anchorMessage.offsetTop;
+
+    // アンカーがヘッダー（paddingTop）より上に行かないようにする
+    const maxScrollToKeepAnchorVisible = Math.max(0, anchorTop - paddingTop);
+
+    // 自動スクロールの目標値がこの制限を超えないように clamp
+    targetTop = Math.min(targetTop, maxScrollToKeepAnchorVisible);
+  }
+
+  // JS によるスクロール中フラグを立てる
+  isProgrammaticScroll = true;
+
+  const finishProgrammatic = () => {
+    // 少し遅らせてフラグを戻す（scroll イベント発火後）
+    setTimeout(() => {
+      isProgrammaticScroll = false;
+    }, 0);
+  };
 
   if (
     typeof modalText.scrollTo === "function" &&
     (behavior === "smooth" || behavior === "auto")
   ) {
     modalText.scrollTo({ top: targetTop, behavior });
+    finishProgrammatic();
   } else {
     modalText.scrollTop = targetTop;
+    finishProgrammatic();
   }
+}
+
+if (modalText) {
+  modalText.addEventListener(
+    "scroll",
+    () => {
+      // JS ではなくユーザー操作でスクロールされたらアンカー固定を解除
+      if (!isProgrammaticScroll) {
+        anchorLockEnabled = false;
+      }
+    },
+    { passive: true },
+  );
 }
 const journeyCloseButton = document.getElementById("journey-close-button");
 const pricingSection = document.getElementById("pricing");
@@ -337,7 +382,8 @@ function appendMessage(
   stepIndex = currentModalStep,
   options = {}
 ) {
-  if (!modalText) return;
+  if (!modalText) return null;
+
   const message = document.createElement("div");
   message.className = `chat-message ${type}`;
   message.dataset.step = `${stepIndex}-${type}-${modalText.children.length}`;
@@ -348,14 +394,21 @@ function appendMessage(
 
   message.appendChild(bubble);
   modalText.appendChild(message);
+
   if (options.autoScroll !== false) {
     scrollMessageIntoView(message, { behavior: options.scrollBehavior || "auto" });
   }
+
+  return message;
 }
 
 function appendUserResponse(label) {
   if (!label) return;
-  appendMessage(label, "sent", currentModalStep, { autoScroll: false });
+  // 自分の送信メッセージを追加
+  const message = appendMessage(label, "sent", currentModalStep, { autoScroll: false });
+  // このメッセージを「アンカー」として記憶
+  anchorMessage = message;
+  anchorLockEnabled = true; // 次の自動スクロールまではロック有効
 }
 
 function clearTypewriterTimers(state) {
