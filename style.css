@@ -1,3 +1,7 @@
+/* =========================================================
+   全体レイアウト・タイポグラフィ
+   - ページ全体の基本スタイル
+   ========================================================= */
 body {
     font-family:
         "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro",
@@ -8,12 +12,14 @@ body {
     transition: background-color 1s;
     text-align: center;
 }
+
 header {
     padding: 20px;
     background: #ccc;
     position: relative;
 }
 
+/* デスクトップ時とモバイル時の表示テキスト切り替え */
 .desktop-text {
     display: inline;
 }
@@ -22,6 +28,7 @@ header {
     display: none;
 }
 
+/* ハンバーガーメニューのボタン（モバイルのみ表示） */
 .hamburger {
     display: none;
     background: none;
@@ -30,6 +37,7 @@ header {
     cursor: pointer;
 }
 
+/* メインメニュー（PC時の横並びナビゲーション） */
 .main-menu ul {
     list-style: none;
     margin: 0;
@@ -56,6 +64,10 @@ header {
     padding: 20px;
 }
 
+/* =========================================================
+   料金表・サロン情報の装飾リスト
+   ========================================================= */
+
 .pricing-list {
     list-style: none;
     margin: 20px auto;
@@ -68,6 +80,7 @@ header {
     position: relative;
 }
 
+/* 料金枠の内側の点線枠 */
 .pricing-list::after {
     content: "";
     position: absolute;
@@ -91,6 +104,7 @@ header {
     border-top: 1px solid rgba(135, 206, 235, 0.35);
 }
 
+/* 各項目の丸いマーカー */
 .pricing-list li::before {
     content: "";
     position: absolute;
@@ -104,6 +118,7 @@ header {
     box-shadow: 0 0 6px rgba(135, 206, 235, 0.6);
 }
 
+/* サロンの特徴リスト */
 .salon-list {
     list-style: none;
     margin: 30px auto;
@@ -119,6 +134,7 @@ header {
     overflow: hidden;
 }
 
+/* サロンリスト背景の光の演出 */
 .salon-list::before {
     content: "";
     position: absolute;
@@ -143,6 +159,7 @@ header {
     border-top: 1px solid rgba(255, 255, 255, 0.6);
 }
 
+/* サロンリストのひし形マーカー */
 .salon-list li::before {
     content: "";
     position: absolute;
@@ -154,6 +171,11 @@ header {
     background: linear-gradient(135deg, #fff9db, #d4af37);
     box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
 }
+
+/* =========================================================
+   動画エリア
+   ========================================================= */
+
 .video-container {
     position: relative;
     width: 100%;
@@ -161,10 +183,16 @@ header {
     margin: 20px auto;
     aspect-ratio: 16 / 9;
 }
+
 .video-container iframe {
     width: 100%;
     height: 100%;
 }
+
+/* =========================================================
+   ギャラリー（画像シャッフル・拡大アニメなど）
+   ========================================================= */
+
 .gallery {
     display: flex;
     justify-content: center;
@@ -173,6 +201,8 @@ header {
     flex-wrap: wrap;
     perspective: 1000px;
 }
+
+/* 中央拡大表示時のギャラリー位置制御 */
 .gallery.centered {
     position: fixed;
     top: 50%;
@@ -182,6 +212,8 @@ header {
     max-width: 960px;
     flex-wrap: nowrap;
 }
+
+/* 個々の画像コンテナ（拡大・アニメ対象） */
 .image-container {
     position: relative;
     overflow: hidden;
@@ -189,18 +221,21 @@ header {
     aspect-ratio: 528 / 682;
     cursor: pointer;
     transform-style: preserve-3d;
-    transform-origin: center center; /* 安定化（任意だが推奨） */
-    will-change: transform;          /* 初期フレームのブレ低減 */
+    transform-origin: center center;
+    will-change: transform;
 }
+
 .image-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     backface-visibility: hidden;
-    animation: slideIn 1s ease;       /* ← ここに移す（見た目は同じ） */
-    transform-origin: center center;  /* 念のため */
-    will-change: transform, opacity;  /* 念のため */
+    animation: slideIn 1s ease;
+    transform-origin: center center;
+    will-change: transform, opacity;
 }
+
+/* 画像が右側からスライドインするアニメーション */
 @keyframes slideIn {
     from {
         transform: translateX(100%);
@@ -211,6 +246,8 @@ header {
         opacity: 1;
     }
 }
+
+/* 拡大された状態（画像クリック時に付けるクラス） */
 .expanded {
     position: fixed;
     top: 50%;
@@ -221,6 +258,8 @@ header {
     animation: zoomIn 0.5s forwards;
     overflow: visible;
 }
+
+/* 拡大アニメーション */
 @keyframes zoomIn {
     from {
         transform: translate(-50%, -50%) scale(1);
@@ -238,9 +277,13 @@ header {
         transform: translate(-50%, -50%) scale(2);
     }
 }
+
+/* 背景を暗くするためのクラス */
 .fade-bg {
     background: rgba(128, 128, 128, 0.8);
 }
+
+/* 拡大時の詳細テキストエリア */
 .details {
     position: absolute;
     top: 0;
@@ -258,9 +301,13 @@ header {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
+
+/* 共通で使う非表示クラス */
 .hidden {
     display: none;
 }
+
+/* 「詳しく見る」などのボタン */
 .more-button {
     display: inline-block;
     margin-top: 20px;
@@ -274,9 +321,13 @@ header {
     white-space: nowrap;
 }
 
+/* =========================================================
+   汎用ボタン（CTA / モーダル内リンク共通化）
+   ========================================================= */
+
 .primary-button,
 .modal-actions a {
-    width: 100%;             /* ← 横幅を完全統一 */
+    width: 100%;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -291,7 +342,7 @@ header {
     cursor: pointer;
     text-decoration: none;
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    box-sizing: border-box;  /* ← パディングでズレない */
+    box-sizing: border-box;
     min-width: 180px;
 }
 
@@ -307,12 +358,17 @@ header {
     width: 180px;
 }
 
+/* =========================================================
+   モーダル全体のレイアウト
+   - LINE風チャットを含む全画面オーバーレイ
+   ========================================================= */
+
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100vh; /* フォールバック用：古いブラウザ向け */
     background: rgba(128, 128, 128, 0.6);
     display: flex;
     align-items: center;
@@ -321,10 +377,19 @@ header {
     z-index: 250;
 }
 
+/* ビューポートの「実際に見える高さ」を使う（スマホでの隠れ防止） */
+@supports (height: 100dvh) {
+    .modal {
+        height: 100dvh;
+    }
+}
+
+/* モーダルを閉じている時 */
 .modal.hidden {
     display: none;
 }
 
+/* モーダル内部のカード本体 */
 .modal-content {
     background: #fff;
     border-radius: 28px;
@@ -341,22 +406,14 @@ header {
     margin-inline: auto;
 }
 
-@media (max-width: 600px) {
-    .modal {
-        padding: 12px;
-    }
-
-    .modal-content {
-        width: min(100%, 520px);
-    }
-}
-
+/* モーダル内テキストの基本スタイル（チャット本文にも適用） */
 .modal-text {
     font-size: 16px;
     line-height: 1.8;
     text-align: left;
 }
 
+/* モーダル内のボタン群のレイアウト */
 .modal-actions {
     display: flex;
     flex: 1 1 auto;
@@ -368,10 +425,15 @@ header {
     margin-left: auto;
 }
 
+/* 汎用ボタン幅の上書き（アクションエリアでは自動幅） */
 .modal-actions button,
 .modal-actions a {
     width: auto;
 }
+
+/* =========================================================
+   チャット入力エリア（LINE風の最下部）
+   ========================================================= */
 
 .chat-input-area {
     padding: 16px 20px;
@@ -385,22 +447,33 @@ header {
     gap: 8px;
 }
 
+/* 入力エリア内のボタンを詰め気味にして横に並べやすくする */
 .chat-input-area .primary-button,
 .chat-input-area .modal-close-button {
     min-width: auto;
     white-space: nowrap;
 }
 
+/* モーダルが開いている時に背景ページをスクロールさせない */
 body.modal-open {
     overflow: hidden;
 }
 
+/* =========================================================
+   LINE風チャットカード周りのスタイル
+   ========================================================= */
+
+/* チャット用のモーダルカード全体 */
 .chat-modal {
     background: #f4f6f8;
     border: 12px solid #1cb24a;
 }
 
+/* チャットヘッダー（店舗名＋ステータス） */
 .chat-header {
+    /* ヘッダー高さを変数にして、本文側の余白計算に利用する */
+    --chat-header-height: 72px;
+    min-height: var(--chat-header-height);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -409,6 +482,7 @@ body.modal-open {
     color: #fff;
 }
 
+/* 店舗名の頭文字用丸アイコン */
 .chat-header-avatar {
     width: 44px;
     height: 44px;
@@ -422,6 +496,7 @@ body.modal-open {
     text-transform: uppercase;
 }
 
+/* ヘッダー内の文字情報（店名＋ステータス） */
 .chat-header-info {
     display: flex;
     flex-direction: column;
@@ -438,16 +513,20 @@ body.modal-open {
     opacity: 0.85;
 }
 
+/* チャット本文領域
+   - ヘッダーの高さ分だけ上に余白をとることで
+     「ヘッダーとメッセージがかぶる」のを防ぐ */
 .chat-body {
     flex: 1;
     background: #e7edf3;
-    padding: 24px 20px;
+    padding: calc(var(--chat-header-height, 72px) + 16px) 20px 24px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
+/* メッセージ全体の横位置（左寄せ・右寄せ） */
 .chat-message {
     display: flex;
     width: 100%;
@@ -461,6 +540,7 @@ body.modal-open {
     justify-content: flex-end;
 }
 
+/* 吹き出し（メッセージバブル） */
 .chat-bubble {
     max-width: min(80%, 360px);
     padding: 12px 16px;
@@ -473,6 +553,7 @@ body.modal-open {
     border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
+/* CTAボタンを含んだ特別なバブル */
 .chat-bubble.action-bubble {
     display: flex;
     flex-direction: column;
@@ -485,6 +566,7 @@ body.modal-open {
     line-height: 1.7;
 }
 
+/* バブル内のボタン群 */
 .bubble-actions {
     display: flex;
     flex-direction: column;
@@ -497,17 +579,20 @@ body.modal-open {
     width: min(260px, 100%);
 }
 
+/* 送信側（ユーザー側）の吹き出し色 */
 .chat-message.sent .chat-bubble {
     background: #c7f5cb;
     border-color: rgba(6, 199, 85, 0.25);
     color: #043517;
 }
 
+/* 受信側（店舗側）の吹き出し色 */
 .chat-message.received .chat-bubble {
     background: #fff;
     color: #1f2933;
 }
 
+/* タイピングアニメーション用 */
 .typing-bubble {
     position: relative;
 }
@@ -525,6 +610,7 @@ body.modal-open {
     transform: translateY(0);
 }
 
+/* モーダルの閉じるボタン */
 .modal-close-button {
     display: inline-flex;
     align-items: center;
@@ -554,6 +640,7 @@ body.modal-open {
     box-shadow: 0 0 0 3px rgba(6, 199, 85, 0.35);
 }
 
+/* チャット内のアクションボタン（LINE風の緑ボタン） */
 .chat-action-button {
     background: #06c755;
     color: #fff;
@@ -569,6 +656,7 @@ body.modal-open {
     box-shadow: 0 10px 24px rgba(6, 199, 85, 0.45);
 }
 
+/* LINE フォロー用QRコードなど */
 .found-u-logo {
     width: min(220px, 60vw);
     height: auto;
@@ -601,15 +689,20 @@ body.modal-open {
     width: 100%;
 }
 
-/* New animations */
+/* =========================================================
+   新規アニメーション（フェード・暗転など）
+   ========================================================= */
+
 .fade-out-other {
     animation: fadeOut 0.5s forwards;
 }
+
 @keyframes fadeOut {
     to {
         opacity: 0;
     }
 }
+
 .dim-image {
     opacity: 1;
 }
@@ -617,6 +710,7 @@ body.modal-open {
 .dim-image img {
     animation: dimImage 3s forwards;
 }
+
 @keyframes dimImage {
     from {
         opacity: 1;
@@ -625,9 +719,11 @@ body.modal-open {
         opacity: 0.3;
     }
 }
+
 .fade-in-text {
     animation: fadeInText 3s forwards;
 }
+
 .fade-in-btn {
     animation: fadeInText 3s forwards;
 }
@@ -655,6 +751,7 @@ body.modal-open {
         opacity: 1;
     }
 }
+
 @keyframes fadeInText {
     from {
         opacity: 0;
@@ -663,6 +760,8 @@ body.modal-open {
         opacity: 1;
     }
 }
+
+/* 小さな説明文／注意文 */
 .description {
     font-size: 10px;
     font-weight: bold;
@@ -670,6 +769,7 @@ body.modal-open {
     word-break: break-word;
     overflow-wrap: anywhere;
 }
+
 .autonomic-note {
     font-size: 10px;
     font-weight: bold;
@@ -678,6 +778,10 @@ body.modal-open {
     word-break: break-word;
     overflow-wrap: anywhere;
 }
+
+/* =========================================================
+   最初のイントロオーバーレイ（白背景にテキスト）
+   ========================================================= */
 
 #intro-overlay {
     position: fixed;
@@ -693,6 +797,7 @@ body.modal-open {
     z-index: 1200;
 }
 
+/* 実際の表示領域に合わせた高さ（スマホ対策） */
 @supports (height: 100dvh) {
     #intro-overlay {
         height: 100dvh;
@@ -715,6 +820,7 @@ body.modal-open {
     opacity: 0;
 }
 
+/* バナー部分（上部のキャッチコピー） */
 #intro-banner {
     display: flex;
     flex-direction: column;
@@ -747,7 +853,7 @@ body.modal-open {
     pointer-events: none;
 }
 
-
+/* 点滅するテキスト用 */
 .blink {
     animation: blinkText 2.5s ease-in-out infinite;
 }
@@ -777,6 +883,7 @@ body.modal-open {
     }
 }
 
+/* イントロカードの表示制御 */
 #intro-card {
     opacity: 0;
     margin-top: 20px;
@@ -798,6 +905,7 @@ body.modal-open {
     }
 }
 
+/* テキストのフェードイン／アウト */
 .show-text {
     animation: fadeInSlow 3s forwards;
 }
@@ -832,6 +940,10 @@ body.modal-open {
     }
 }
 
+/* =========================================================
+   ページ遷移用のホワイトアウト／カラフラッシュ
+   ========================================================= */
+
 #white-overlay {
     position: fixed;
     top: 0;
@@ -855,6 +967,7 @@ body.modal-open {
     z-index: 1000;
 }
 
+/* カラーサークル（三原色での演出） */
 .color-circle {
     position: absolute;
     width: 150px;
@@ -876,14 +989,25 @@ body.modal-open {
     background: blue;
 }
 
-/* Responsive styles */
+/* =========================================================
+   レスポンシブ対応（主にスマホ用調整）
+   ========================================================= */
+
 @media (max-width: 600px) {
+    /* モーダル全体の余白調整＋安全領域考慮
+       - 上: ステータスバー・ノッチ分を余白に足す
+       - 下: ホームバー分も少し余裕を持たせる */
     .modal {
         align-items: center;
-        padding: 24px 12px 32px;
+        padding: calc(24px + env(safe-area-inset-top, 0px))
+                 12px
+                 calc(32px + env(safe-area-inset-bottom, 0px));
         box-sizing: border-box;
     }
 
+    /* スマホ時のモーダルカードサイズ調整
+       - 画面幅いっぱい
+       - 縦は実際の高さからマージンを引いた値に制限 */
     .modal-content {
         width: 100%;
         max-width: 480px;
@@ -912,6 +1036,7 @@ body.modal-open {
         margin-right: auto;
     }
 
+    /* ハンバーガーメニューの表示と位置（モバイル専用） */
     .hamburger {
         display: block;
         position: absolute;
@@ -928,6 +1053,7 @@ body.modal-open {
         display: none;
     }
 
+    /* モバイル版サイドスライドメニュー */
     .main-menu {
         position: fixed;
         top: 0;
@@ -977,6 +1103,7 @@ body.modal-open {
         font-size: 16px;
     }
 
+    /* ギャラリーのモバイルレイアウト */
     .gallery {
         flex-direction: row;
         justify-content: center;
@@ -1044,20 +1171,24 @@ body.modal-open {
         padding: 3px 6px;
     }
 
-
+    /* イントロカードのサイズをモバイル用に縮小 */
     #intro-card {
         width: 24%;
     }
 }
 
-/* U ロゴグリッド */
+/* =========================================================
+   U ロゴのグリッド表示
+   ========================================================= */
+
+/* U ロゴ全体を中央寄せするコンテナ */
 .logo-u-section {
   display: flex;
   justify-content: center;
   margin-bottom: 24px;
 }
 
-/* U の外枠自体も少し丸く、カードっぽく */
+/* U ロゴを構成する10x10グリッド */
 .logo-u-grid {
   --rows: 10;
   --cols: 10;
@@ -1068,17 +1199,17 @@ body.modal-open {
   aspect-ratio: 1 / 1;
   padding: 12px;
   border-radius: 24px;
-  background: #ffffff; /* 後述の「背景を揃える」にも関係 */
+  background: #ffffff;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
-/* ロゴセルを丸く */
+/* ロゴセル（丸いマス） */
 .logo-cell {
   display: flex;
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  border-radius: 999px; /* 極端に大きくすると丸に近づく */
+  border-radius: 999px;
   overflow: hidden;
   cursor: pointer;
   transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
@@ -1088,6 +1219,7 @@ body.modal-open {
   max-width: 100%;
   max-height: 100%;
 }
+
 /* ホバー時の立体感 */
 .logo-cell:hover {
   transform: translateY(-1px);
@@ -1095,19 +1227,18 @@ body.modal-open {
   background-color: #fdfdfd;
 }
 
-/* 空マスは影なし＆透明 */
+/* 何も置かないマス（空セル）は装飾なし */
 .logo-cell--empty {
   background: transparent;
   cursor: default;
   box-shadow: none;
 }
 
-/* 詳細パネル */
+/* ロゴ詳細表示エリアのカード */
 .logo-detail-section {
   background: #fff;
   border-radius: 8px;
   max-width: 480px;
-  /* 追加：横方向の中央寄せ */
   margin: 0 auto;
   padding: 16px 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -1117,12 +1248,12 @@ body.modal-open {
   color: #777;
 }
 
-/* 詳細パネル全体を縦並びに */
+/* 詳細表示コンテンツの縦並びレイアウト */
 .logo-detail-content {
   display: flex;
-  flex-direction: column;   /* ← これを追加 */
-  align-items: center;       /* 中央揃え */
-  text-align: center;        /* テキストの中央寄せ */
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 16px;
 }
 
@@ -1153,4 +1284,3 @@ body.modal-open {
   padding: 0;
   text-align: center;
 }
-
