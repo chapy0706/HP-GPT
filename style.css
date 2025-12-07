@@ -1558,9 +1558,10 @@ body.modal-open {
    PC レイアウト調整
    ----------------------- */
 @media (min-width: 769px) {
-  /* PCではSNSは右寄せ、ラベルも表示 */
+  /* PCではSNSを中央寄せに変更 */
   .footer-sns-row {
-    justify-content: flex-end;
+    justify-content: center;
+    gap: 32px; /* ← これを追加 or 値を好みで調整（32〜48 がおすすめ） */
   }
 
   /* PCではナビは文字主体、アイコンは隠す */
