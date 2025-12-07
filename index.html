@@ -4,6 +4,11 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>神経整体found 別府院</title>
+        <!-- アイコン用 Font Awesome -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        />
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
@@ -103,9 +108,9 @@
             <section id="pricing" class="content-section hidden">
                 <h2>各種料金</h2>
                 <ul class="pricing-list">
-                    <li>神経整体 通常      1回 ￥8,000</li>
-                    <li>メンテナンスコース  1回 ￥7,000</li>
-                    <li>幼児〜高校生       1回 ￥3,000 〜 ￥5,000</li>
+                    <li>神経整体 通常      1回 ￥8,800</li>
+                    <li>メンテナンスコース  1回 ￥7,700</li>
+                    <li>幼児〜高校生       1回 ￥4,400 〜 ￥5,500</li>
                 </ul>
                 <br>
                 <h2>なぜこの料金なのか？</h2>
@@ -224,6 +229,89 @@
 
         <div id="menu-overlay" class="hidden"></div>
         <div id="white-overlay"></div>
+
+        <!-- ▼ フッター（2段構成） -->
+        <footer class="site-footer">
+          <div class="footer-inner">
+            <!-- 上段：SNSリンク + お問い合わせ -->
+            <div class="footer-sns-row" aria-label="外部リンク・お問い合わせ">
+              <a
+                href="https://www.instagram.com/あなたのアカウント"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class="fa-brands fa-instagram"></i>
+                <span class="sns-label">Instagram</span>
+              </a>
+              <a
+                href="https://www.youtube.com/watch?v=動画ID"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class="fa-brands fa-youtube"></i>
+                <span class="sns-label">YouTube</span>
+              </a>
+              <!-- 上段に移動した「お問い合わせ」 -->
+              <a
+                href="#"
+                class="footer-contact-link"
+                data-section="contact"
+              >
+                <i class="fa-solid fa-comment-dots"></i>
+                <span class="sns-label">お問い合わせ</span>
+              </a>
+            </div>
+
+            <!-- 下段：フッターナビ（Uranai を追加） -->
+            <nav class="footer-nav-row" aria-label="フッターメニュー">
+              <ul>
+                <li>
+                  <a href="#" data-section="top">
+                    <span class="footer-icon" aria-hidden="true">
+                      <i class="fa-solid fa-house"></i>
+                    </span>
+                    <span class="footer-label">TOP</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" data-section="pricing">
+                    <span class="footer-icon" aria-hidden="true">
+                      <i class="fa-solid fa-yen-sign"></i>
+                    </span>
+                    <span class="footer-label">各種料金</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" data-section="feel">
+                    <span class="footer-icon" aria-hidden="true">
+                      <i class="fa-solid fa-hands-holding"></i>
+                    </span>
+                    <span class="footer-label">感じあうロゴ</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" data-section="about">
+                    <span class="footer-icon" aria-hidden="true">
+                      <i class="fa-solid fa-circle-info"></i>
+                    </span>
+                    <span class="footer-label">Found U</span>
+                  </a>
+                </li>
+                <!-- 下段に追加した Uranai -->
+                <li>
+                  <a href="#" data-section="uranai">
+                    <span class="footer-icon" aria-hidden="true">
+                      <i class="fa-solid fa-yin-yang"></i>
+                    </span>
+                    <span class="footer-label">Uranai</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </footer>
+        <!-- ▲ フッター -->
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
         <script src="script.js"></script>
     </body>

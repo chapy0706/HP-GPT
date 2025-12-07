@@ -8,6 +8,7 @@ body {
         "MS PMincho", "MS Mincho", serif;
     margin: 0;
     padding: 0;
+    padding-bottom: 96px; /* フッター分の余白（高さに合わせて調整） */
     background: #f5f5f5;
     transition: background-color 1s;
     text-align: center;
@@ -1460,4 +1461,144 @@ body.modal-open {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     overflow: hidden;
+}
+/* =========================================================
+   フッター（2段構成）
+   - 上：SNSリンク (Instagram / YouTube)
+   - 下：ナビ（TOP / 料金 / …）
+   ========================================================= */
+
+.site-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.12);
+  z-index: 150;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+    Arial, sans-serif;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 6px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 上段：SNS */
+.footer-sns-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+}
+
+.footer-sns-row a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #4b5563;
+}
+
+.footer-sns-row a i {
+  font-size: 16px;
+}
+
+/* 下段：ナビ */
+.footer-nav-row ul {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0 2px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.footer-nav-row li {
+  flex: 1 1 0;
+  text-align: center;
+}
+
+.footer-nav-row a {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-decoration: none;
+  color: #374151;
+  font-size: 11px;
+  padding: 4px 2px;
+}
+
+.footer-nav-row a:hover {
+  background: rgba(209, 250, 229, 0.85);
+  border-radius: 999px;
+}
+
+/* ナビ内のアイコン（スマホ主体） */
+.footer-icon {
+  font-size: 17px;
+}
+
+/* SNSのラベル（テキスト） */
+.sns-label {
+  font-size: 11px;
+}
+
+/* -----------------------
+   PC レイアウト調整
+   ----------------------- */
+@media (min-width: 769px) {
+  /* PCではSNSは右寄せ、ラベルも表示 */
+  .footer-sns-row {
+    justify-content: flex-end;
+  }
+
+  /* PCではナビは文字主体、アイコンは隠す */
+  .footer-icon {
+    display: none;
+  }
+
+  .footer-nav-row a {
+    flex-direction: row;
+    gap: 8px;
+    font-size: 13px;
+  }
+}
+
+/* -----------------------
+   スマホレイアウト調整
+   ----------------------- */
+@media (max-width: 768px) {
+  .footer-inner {
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* スマホではSNSは中央寄せ、ラベルは隠してアイコンだけ */
+  .footer-sns-row {
+    justify-content: center;
+    font-size: 10px;
+    gap: 20px;
+  }
+
+  .sns-label {
+    display: none;
+  }
+
+  .footer-nav-row a {
+    font-size: 10px;
+  }
+
+  .footer-icon {
+    font-size: 18px;
+  }
 }

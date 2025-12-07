@@ -1597,6 +1597,56 @@ mainMenu.addEventListener("click", (e) => {
   }
 });
 
+// フッターナビからのページ内遷移
+const footerNav = document.querySelector(".footer-nav-row");
+
+if (footerNav) {
+  footerNav.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (!link) return;
+    e.preventDefault();
+
+    // モーダルが開いていたら閉じる
+    closeModal({ restoreFocus: false });
+
+    const section = link.dataset.section;
+
+    // Uranai だけは特別扱い（ヘッダーの Uranai と同じ動きに揃える）
+    if (section === "uranai") {
+      // ここは運用に合わせて調整：
+      // 現状 index.html 自体が Uranai ページなら、そのままリロード
+      window.location.href = "index.html";
+      return;
+    }
+
+    if (section) {
+      showSection(section);
+    }
+  });
+}
+
+// フッター上段「お問い合わせ」から contact セクションへ
+const footerSnsRow = document.querySelector(".footer-sns-row");
+
+if (footerSnsRow) {
+  footerSnsRow.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (!link) return;
+
+    const section = link.dataset.section;
+    if (!section) {
+      // Instagram / YouTube など data-section を持たないリンクはそのまま動かす
+      return;
+    }
+
+    // data-section を持つのは「お問い合わせ」だけなので、ここだけ制御する
+    e.preventDefault();
+    closeModal({ restoreFocus: false });
+    showSection(section);
+  });
+}
+
+
 // 「もっと見る」ボタンからのシナリオ進行
 let detailStage = "initial";
 moreButton.addEventListener("click", (e) => {
