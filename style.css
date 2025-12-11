@@ -8,7 +8,7 @@ body {
         "MS PMincho", "MS Mincho", serif;
     margin: 0;
     padding: 0;
-    padding-bottom: 96px; /* フッター分の余白（高さに合わせて調整） */
+    padding-bottom: 120px; /* フッター分の余白（高さに合わせて調整） */
     background: #f5f5f5;
     transition: background-color 1s;
     text-align: center;
@@ -1463,7 +1463,7 @@ body.modal-open {
     overflow: hidden;
 }
 /* =========================================================
-   フッター（2段構成）
+   フッター（3段構成）
    - 上：SNSリンク (Instagram / YouTube)
    - 下：ナビ（TOP / 料金 / …）
    ========================================================= */
@@ -1576,6 +1576,39 @@ body.modal-open {
   }
 }
 
+/* 下段：店舗情報（PC用） */
+.footer-info-row {
+  border-top: 1px solid #e5e7eb;
+  margin-top: 4px;
+  padding-top: 6px;
+  padding-bottom: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.footer-info-main {
+  font-weight: 600;
+  text-align: center;
+}
+
+.footer-info-detail {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 16px;
+  text-align: center;
+}
+
+.footer-info-detail a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 2px;
+}
+
 /* -----------------------
    スマホレイアウト調整
    ----------------------- */
@@ -1601,5 +1634,9 @@ body.modal-open {
 
   .footer-icon {
     font-size: 18px;
+  }
+  
+  .footer-info-row {
+    display: none;
   }
 }
