@@ -22,6 +22,7 @@ const details = document.querySelector(".details");
 const descriptionDiv = document.querySelector(".description");
 const body = document.body;
 const header = document.querySelector("header");
+const siteFooter = document.querySelector(".site-footer");
 const moreButton = document.querySelector(".more-button");
 
 // イントロ用オーバーレイ要素
@@ -280,6 +281,7 @@ if (hamburger && mainMenu && menuOverlay) {
 // ========================================================
 const mainContent = document.getElementById("main-content");
 const contentSections = document.querySelectorAll(".content-section");
+let activeSectionId = "top"; // いま表示しているセクション
 const subtext = document.querySelector(".subtext");
 const startButton = document.getElementById("start-journey-button");
 const modalOverlay = document.getElementById("journey-modal");
@@ -1550,13 +1552,52 @@ images.forEach((img) => {
  * id を指定して該当セクションだけ表示する
  */
 function showSection(id) {
+  if (id === activeSectionId) return;
+
+  const next = document.getElementById(id);
+  if (!next) return;
+
+  const prev = activeSectionId ? document.getElementById(activeSectionId) : null;
+
+  // まず他のセクションは hidden にしておく保険（念のため全消し）
   contentSections.forEach((sec) => {
-    if (sec.id === id) {
-      sec.classList.remove("hidden");
-    } else {
+    if (sec.id !== id) {
       sec.classList.add("hidden");
     }
   });
+
+  // 前のセクションをフェードアウト（GSAP があればアニメ付き、なければ即非表示）
+  if (prev && prev !== next) {
+    if (window.gsap) {
+      gsap.to(prev, {
+        autoAlpha: 0,
+        duration: 0.3,
+        onComplete: () => {
+          prev.classList.add("hidden");
+          gsap.set(prev, { clearProps: "opacity,visibility" });
+        },
+      });
+    } else {
+      prev.classList.add("hidden");
+    }
+  }
+
+  // 次のセクションを表示＆フェードイン
+  next.classList.remove("hidden");
+
+  if (window.gsap) {
+    gsap.fromTo(
+      next,
+      { autoAlpha: 0 },
+      {
+        autoAlpha: 1,
+        duration: 0.3,
+        clearProps: "opacity,visibility",
+      }
+    );
+  }
+
+  activeSectionId = id;
 }
 
 /**
@@ -1577,6 +1618,11 @@ function showTopPage() {
   window.scrollTo(0, 0);
   showSection("top");
   detailStage = "done";
+  
+  // ★ ここでフッターを表示
+  if (siteFooter) {
+    siteFooter.classList.remove("hidden");
+  }
 }
 
 // メインメニュークリックでページ内遷移 & モーダルクローズ
