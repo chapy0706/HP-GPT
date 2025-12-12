@@ -281,7 +281,7 @@ if (hamburger && mainMenu && menuOverlay) {
 // ========================================================
 const mainContent = document.getElementById("main-content");
 const contentSections = document.querySelectorAll(".content-section");
-let activeSectionId = "top"; // いま表示しているセクション
+let activeSectionId = null;// いま表示しているセクション
 const subtext = document.querySelector(".subtext");
 const startButton = document.getElementById("start-journey-button");
 const modalOverlay = document.getElementById("journey-modal");
@@ -1552,21 +1552,28 @@ images.forEach((img) => {
  * id を指定して該当セクションだけ表示する
  */
 function showSection(id) {
-  if (id === activeSectionId) return;
-
   const next = document.getElementById(id);
   if (!next) return;
 
   const prev = activeSectionId ? document.getElementById(activeSectionId) : null;
 
-  // まず他のセクションは hidden にしておく保険（念のため全消し）
+  // まず、今表示したいもの「以外」を全部 hidden にする保険
   contentSections.forEach((sec) => {
     if (sec.id !== id) {
       sec.classList.add("hidden");
+      if (window.gsap) {
+        gsap.set(sec, { clearProps: "opacity,visibility" });
+      }
     }
   });
 
-  // 前のセクションをフェードアウト（GSAP があればアニメ付き、なければ即非表示）
+  // 同じセクションならここで終わり（2回目以降だけ効く）
+  if (id === activeSectionId) {
+    next.classList.remove("hidden");
+    return;
+  }
+
+  // 前のセクションをフェードアウト
   if (prev && prev !== next) {
     if (window.gsap) {
       gsap.to(prev, {
@@ -1582,7 +1589,7 @@ function showSection(id) {
     }
   }
 
-  // 次のセクションを表示＆フェードイン
+  // 次のセクションを表示 & フェードイン
   next.classList.remove("hidden");
 
   if (window.gsap) {
@@ -1599,6 +1606,7 @@ function showSection(id) {
 
   activeSectionId = id;
 }
+
 
 /**
  * 詳細表示やチャットから TOP セクションに戻る
