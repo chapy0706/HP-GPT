@@ -1614,6 +1614,9 @@ function showSection(id) {
   }
 
   activeSectionId = id;
+
+  // ★追加
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 
