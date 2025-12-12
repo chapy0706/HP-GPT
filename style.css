@@ -1752,6 +1752,16 @@ body.modal-open {
   .footer-info-row {
     display: none;
   }
+
+  #modal-actions {
+    margin-right: 0;
+    padding-right: 0;
+    justify-content: flex-end;
+  }
+
+  #modal-actions .chat-action-button {
+    margin-right: 0;
+  }
 }
 
 /* フッター上段：右端の三本線 */
