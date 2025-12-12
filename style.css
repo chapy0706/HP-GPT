@@ -1590,6 +1590,39 @@ body.modal-open {
   color: #6b7280;
 }
 
+/* PCフッター下段：コンパクト表示＋ホバーで展開 */
+.footer-info-compact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 16px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.footer-info-hint {
+  color: #9ca3af;
+}
+
+/* 展開部分は閉じた状態がデフォルト */
+.footer-info-expand {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: max-height 0.35s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* PC: ホバー or フォーカスで展開 */
+@media (min-width: 769px) {
+  .footer-info-row:hover .footer-info-expand,
+  .footer-info-row:focus-within .footer-info-expand {
+    max-height: 520px; /* 中身より大きければOK。足りなければ増やす */
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .footer-info-main {
   font-weight: 600;
   text-align: center;

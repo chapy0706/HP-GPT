@@ -427,15 +427,18 @@
                 神経整体 found 別府院
               </div>
 
-              <div class="footer-info-layout">
-                <!-- 左：住所など＋営業時間表 -->
-                <div class="footer-info-left">
-                  <div class="footer-info-text">
-                    <div>〒000-0000 大分県別府市◯◯◯◯</div>
-                    <div>TEL：<a href="tel:0000000000">000-0000-0000</a></div>
-                  </div>
+              <!-- 常時表示：コンパクト情報 -->
+              <div class="footer-info-compact">
+                <span>〒000-0000 大分県別府市◯◯◯◯</span>
+                <span>TEL：<a href="tel:0000000000">000-0000-0000</a></span>
+                <span class="footer-info-hint">（マウスを近づけると営業時間・地図が表示）</span>
+              </div>
 
-                  <div class="footer-hours">
+              <!-- 展開表示：営業時間表＋地図（ここをアコーディオン） -->
+              <div class="footer-info-expand" aria-label="営業時間と地図">
+                <div class="footer-info-layout">
+                  <div class="footer-info-left">
+                    <div class="footer-hours">
                     <table class="hours-table" aria-label="営業時間">
                       <thead>
                         <tr>
