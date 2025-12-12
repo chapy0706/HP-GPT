@@ -1179,18 +1179,19 @@ function playCardBurst(onComplete) {
   });
   const footer = document.querySelector("footer");
   const footerHeight = footer ? footer.offsetHeight : 0;
+  const headerHeight = header ? header.offsetHeight : 0;
   const refImg = document.querySelector(".image-container");
   const cardWidth = refImg ? refImg.offsetWidth : 100;
   const cardHeight = refImg ? refImg.offsetHeight : 100;
   const availableWidth = window.innerWidth - cardWidth;
-  const availableHeight = window.innerHeight - footerHeight - cardHeight;
+  const availableHeight = window.innerHeight - headerHeight - footerHeight - cardHeight;
 
   for (let i = 0; i < 20; i++) {
     const card = document.createElement("img");
     card.src = "images/card.png";
     card.className = "burst-card";
     const left = cardWidth / 2 + availableWidth * (0.4 + Math.random() * 0.2);
-    const top = cardHeight / 2 + availableHeight * (0.4 + Math.random() * 0.2);
+    const top = headerHeight + cardHeight / 2 + availableHeight * (0.4 + Math.random() * 0.2);
     Object.assign(card.style, {
       position: "absolute",
       width: `${cardWidth}px`,
@@ -1255,13 +1256,21 @@ function scatterCards() {
 function prepareCards() {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
+  const footer = document.querySelector("footer");
+  const footerHeight = footer ? footer.offsetHeight : 0;
+  const headerHeight = header ? header.offsetHeight : 0;
   images.forEach((card) => {
     const img = card.querySelector("img");
     img.dataset.front = `images/${img.alt}.jpg`;
     img.src = "images/card.png";
+
+    // カード自身の高さ（未取得なら仮）
+     const cardElHeight = card.offsetHeight || 150;
+     const safeHeight = Math.max(0, vh - headerHeight - footerHeight - cardElHeight);
     gsap.set(card, {
       x: (Math.random() - 0.5) * vw,
-      y: (Math.random() - 0.5) * vh,
+      // header の下〜footer の上の範囲に収める
+      y: headerHeight / 2 + (Math.random() - 0.5) * safeHeight,
       rotation: Math.random() * 360,
       rotateY: 180,
     });

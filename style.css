@@ -12,6 +12,7 @@ body {
     background: #f5f5f5;
     transition: background-color 1s;
     text-align: center;
+    z-index: 300;
 }
 
 header {
@@ -1660,21 +1661,24 @@ body.modal-open {
   background: rgba(209, 250, 229, 0.85);
 }
 
-/* 展開パネル（デフォルトは閉じている） */
+/* 展開パネル：フッターの中で伸びる（アコーディオン） */
 .footer-drawer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 100%; /* フッター本体の “上” に出す */
-  transform: translateY(12px);
+  /* 重要：absolute をやめる */
+  position: static;
+
+  /* 閉じる状態 */
+  max-height: 0;
+  overflow: hidden;
   opacity: 0;
-  pointer-events: none;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transform: translateY(6px);
+
+  transition: max-height 0.35s ease, opacity 0.25s ease, transform 0.25s ease;
 }
 
+/* 中身 */
 .footer-drawer-inner {
   max-width: 1100px;
-  margin: 0 auto 8px;
+  margin: 6px auto 2px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid #e5e7eb;
@@ -1710,11 +1714,11 @@ body.modal-open {
   font-weight: 600;
 }
 
-/* 開いている状態 */
+/* 開いている状態：max-height を十分大きくする */
 .site-footer.is-drawer-open .footer-drawer {
-  transform: translateY(0);
+  max-height: 240px; /* 中身の高さより大きければOK（足りなければ増やす） */
   opacity: 1;
-  pointer-events: auto;
+  transform: translateY(0);
 }
 
 /* スマホではより指で押しやすく */
