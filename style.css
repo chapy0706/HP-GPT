@@ -1640,3 +1640,46 @@ body.modal-open {
     display: none;
   }
 }
+
+/* =========================================================
+   - TOP画面　雪レイヤーを追加
+   ========================================================= */
+#top {
+  position: relative;
+  overflow: hidden;
+}
+
+.top-snow-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0; /* 背面に置く。必要なら -1 でもOK */
+}
+
+/* 雪の粒 */
+.snowflake {
+  position: absolute;
+  top: -10px;
+  left: var(--flake-left);
+  width: var(--flake-size);
+  height: var(--flake-size);
+  border-radius: 999px;
+  background: rgba(112, 108, 108, 0.7);
+  opacity: 0.6;
+  filter: blur(0.5px);
+  animation-name: snow-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: var(--flake-duration);
+  animation-delay: var(--flake-delay);
+}
+
+/* 下方向＋少し斜めに流れる */
+@keyframes snow-fall {
+  0% {
+    transform: translate3d(0, -5vh, 0);
+  }
+  100% {
+    transform: translate3d(5vw, 110vh, 0);
+  }
+}

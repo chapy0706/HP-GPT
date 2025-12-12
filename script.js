@@ -1872,3 +1872,36 @@ function showDetail(logo) {
 
 // ロゴグリッド初期化
 document.addEventListener("DOMContentLoaded", initGallery);
+
+// ----------------------
+// TOP画面に雪が降るアニメーション
+// ----------------------
+
+function initSnow() {
+  const layer = document.querySelector(".top-snow-layer");
+  if (!layer) return;
+
+  const FLAKES = 40; // 粒の数。重ければ 20〜30 に減らす
+
+  for (let i = 0; i < FLAKES; i++) {
+    const flake = document.createElement("div");
+    flake.className = "snowflake";
+
+    const size = 2 + Math.random() * 3; // 2〜5px
+    const left = Math.random() * 100;   // 0〜100%
+    const duration = 8 + Math.random() * 8; // 8〜16秒
+    const delay = Math.random() * -duration; // ばらけさせる
+
+    flake.style.setProperty("--flake-size", `${size}px`);
+    flake.style.setProperty("--flake-left", `${left}%`);
+    flake.style.setProperty("--flake-duration", `${duration}s`);
+    flake.style.setProperty("--flake-delay", `${delay}s`);
+
+    layer.appendChild(flake);
+  }
+}
+
+// DOM 構築後に一度だけ呼ぶ
+document.addEventListener("DOMContentLoaded", () => {
+  initSnow();
+});
