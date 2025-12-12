@@ -1829,3 +1829,109 @@ body.modal-open {
     grid-template-columns: 1fr;
   }
 }
+
+/* フッター内：動画サムネ行（スマホ向け） */
+.footer-video-row {
+  display: none; /* PCでは一旦出さない（必要なら後でON） */
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.footer-video-thumb {
+  position: relative;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  width: 140px;
+  cursor: pointer;
+}
+
+.footer-video-thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.play-badge {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 18px;
+  background: linear-gradient(to top, rgba(0,0,0,0.35), rgba(0,0,0,0.05));
+}
+
+.thumb-label {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+}
+
+@media (max-width: 768px) {
+  .footer-video-row {
+    display: flex;
+  }
+}
+
+/* 動画モーダル */
+.video-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}
+
+.video-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+.video-modal-panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(92vw, 860px);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.35);
+}
+
+.video-modal-close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #374151;
+}
+
+.video-modal-close:hover {
+  background: rgba(209, 250, 229, 0.85);
+}
+
+.video-modal-embed {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.video-modal-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}

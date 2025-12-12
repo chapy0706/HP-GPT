@@ -354,7 +354,7 @@
             <div id="footer-drawer" class="footer-drawer" aria-hidden="true">
             <div class="footer-drawer-inner">
               <a
-                href="https://www.instagram.com/あなたのアカウント"
+                href="https://www.instagram.com/yoshiiwaseitai?igsh=b3lhbnBwbjl1dmwz"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="footer-drawer-item"
@@ -364,7 +364,7 @@
               </a>
 
               <a
-                href="https://www.youtube.com/watch?v=動画ID"
+                href="https://www.youtube.com/watch?v=ybOTOy8Ct38"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="footer-drawer-item"
@@ -378,6 +378,28 @@
                 <span>お問い合わせ</span>
               </a>
             </div>
+            <div class="footer-video-row" aria-label="動画">
+            <button type="button" class="footer-video-thumb" data-video-id="VIDEO_ID_1">
+              <img
+                src="https://i.ytimg.com/vi/eL7nim3E9X4/hqdefault.jpg"
+                alt="動画1のサムネイル"
+                loading="lazy"
+              />
+              <span class="play-badge"><i class="fa-solid fa-play"></i></span>
+              <span class="thumb-label">動画1</span>
+            </button>
+
+            <button type="button" class="footer-video-thumb" data-video-id="VIDEO_ID_2">
+              <img
+                src="https://i.ytimg.com/vi/ybOTOy8Ct38/hqdefault.jpg"
+                alt="動画2のサムネイル"
+                loading="lazy"
+              />
+              <span class="play-badge"><i class="fa-solid fa-play"></i></span>
+              <span class="thumb-label">動画2</span>
+            </button>
+          </div>
+
           </div>
           
             <!-- 下段：店舗情報（PCのみ表示予定） -->
@@ -406,5 +428,15 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
         <script src="script.js"></script>
+        <!-- 動画再生用のモーダル -->
+        <div id="video-modal" class="video-modal hidden" aria-hidden="true">
+          <div class="video-modal-backdrop" data-close="true"></div>
+          <div class="video-modal-panel" role="dialog" aria-label="動画再生">
+            <button type="button" class="video-modal-close" data-close="true" aria-label="閉じる">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="video-modal-embed" id="video-modal-embed"></div>
+          </div>
+        </div>
     </body>
 </html>

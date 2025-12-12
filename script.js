@@ -2002,3 +2002,55 @@ if (siteFooter) {
     { passive: true }
   );
 }
+
+// ===========================
+// 動画モーダル（フッターサムネ用）
+// ===========================
+const videoModal = document.getElementById("video-modal");
+const videoModalEmbed = document.getElementById("video-modal-embed");
+
+function openVideoModal(videoId) {
+  if (!videoModal || !videoModalEmbed) return;
+
+  videoModal.classList.remove("hidden");
+  videoModal.setAttribute("aria-hidden", "false");
+
+  // autoplay=1 / mute=1 で静かに開始（必要なら mute=0 に変更）
+  videoModalEmbed.innerHTML = `
+    <iframe
+      src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
+      title="動画再生"
+      frameborder="0"
+      allow="autoplay; encrypted-media; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  `;
+}
+
+function closeVideoModal() {
+  if (!videoModal || !videoModalEmbed) return;
+
+  videoModal.classList.add("hidden");
+  videoModal.setAttribute("aria-hidden", "true");
+
+  // 再生停止（iframe破棄）
+  videoModalEmbed.innerHTML = "";
+}
+
+document.addEventListener("click", (e) => {
+  const thumb = e.target.closest(".footer-video-thumb");
+  if (thumb) {
+    const videoId = thumb.dataset.videoId;
+    if (videoId) openVideoModal(videoId);
+    return;
+  }
+
+  const closeEl = e.target.closest('[data-close="true"]');
+  if (closeEl && videoModal && !videoModal.classList.contains("hidden")) {
+    closeVideoModal();
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeVideoModal();
+});
