@@ -294,9 +294,18 @@
                 <i class="fa-solid fa-comment-dots"></i>
                 <span class="sns-label">お問い合わせ</span>
               </a>
+              <button
+                type="button"
+                class="footer-drawer-handle"
+                aria-label="フッターメニューを開く"
+                aria-expanded="false"
+                aria-controls="footer-drawer"
+              >
+                <i class="fa-solid fa-bars"></i>
+              </button>
             </div>
 
-            <!-- 下段：フッターナビ（Uranai を追加） -->
+            <!-- 中段：フッターナビ（Uranai を追加） -->
             <nav class="footer-nav-row" aria-label="フッターメニュー">
               <ul>
                 <li>
@@ -342,6 +351,34 @@
                 </li>
               </ul>
             </nav>
+            <div id="footer-drawer" class="footer-drawer" aria-hidden="true">
+            <div class="footer-drawer-inner">
+              <a
+                href="https://www.instagram.com/あなたのアカウント"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer-drawer-item"
+              >
+                <i class="fa-brands fa-instagram"></i>
+                <span>Instagram</span>
+              </a>
+
+              <a
+                href="https://www.youtube.com/watch?v=動画ID"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer-drawer-item"
+              >
+                <i class="fa-brands fa-youtube"></i>
+                <span>YouTube</span>
+              </a>
+
+              <a href="#" data-section="contact" class="footer-drawer-item">
+                <i class="fa-solid fa-comment-dots"></i>
+                <span>お問い合わせ</span>
+              </a>
+            </div>
+          </div>
           
             <!-- 下段：店舗情報（PCのみ表示予定） -->
             <div class="footer-info-row">

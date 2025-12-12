@@ -1641,6 +1641,103 @@ body.modal-open {
   }
 }
 
+/* フッター上段：右端の三本線 */
+.footer-sns-row {
+  position: relative;
+}
+
+.footer-drawer-handle {
+  margin-left: 12px;
+  border: none;
+  background: transparent;
+  color: #4b5563;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.footer-drawer-handle:hover {
+  background: rgba(209, 250, 229, 0.85);
+}
+
+/* 展開パネル（デフォルトは閉じている） */
+.footer-drawer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%; /* フッター本体の “上” に出す */
+  transform: translateY(12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.footer-drawer-inner {
+  max-width: 1100px;
+  margin: 0 auto 8px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.12);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+/* 中のアイコンを大きくする（展開時の主役） */
+.footer-drawer-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #374151;
+  padding: 10px 14px;
+  border-radius: 14px;
+}
+
+.footer-drawer-item:hover {
+  background: rgba(209, 250, 229, 0.85);
+}
+
+.footer-drawer-item i {
+  font-size: 26px;
+}
+
+.footer-drawer-item span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 開いている状態 */
+.site-footer.is-drawer-open .footer-drawer {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* スマホではより指で押しやすく */
+@media (max-width: 768px) {
+  .footer-drawer-inner {
+    gap: 12px;
+    padding: 12px 10px;
+  }
+
+  .footer-drawer-item {
+    padding: 12px 12px;
+  }
+
+  .footer-drawer-item i {
+    font-size: 30px;
+  }
+
+  .footer-drawer-item span {
+    font-size: 13px;
+  }
+}
+
+
 /* =========================================================
    - TOP画面　雪レイヤーを追加
    ========================================================= */

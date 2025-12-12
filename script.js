@@ -1905,3 +1905,100 @@ function initSnow() {
 document.addEventListener("DOMContentLoaded", () => {
   initSnow();
 });
+
+// ===========================
+// フッター上段：アコーディオン（ドロワー）
+// ===========================
+const footerDrawer = document.getElementById("footer-drawer");
+const footerDrawerHandle = document.querySelector(".footer-drawer-handle");
+
+function setFooterDrawer(open) {
+  if (!siteFooter || !footerDrawer || !footerDrawerHandle) return;
+
+  siteFooter.classList.toggle("is-drawer-open", open);
+  footerDrawer.setAttribute("aria-hidden", open ? "false" : "true");
+  footerDrawerHandle.setAttribute("aria-expanded", open ? "true" : "false");
+}
+
+function toggleFooterDrawer() {
+  if (!siteFooter) return;
+  const isOpen = siteFooter.classList.contains("is-drawer-open");
+  setFooterDrawer(!isOpen);
+}
+
+if (footerDrawerHandle) {
+  footerDrawerHandle.addEventListener("click", (e) => {
+    e.preventDefault();
+    toggleFooterDrawer();
+  });
+}
+
+// 外側クリックで閉じる（ドロワー内は除外）
+document.addEventListener("click", (e) => {
+  if (!siteFooter) return;
+  if (!siteFooter.classList.contains("is-drawer-open")) return;
+
+  const insideFooter = e.target.closest(".site-footer");
+  if (!insideFooter) {
+    setFooterDrawer(false);
+  }
+});
+
+// Escで閉じる
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  setFooterDrawer(false);
+});
+
+// ドロワー内の「お問い合わせ」クリックは showSection に繋ぐ（既存の footer-sns-row と同様）
+if (footerDrawer) {
+  footerDrawer.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (!link) return;
+
+    const section = link.dataset.section;
+    if (!section) return; // 外部リンクはそのまま
+
+    e.preventDefault();
+    setFooterDrawer(false);
+    closeModal?.({ restoreFocus: false });
+    showSection(section);
+  });
+}
+
+/**
+ * スワイプで開閉（簡易）
+ * 上スワイプ: open
+ * 下スワイプ: close
+ */
+let footerTouchStartY = null;
+
+if (siteFooter) {
+  siteFooter.addEventListener(
+    "touchstart",
+    (e) => {
+      footerTouchStartY = e.touches?.[0]?.clientY ?? null;
+    },
+    { passive: true }
+  );
+
+  siteFooter.addEventListener(
+    "touchend",
+    (e) => {
+      if (footerTouchStartY == null) return;
+      const endY = e.changedTouches?.[0]?.clientY ?? null;
+      if (endY == null) return;
+
+      const dy = endY - footerTouchStartY;
+
+      // 上方向に 35px 以上 → 開く
+      if (dy < -35) setFooterDrawer(true);
+
+      // 下方向に 35px 以上 → 閉じる
+      if (dy > 35) setFooterDrawer(false);
+
+      footerTouchStartY = null;
+    },
+    { passive: true }
+  );
+}
