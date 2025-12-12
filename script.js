@@ -1308,6 +1308,23 @@ function flipCardsToFront() {
  */
 function animateCards() {
   gallery.classList.add("centered");
+
+  // ★追加：整列時の「中心位置」をヘッダーに被らないよう調整する
+  const headerHeight = header ? header.offsetHeight : 0;
+  const refCard = images && images[0] ? images[0] : null;
+  const cardHeight = refCard ? refCard.offsetHeight : 0;
+
+  // カード上端が header の下に来るように、中心Yの最低値を作る
+  const padding = 16; // 好みで 12〜24
+  const minCenterY = headerHeight + cardHeight / 2 + padding;
+
+  // 本来の中央(50%)と比較して、必要なら下げる
+  const center50 = window.innerHeight * 0.5;
+  const targetCenterY = Math.max(center50, minCenterY);
+
+  // centered の top:50% を上書き（inline が勝つ）
+  gallery.style.top = `${targetCenterY}px`;
+
   gsap.to(images, {
     x: 0,
     y: 0,
@@ -1320,6 +1337,7 @@ function animateCards() {
     },
   });
 }
+
 
 /**
  * 白いオーバーレイを一瞬挟むトランジション
@@ -1643,6 +1661,9 @@ function showTopPage() {
   if (siteFooter) {
     siteFooter.classList.remove("hidden");
   }
+  if (gallery) {
+  gallery.style.top = "";
+}
 }
 
 // メインメニュークリックでページ内遷移 & モーダルクローズ
