@@ -1584,12 +1584,6 @@ function showSection(id) {
 
   const prev = activeSectionId ? document.getElementById(activeSectionId) : null;
 
-  const feelSection = document.getElementById("feel");
-  const feelVideoLayer = feelSection
-    ? feelSection.querySelector(".feel-video-layer")
-    : null;
-  let feelVideoTimer = null;
-
   // まず、今表示したいもの「以外」を全部 hidden にする保険
   contentSections.forEach((sec) => {
     if (sec.id !== id) {
@@ -1602,22 +1596,6 @@ function showSection(id) {
       sec.classList.remove("hidden");
     } else {
       sec.classList.add("hidden");
-    }
-      // 背景動画のフェード制御
-    if (!feelVideoLayer) return;
-
-    // いったんリセット
-    feelVideoLayer.classList.remove("is-visible");
-    if (feelVideoTimer) {
-      clearTimeout(feelVideoTimer);
-      feelVideoTimer = null;
-    }
-
-    // 「感じあうロゴ」セクションに遷移したときだけ 0.5 秒後に薄く表示
-    if (id === "feel") {
-      feelVideoTimer = setTimeout(() => {
-        feelVideoLayer.classList.add("is-visible");
-      }, 500); // 0.5 秒後
     }
   });
 
