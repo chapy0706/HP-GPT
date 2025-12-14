@@ -1907,6 +1907,15 @@ body.modal-open {
     transform: translate3d(5vw, 110vh, 0);
   }
 }
+/* 感じあうロゴページ：淡い2色グラデーション */
+#feel {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 248, 220, 0.6), /* 淡い黄色 */
+      rgba(220, 235, 255, 0.6)  /* 淡い青 */
+    );
+}
 
 /* feel 下部の動画2本 */
 .feel-videos {
