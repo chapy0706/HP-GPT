@@ -2071,3 +2071,220 @@ body.modal-open {
   width: 100%;
   height: 100%;
 }
+
+/* =========================================================
+   Mini shadcn/ui-ish layer (tokens + components)
+   使い方: style.css の末尾に追記（後勝ちで既存を上書き）
+   ========================================================= */
+
+:root {
+  /* --- Color tokens (HSLベースで調整しやすく) --- */
+  --bg: 0 0% 100%;
+  --fg: 222 47% 11%;
+
+  --card: 0 0% 100%;
+  --card-fg: 222 47% 11%;
+
+  --muted: 210 40% 96%;
+  --muted-fg: 215 16% 47%;
+
+  --border: 214 32% 91%;
+  --ring: 142 76% 36%;
+
+  --primary: 142 76% 36%;
+  --primary-fg: 0 0% 100%;
+
+  --secondary: 210 40% 96%;
+  --secondary-fg: 222 47% 11%;
+
+  --destructive: 0 84% 60%;
+  --destructive-fg: 0 0% 100%;
+
+  /* --- Radius / Shadow --- */
+  --radius: 14px;
+  --radius-sm: 10px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+  --shadow: 0 12px 30px rgba(0,0,0,.10);
+  --shadow-lg: 0 22px 60px rgba(0,0,0,.14);
+
+  /* --- Motion --- */
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --dur-1: 140ms;
+  --dur-2: 240ms;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  color: hsl(var(--fg));
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 2px;
+}
+
+:where(button, a, input, textarea, select) {
+  font: inherit;
+}
+
+:where(button, a, input, textarea, select):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(34,197,94,.20);
+}
+
+/* -------------------------
+   Surface / Card
+   ------------------------- */
+.ui-card {
+  background: hsl(var(--card));
+  color: hsl(var(--card-fg));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.ui-glass {
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.55);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+}
+
+/* -------------------------
+   Button system
+   既存ボタンを shadcn/ui っぽく上書き
+   ------------------------- */
+.primary-button,
+.chat-action-button,
+.modal-close-button {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 10px 16px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: .01em;
+  cursor: pointer;
+  transition:
+    transform var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) var(--ease-out),
+    background-color var(--dur-1) var(--ease-out),
+    border-color var(--dur-1) var(--ease-out),
+    filter var(--dur-1) var(--ease-out);
+  will-change: transform;
+}
+
+/* Primary (緑の主役ボタン) */
+.primary-button,
+.chat-action-button {
+  color: hsl(var(--primary-fg));
+  background: linear-gradient(135deg, rgba(34,197,94,1), rgba(16,185,129,1));
+  box-shadow: 0 14px 34px rgba(34,197,94,.22);
+}
+
+.primary-button:hover,
+.chat-action-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 44px rgba(34,197,94,.28);
+  filter: saturate(1.03);
+}
+
+.primary-button:active,
+.chat-action-button:active {
+  transform: translateY(0px) scale(.99);
+}
+
+/* Secondary (閉じるボタンなど) */
+.modal-close-button {
+  background: rgba(255,255,255,.85);
+  color: hsl(var(--fg));
+  border-color: rgba(0,0,0,.10);
+  box-shadow: var(--shadow-sm);
+}
+
+.modal-close-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+  background: rgba(255,255,255,.95);
+}
+
+/* Disabled */
+:where(button, .primary-button, .chat-action-button, .modal-close-button)[disabled],
+:where(button, .primary-button, .chat-action-button, .modal-close-button).is-disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* -------------------------
+   Input / Text
+   ------------------------- */
+.ui-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid hsl(var(--border));
+  background: rgba(255,255,255,.85);
+  box-shadow: var(--shadow-sm);
+}
+
+.ui-input:focus-visible {
+  border-color: rgba(34,197,94,.55);
+}
+
+/* -------------------------
+   Modal polish (既存モーダルを上品に)
+   ------------------------- */
+.modal-content {
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: var(--shadow-lg);
+}
+
+.chat-modal {
+  border: 10px solid rgba(28,178,74,.95); /* 既存の雰囲気維持しつつ少し品よく */
+  box-shadow: var(--shadow-lg);
+}
+
+.chat-header {
+  border-bottom: 1px solid rgba(255,255,255,.18);
+}
+
+/* -------------------------
+   Footer polish (既存フッターに“今っぽい質感”を足す)
+   ※ footer の class 名が違っても、.footer-inner が既にあるのでそこを強化
+   ------------------------- */
+.footer-inner {
+  background: rgba(255,255,255,.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 -18px 46px rgba(0,0,0,.08);
+}
+
+/* フッター内の表や地図も統一感 */
+.hours-table {
+  box-shadow: var(--shadow-sm);
+}
+
+.map-embed {
+  box-shadow: var(--shadow-sm);
+}
+
+/* -------------------------
+   Micro motion（“呼吸”を足す：邪魔にならない範囲）
+   ------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .breathing {
+    animation: breathing 4.8s var(--ease-out) infinite;
+  }
+  @keyframes breathing {
+    0%, 100% { transform: translateY(0); filter: saturate(1); }
+    50% { transform: translateY(-1px); filter: saturate(1.02); }
+  }
+}
