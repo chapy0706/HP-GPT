@@ -2381,3 +2381,59 @@ a {
     justify-content: center;
   }
 }
+
+/* =========================
+   YouTube サムネ → 再生
+   ========================= */
+
+.video-thumb {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.video-thumb img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+/* 再生アイコン */
+.video-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.video-play::before {
+  content: "";
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(4px);
+}
+
+.video-play::after {
+  content: "";
+  position: absolute;
+  margin-left: 4px;
+  width: 0;
+  height: 0;
+  border-left: 16px solid white;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+/* hover演出（PCのみ） */
+@media (hover: hover) {
+  .video-thumb:hover img {
+    transform: scale(1.02);
+  }
+
+  .video-thumb img {
+    transition: transform 240ms cubic-bezier(.16,1,.3,1);
+  }
+}

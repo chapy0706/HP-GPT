@@ -2092,3 +2092,26 @@ document.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeVideoModal();
 });
+
+/* =================================
+   YouTube サムネ → 再生処理
+   ================================= */
+document.addEventListener("click", (e) => {
+  const card = e.target.closest(".video-thumb");
+  if (!card) return;
+
+  const id = card.dataset.videoId;
+  if (!id) return;
+
+  card.innerHTML = `
+    <iframe
+      src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
+      frameborder="0"
+      allow="autoplay; encrypted-media; picture-in-picture"
+      allowfullscreen
+      title="YouTube video">
+    </iframe>
+  `;
+
+  card.classList.remove("video-thumb");
+});
