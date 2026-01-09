@@ -2255,6 +2255,16 @@ a {
   border-bottom: 1px solid rgba(255,255,255,.18);
 }
 
+.calendar-embed {
+  max-width: 900px;
+  margin: 24px auto;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+
 /* -------------------------
    Footer polish (既存フッターに“今っぽい質感”を足す)
    ※ footer の class 名が違っても、.footer-inner が既にあるのでそこを強化
