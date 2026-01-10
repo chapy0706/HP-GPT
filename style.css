@@ -2548,3 +2548,160 @@ a {
     justify-items: center;
   }
 }
+
+/* =========================
+   Footer hours: richer UI
+   ========================= */
+
+/* 枠をガラス寄りにして “カード感” を上げる */
+.footer-hours-text {
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  padding: 14px 14px;
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.10);
+}
+
+/* タイトル行を強くする */
+.footer-hours-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  margin: 0 0 10px;
+  letter-spacing: .01em;
+}
+
+/* タイトルの左に小さなアクセント */
+.footer-hours-title::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(34,197,94,1), rgba(16,185,129,1));
+  box-shadow: 0 10px 24px rgba(34,197,94,.22);
+}
+
+/* リストを “チップ表示” に変える */
+.footer-hours-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.footer-hours-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.06);
+  background: rgba(255,255,255,.85);
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+}
+
+/* 時間の見え方を整える */
+.footer-hours-list li:not(.footer-hours-note)::before {
+  content: "受付";
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(34,197,94,.12);
+  color: rgba(16, 120, 75, 0.95);
+  flex: 0 0 auto;
+}
+
+/* 本文側（時間） */
+.footer-hours-list li:not(.footer-hours-note) {
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+
+/* 休診日表示は少し控えめに、でも分かる */
+.footer-hours-note {
+  justify-content: flex-start;
+  font-weight: 700;
+  color: rgba(17,24,39,.78);
+  background: rgba(255,255,255,.78);
+}
+
+.footer-hours-note::before {
+  content: "休診";
+  font-size: 12px;
+  font-weight: 900;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(239, 68, 68, .12);
+  color: rgba(185, 28, 28, 0.95);
+  margin-right: 8px;
+}
+
+/* =========================
+   Contact calendar: smaller
+   ========================= */
+
+#contact .calendar-embed {
+  max-width: 900px;
+  margin: 18px auto 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255,255,255,.85);
+  box-shadow: 0 12px 30px rgba(0,0,0,.10);
+  border: 1px solid rgba(0,0,0,.06);
+}
+
+#contact .calendar-embed iframe {
+  width: 100%;
+  height: 420px; /* ← 小さくする（好みで 360〜480） */
+  border: 0;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  #contact .calendar-embed iframe {
+    height: 360px;
+  }
+}
+
+/* =========================
+   Footer: hours card width
+   ========================= */
+
+@media (min-width: 901px) {
+  /* 営業時間カラムを広がりすぎないようにする */
+  .footer-info-left {
+    justify-self: center;
+    width: 100%;
+    max-width: 360px; /* 好みで 320〜420 */
+  }
+
+  /* 中央2枠との間隔も少し整える（必要なら） */
+  .footer-info-layout {
+    column-gap: 18px;
+  }
+}
+
+/* =========================
+   Footer: map & calendar tone
+   ========================= */
+
+.footer-info-calendar .calendar-embed,
+.footer-info-right .map-embed {
+  background: rgba(255, 255, 255, 0.92);      /* 白寄りに */
+  border: 1px solid rgba(255, 255, 255, 0.70); /* 同系色の境界 */
+  box-shadow: 0 12px 30px rgba(0,0,0,.10);     /* hoursと同じ質感へ */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* “灰色っぽさ”の原因になりやすい余計な背景があれば明示的に消す */
+.footer-info-calendar .calendar-embed iframe,
+.footer-info-right .map-embed iframe {
+  background: transparent;
+}
