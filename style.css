@@ -21,6 +21,198 @@ header {
     position: relative;
 }
 
+
+/* =========================================================
+   Found U（#about）: 影響範囲を最小にする宇宙背景（画像）
+   - body直下のレイヤーは使わない（TOPの3枚カード等へ干渉しやすい）
+   ========================================================= */
+
+/* 以前の全画面レイヤー（もし残っていても無効化） */
+#space-scene,
+#wash-bg {
+  display: none !important;
+}
+
+/* Found U セクションだけ背景画像を敷く */
+#about.content-section {
+  position: relative;
+  background-image: url("images/fu-space.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 読みやすさのための白いベール（固定ではなくセクション内だけ）
+   上部は白強め → 下にいくほど薄くして“見えてくる感”を出す */
+#about.content-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(245, 245, 245, 0.94) 35%,
+    rgba(245, 245, 245, 0.40) 100%
+  );
+}
+
+/* 背景より前に本文を出す */
+#about.content-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* iOS系は background-attachment: fixed が不安定なことがあるので保険 */
+@supports (-webkit-touch-callout: none) {
+  #about.content-section {
+    background-attachment: scroll;
+  }
+}
+/* /style.css */
+/* =========================================================
+   Found U（#about）: 宇宙背景（星・天の川・惑星） + 白ベール
+   ========================================================= */
+
+#space-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    background: #050816;
+    overflow: hidden;
+}
+
+/* Found U のときだけ見せる（JS が body.is-about を付与） */
+body.is-about #space-scene {
+    opacity: 1;
+}
+
+/* ギャラリー拡大（fade-bg）や、背景色上書き中は邪魔しない */
+body.fade-bg #space-scene,
+body.bg-custom #space-scene {
+    opacity: 0;
+}
+
+#tsparticles {
+    position: absolute;
+    inset: 0;
+}
+
+/* tsParticles が生成する canvas の位置合わせ */
+#tsparticles canvas {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 天の川（映画っぽい “うっすら帯”） */
+#milkyway {
+    position: absolute;
+    inset: -35%;
+    z-index: 1;
+    pointer-events: none;
+    transform: rotate(-18deg);
+    opacity: 0.55;
+    mix-blend-mode: screen;
+    filter: blur(18px) saturate(1.15) contrast(1.05);
+
+    background:
+        radial-gradient(closest-side at 20% 40%, rgba(255, 255, 255, 0.22), transparent 65%),
+        radial-gradient(closest-side at 45% 52%, rgba(191, 219, 254, 0.18), transparent 70%),
+        radial-gradient(closest-side at 65% 48%, rgba(167, 139, 250, 0.16), transparent 72%),
+        radial-gradient(closest-side at 80% 60%, rgba(56, 189, 248, 0.12), transparent 70%),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.0), rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.0));
+}
+
+/* 惑星/月（“垣間見える”程度に薄く） */
+.planet {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.22;
+    mix-blend-mode: screen;
+    transform: translateZ(0);
+    animation: planetFloat 18s ease-in-out infinite;
+}
+
+/* 右上：惑星っぽい */
+.planet--a {
+    width: 360px;
+    height: 360px;
+    top: -120px;
+    right: -120px;
+    background:
+        radial-gradient(circle at 35% 35%, rgba(255,255,255,0.35), transparent 35%),
+        radial-gradient(circle at 30% 30%, rgba(186, 230, 253, 0.28), transparent 55%),
+        radial-gradient(circle at 65% 70%, rgba(59, 130, 246, 0.18), rgba(5, 8, 22, 0.0) 70%),
+        radial-gradient(circle at 80% 85%, rgba(5, 8, 22, 0.0), rgba(5, 8, 22, 0.35) 78%);
+    box-shadow: 0 0 60px rgba(147, 197, 253, 0.22);
+}
+
+/* 左下：月っぽい（クレーター風） */
+.planet--b {
+    width: 240px;
+    height: 240px;
+    bottom: -90px;
+    left: -90px;
+    opacity: 0.18;
+    background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,0.35), transparent 40%),
+        radial-gradient(circle at 55% 55%, rgba(255,255,255,0.10), transparent 55%),
+        radial-gradient(8px 8px at 35% 40%, rgba(148, 163, 184, 0.35) 40%, transparent 41%),
+        radial-gradient(10px 10px at 55% 55%, rgba(148, 163, 184, 0.28) 40%, transparent 41%),
+        radial-gradient(7px 7px at 65% 35%, rgba(148, 163, 184, 0.22) 40%, transparent 41%),
+        radial-gradient(circle at 70% 70%, rgba(30, 41, 59, 0.18), transparent 60%),
+        radial-gradient(circle at 80% 85%, rgba(5, 8, 22, 0.0), rgba(5, 8, 22, 0.28) 78%);
+    box-shadow: 0 0 48px rgba(226, 232, 240, 0.18);
+}
+
+@keyframes planetFloat {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50%      { transform: translate3d(0, 10px, 0); }
+}
+
+/* 白ベール（通常は白。Found U のときだけ透過が変わる） */
+#wash-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: #f5f5f5;
+    opacity: 1;
+    transition: opacity 0.08s linear;
+}
+
+body.is-about #wash-bg {
+    opacity: var(--foundu-wash-opacity, 1);
+}
+
+body.fade-bg #wash-bg,
+body.bg-custom #wash-bg {
+    opacity: 0;
+}
+
+/* 背景より前に出したい要素 */
+header,
+main,
+footer {
+    position: relative;
+    z-index: 10;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #space-scene { transition: none; }
+    #wash-bg { transition: none; }
+    .planet { animation: none; }
+}
+
+
 /* ========== Mini shadcn-like 基本トークン & 汎用コンポーネント ========== */
 :root {
   --u-radius-lg: 20px;
@@ -83,7 +275,7 @@ header {
 
 /* ゴーストボタン（枠だけ） */
 .u-btn-ghost {
-  background: transparent;
+  background: #f5f5f5;
   color: #0f172a;
   border: 1px solid rgba(15, 23, 42, 0.18);
 }
@@ -1083,7 +1275,7 @@ body.modal-open {
     left: 0;
     width: 100%;
     height: 100%;
-    background: transparent;
+    background: #f5f5f5;
     pointer-events: none;
     z-index: 1000;
 }
@@ -1391,7 +1583,7 @@ body.modal-open {
 
 /* 何も置かないマス（空セル）は装飾なし */
 .logo-cell--empty {
-  background: transparent;
+  background: #f5f5f5;
   cursor: default;
   box-shadow: none;
 }
@@ -1773,7 +1965,7 @@ body.modal-open {
 .footer-drawer-handle {
   margin-left: 12px;
   border: none;
-  background: transparent;
+  background: #f5f5f5;
   color: #4b5563;
   cursor: pointer;
   padding: 6px 10px;
@@ -2047,7 +2239,7 @@ body.modal-open {
 
 .video-modal-close {
   border: none;
-  background: transparent;
+  background: #f5f5f5;
   cursor: pointer;
   padding: 6px 10px;
   border-radius: 999px;
@@ -2703,5 +2895,5 @@ a {
 /* “灰色っぽさ”の原因になりやすい余計な背景があれば明示的に消す */
 .footer-info-calendar .calendar-embed iframe,
 .footer-info-right .map-embed iframe {
-  background: transparent;
+  background: #f5f5f5;
 }

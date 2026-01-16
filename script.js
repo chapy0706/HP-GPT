@@ -1572,6 +1572,160 @@ images.forEach((img) => {
 });
 
 // ========================================================
+// 7.5 Found U（about）: 宇宙背景（tsParticles）
+// ========================================================
+let spaceParticlesLoaded = false;
+let foundURevealBound = false;
+
+function initSpaceParticlesOnce() {
+  if (spaceParticlesLoaded) return;
+  spaceParticlesLoaded = true;
+
+  const host = document.getElementById("tsparticles");
+  if (!host) return;
+  if (!window.tsParticles || typeof window.tsParticles.load !== "function") return;
+
+  const prefersReducedMotion =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const options = {
+    fullScreen: { enable: false },
+    detectRetina: true,
+    fpsLimit: prefersReducedMotion ? 30 : 60,
+    background: { color: { value: "transparent" } },
+
+    particles: {
+      number: {
+        value: prefersReducedMotion ? 140 : 260,
+        density: { enable: true, area: 900 },
+      },
+      color: { value: ["#ffffff", "#c7d2fe", "#fef3c7"] },
+      shape: { type: "circle" },
+      opacity: {
+        value: { min: 0.15, max: 0.95 },
+        animation: {
+          enable: !prefersReducedMotion,
+          speed: 0.45,
+          minimumValue: 0.08,
+          sync: false,
+        },
+      },
+      size: { value: { min: 0.6, max: 2.8 } },
+
+      twinkle: {
+        particles: {
+          enable: !prefersReducedMotion,
+          frequency: 0.03,
+          opacity: 1,
+        },
+      },
+
+      move: {
+        enable: !prefersReducedMotion,
+        speed: 0.18,
+        direction: "none",
+        random: true,
+        straight: false,
+        outModes: { default: "out" },
+      },
+    },
+
+    emitters: prefersReducedMotion
+      ? []
+      : [
+          {
+            position: { x: 0, y: 10 },
+            size: { width: 0, height: 35 },
+            rate: { delay: 9, quantity: 1 },
+            life: { count: 0 },
+            particles: {
+              color: { value: ["#ffffff", "#93c5fd"] },
+              shape: { type: "circle" },
+              opacity: { value: 1 },
+              size: { value: { min: 1.2, max: 2.2 } },
+              move: {
+                enable: true,
+                speed: { min: 18, max: 28 },
+                direction: "bottom-right",
+                straight: true,
+                outModes: { default: "destroy" },
+                trail: {
+                  enable: true,
+                  length: 18,
+                  fillColor: { value: "#050816" },
+                },
+              },
+            },
+          },
+          {
+            position: { x: 20, y: 0 },
+            size: { width: 60, height: 0 },
+            rate: { delay: 13, quantity: 1 },
+            life: { count: 0 },
+            particles: {
+              color: { value: ["#ffffff", "#e0f2fe"] },
+              shape: { type: "circle" },
+              opacity: { value: 0.95 },
+              size: { value: { min: 1.0, max: 2.0 } },
+              move: {
+                enable: true,
+                speed: { min: 16, max: 24 },
+                direction: "bottom-right",
+                straight: true,
+                outModes: { default: "destroy" },
+                trail: {
+                  enable: true,
+                  length: 16,
+                  fillColor: { value: "#050816" },
+                },
+              },
+            },
+          },
+        ],
+
+    interactivity: {
+      events: {
+        onHover: { enable: false },
+        onClick: { enable: false },
+        resize: true,
+      },
+    },
+  };
+
+  try {
+    window.tsParticles.load({ id: "tsparticles", options });
+  } catch (error) {
+    // 失敗しても本体を止めない
+  }
+}
+
+function clamp01(n) {
+  return Math.min(1, Math.max(0, n));
+}
+
+function updateFoundUWashOpacity() {
+  if (!document.body.classList.contains("is-about")) return;
+
+  const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  const t = clamp01(window.scrollY / maxScroll);
+
+  // 読みやすさのため、完全透過にはしない
+  const minOpacity = 0.18;
+  const opacity = 1 - t * (1 - minOpacity);
+
+  document.documentElement.style.setProperty("--foundu-wash-opacity", opacity.toFixed(3));
+}
+
+function enableFoundUReveal() {
+  if (foundURevealBound) return;
+  foundURevealBound = true;
+
+  window.addEventListener("scroll", updateFoundUWashOpacity, { passive: true });
+  window.addEventListener("resize", updateFoundUWashOpacity);
+}
+
+// ========================================================
 // 8. セクション切り替え・トップページ制御
 // ========================================================
 
@@ -1646,29 +1800,54 @@ function showSection(id) {
 /**
  * 詳細表示やチャットから TOP セクションに戻る
  */
-function showTopPage() {
+function showTopPage(options = {}) {
+  const { showGallery = false } = options;
+
+  // 詳細/拡大状態をリセット
   details.classList.add("hidden");
-  if (currentImg) currentImg.classList.add("hidden");
-  gallery.classList.add("hidden");
+
+  if (currentImg) {
+    currentImg.classList.add("hidden");
+    currentImg.classList.remove("expanded", "dim-image");
+  }
+  currentImg = null;
+
+  // ★TOPではデフォルトで 3枚カードを隠す（イントロ中だけ見せる）
+  if (gallery) {
+    if (showGallery) {
+      gallery.classList.remove("hidden");
+      gallery.style.visibility = "visible";
+      gallery.style.top = "";
+    } else {
+      gallery.classList.add("hidden");
+      gallery.style.visibility = "hidden"; // 念のため二重で消す
+      gallery.style.top = "";
+    }
+  }
+
+  // 背景の上書きを解除
   body.style.backgroundColor = "";
+  body.classList.remove("bg-custom", "fade-bg", "is-about");
+  document.documentElement.style.setProperty("--foundu-wash-opacity", "1");
+
+  // UI を整える
+  header.style.visibility = "visible";
   subtext.style.display = "none";
   closeMobileMenu();
+
   mainMenu.classList.remove("hidden");
   mainContent.classList.remove("hidden");
   header.classList.remove("hidden");
   hamburger.classList.remove("hidden");
   syncMenuAccessibilityState();
+
   window.scrollTo(0, 0);
   showSection("top");
   detailStage = "done";
-  
-  // ★ ここでフッターを表示
+
   if (siteFooter) {
     siteFooter.classList.remove("hidden");
   }
-  if (gallery) {
-  gallery.style.top = "";
-}
 }
 
 // メインメニュークリックでページ内遷移 & モーダルクローズ
@@ -1743,6 +1922,7 @@ if (footerSnsRow) {
 let detailStage = "initial";
 moreButton.addEventListener("click", (e) => {
   if (detailStage === "initial") {
+    body.classList.add("bg-custom");
     // 第一段階：カード説明 → 体の状態テキストへ遷移
     e.preventDefault();
     descriptionDiv.classList.add("fade-up-out");
