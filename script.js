@@ -63,11 +63,13 @@ function syncMenuAccessibilityState() {
  * モバイルメニューを閉じる
  */
 function closeMobileMenu() {
-  if (!mainMenu || !menuOverlay) {
+  if (!mainMenu) {
     return;
   }
   mainMenu.classList.remove("open");
-  menuOverlay.classList.add("hidden");
+  if (menuOverlay) {
+    menuOverlay.classList.add("hidden");
+  }
   syncMenuAccessibilityState();
 }
 
@@ -1846,10 +1848,18 @@ function showTopPage(options = {}) {
   subtext.style.display = "none";
   closeMobileMenu();
 
-  mainMenu.classList.remove("hidden");
-  mainContent.classList.remove("hidden");
-  header.classList.remove("hidden");
-  hamburger.classList.remove("hidden");
+  if (mainMenu) {
+    mainMenu.classList.remove("hidden");
+  }
+  if (mainContent) {
+    mainContent.classList.remove("hidden");
+  }
+  if (header) {
+    header.classList.remove("hidden");
+  }
+  if (hamburger) {
+    hamburger.classList.remove("hidden");
+  }
   syncMenuAccessibilityState();
 
   window.scrollTo(0, 0);
@@ -1862,7 +1872,8 @@ function showTopPage(options = {}) {
 }
 
 // メインメニュークリックでページ内遷移 & モーダルクローズ
-mainMenu.addEventListener("click", (e) => {
+if (mainMenu) {
+  mainMenu.addEventListener("click", (e) => {
   const target = e.target;
   if (target.tagName !== "A") return;
   e.preventDefault();
@@ -1877,7 +1888,8 @@ mainMenu.addEventListener("click", (e) => {
   if (section) {
     showSection(section);
   }
-});
+  });
+}
 
 // フッターナビからのページ内遷移
 const footerNav = document.querySelector(".footer-nav-row");
