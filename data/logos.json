@@ -1,23 +1,30 @@
 [
   {
     "id": "logo01",
-    "name": "サンプルロゴ A",
-    "author": "マーメイド",
+    "name": "ロゴ1",
+    "author": "50代 女性",
     "description": "夢の中にいるような、海の中を漂っているような、普段しない動きで魔法にかかったみたい",
     "imageSrc": "images/feel1.png"
   },
   {
     "id": "logo02",
-    "name": "サンプルロゴ B",
-    "author": "このページつくった人",
-    "description": "自分の中から溢れる本当の自分に出会える",
-    "imageSrc": "images/Found U.PNG"
+    "name": "ロゴ2",
+    "author": "K",
+    "description": "どこからどうするのか予測できない施術 \n あんまり体感で感じないほうなのだが、終わったあとはこんなに軽くなるかと驚く",
+    "imageSrc": "images/feel2.png"
   },
   {
     "id": "logo03",
-    "name": "サンププログロ C",
-    "author": "にっくねーむC",
-    "description": "つながりとコミュニティをテーマにしています。",
-    "imageSrc": "images/logo.JPG"
+    "name": "ロゴ3",
+    "author": "yuri",
+    "description": "やわらかい、やさしい動きで整う \n スッとする \n 自分のからだのなかの壮大さを感じられる",
+    "imageSrc": "images/feel3.png"
+  },
+  {
+    "id": "logo04",
+    "name": "ロゴ4",
+    "author": "T.I",
+    "description": "・からだのなかを這っていくようなモゾモゾ感 \n ・からだが緩んでいったり、使っていない筋肉が動いていく体感 \n ・おだやかで軽いけど地にしっかり足がついている",
+    "imageSrc": "images/feel4.png"
   }
 ]
