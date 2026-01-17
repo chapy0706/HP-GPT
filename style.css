@@ -50,12 +50,16 @@ header {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(245, 245, 245, 1) 0%,
-    rgba(245, 245, 245, 0.94) 35%,
-    rgba(245, 245, 245, 0.40) 100%
-  );
+  background:
+    radial-gradient(1200px 640px at 18% 8%, rgba(59, 130, 246, 0.18), transparent 62%),
+    radial-gradient(900px 520px at 82% 34%, rgba(168, 85, 247, 0.16), transparent 58%),
+    radial-gradient(980px 720px at 50% 92%, rgba(16, 185, 129, 0.10), transparent 60%),
+    linear-gradient(
+      180deg,
+      rgba(245, 245, 245, 0.86) 0%,
+      rgba(245, 245, 245, 0.56) 38%,
+      rgba(245, 245, 245, 0.18) 100%
+    );
 }
 
 /* 背景より前に本文を出す */
