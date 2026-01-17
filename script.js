@@ -416,12 +416,23 @@ let modalSteps = [];
  * data/modal-steps.json を読み込み、modalSteps に格納
  */
 async function loadModalSteps() {
-  const res = await fetch("data/modal-steps.json");
-  if (!res.ok) {
-    throw new Error("modal-steps.json の読み込みに失敗しました");
+  const urls = ["data/modal-steps.json", "modal-steps.json"];
+
+  for (const url of urls) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        continue;
+      }
+      const data = await res.json();
+      modalSteps = data;
+      return;
+    } catch {
+      // 次の候補へ
+    }
   }
-  const data = await res.json();
-  modalSteps = data;
+
+  throw new Error("modal-steps.json の読み込みに失敗しました");
 }
 
 /**
@@ -2057,38 +2068,44 @@ const MAX_TILES = U_ACTIVE_INDICES.length;
 // JSON 読み込み
 // ----------------------
 async function loadLogos() {
-  const response = await fetch("data/logos.json");
-  if (!response.ok) {
-    console.error("JSON の読み込みに失敗しました");
-    return [];
+  const urls = ["data/logos.json", "logos.json"];
+
+  for (const url of urls) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        continue;
+      }
+      return response.json();
+    } catch {
+      // 次の候補へ
+    }
   }
-  return response.json();
+
+  console.error("logos.json の読み込みに失敗しました");
+  return [];
 }
 
 // ----------------------
 // ロゴ選択ロジック
 // ----------------------
 function createLogoTileOrder(logos, maxTiles) {
-  const result = [];
-
-  if (logos.length >= maxTiles) {
-    // 50 個以上 → シャッフルしてランダム抽出
-    const shuffled = [...logos];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled.slice(0, maxTiles);
+  // 仕様：ロゴは 1 種類につき 1 箇所だけ表示する（重複しない）
+  // ロゴ数がUのセル数を超える場合のみ、シャッフルして上限分を採用
+  if (!Array.isArray(logos) || logos.length === 0) {
+    return [];
   }
 
-  // 50 個未満 → 繰り返し配置
-  let idx = 0;
-  while (result.length < maxTiles) {
-    result.push(logos[idx]);
-    idx = (idx + 1) % logos.length;
+  if (logos.length <= maxTiles) {
+    return [...logos];
   }
 
-  return result;
+  const shuffled = [...logos];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, maxTiles);
 }
 
 // ----------------------
@@ -2105,17 +2122,27 @@ async function initGallery() {
   gridEl.style.setProperty("--cols", GRID_COLS);
 
   const tileLogos = createLogoTileOrder(logos, MAX_TILES);
-  const indexToLogo = new Map();
+  const activeSet = new Set(U_ACTIVE_INDICES);
 
-  U_ACTIVE_INDICES.forEach((cellIndex, i) => {
-    indexToLogo.set(cellIndex, tileLogos[i]);
-  });
+  // Uのアクティブセルのうち、先頭からロゴ数だけ割り当てる
+  const indexToLogo = new Map();
+  for (let i = 0; i < tileLogos.length; i++) {
+    indexToLogo.set(U_ACTIVE_INDICES[i], tileLogos[i]);
+  }
 
   // 全マス生成
   const total = GRID_ROWS * GRID_COLS;
   for (let i = 0; i < total; i++) {
     const cell = document.createElement("div");
 
+    // Uの外側：非表示（透明）
+    if (!activeSet.has(i)) {
+      cell.className = "logo-cell logo-cell--empty";
+      gridEl.appendChild(cell);
+      continue;
+    }
+
+    // Uの内側：ロゴがあれば表示、なければ未選択スロットを表示
     const logo = indexToLogo.get(i);
     if (logo) {
       cell.className = "logo-cell";
@@ -2126,7 +2153,7 @@ async function initGallery() {
 
       cell.addEventListener("click", () => showDetail(logo));
     } else {
-      cell.className = "logo-cell logo-cell--empty";
+      cell.className = "logo-cell logo-cell--placeholder";
     }
 
     gridEl.appendChild(cell);
@@ -2145,12 +2172,24 @@ function showDetail(logo) {
 
   if (placeholder) placeholder.style.display = "none";
 
-  content.classList.remove("is-hidden");
+  if (content) {
+    content.classList.remove("is-hidden");
+  }
 
-  thumb.src = logo.imageSrc;
-  thumb.alt = logo.name;
-  author.textContent = logo.author;
-  desc.textContent = logo.description;
+  if (thumb) {
+    thumb.src = logo.imageSrc;
+    thumb.alt = logo.name;
+  }
+  if (author) author.textContent = logo.author;
+  if (desc) desc.textContent = logo.description;
+
+  // ロゴ詳細カードまで、指でスワイプするように滑らかに移動
+  const target = document.getElementById("logo-detail-card") || document.querySelector(".logo-detail-section");
+  if (target) {
+    requestAnimationFrame(() => {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
 }
 
 // ロゴグリッド初期化

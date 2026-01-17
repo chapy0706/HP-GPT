@@ -1581,11 +1581,37 @@ body.modal-open {
   background-color: #fdfdfd;
 }
 
-/* 何も置かないマス（空セル）は装飾なし */
+/* 何も置かないマス（空セル）：Uの外側（=非表示） */
 .logo-cell--empty {
-  background: #f5f5f5;
+  background: transparent;
   cursor: default;
   box-shadow: none;
+}
+
+/* Uの内側で、まだ未選択のスロット */
+.logo-cell--placeholder {
+  background: #d1d5db;
+  cursor: default;
+  box-shadow: none;
+  border: 1px solid #e5e7eb;
+}
+
+/* hoverの立体感は、クリック可能セルだけに適用 */
+.logo-cell--empty:hover {
+  transform: none;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.logo-cell--placeholder:hover {
+  transform: none;
+  box-shadow: none;
+  background-color: #d1d5db;
+}
+
+/* 詳細カードへスクロールしたとき、見出しが上に張り付かないように */
+#logo-detail-card {
+  scroll-margin-top: 96px;
 }
 
 /* ロゴ詳細表示エリアのカード */
@@ -1596,7 +1622,8 @@ body.modal-open {
   margin: 0 auto;
   padding: 16px 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
+
+  scroll-margin-top: 96px;}
 
 .logo-detail-placeholder {
   color: #777;
