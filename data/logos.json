@@ -9,22 +9,29 @@
   {
     "id": "logo02",
     "name": "ロゴ2",
-    "author": "K",
-    "description": "どこからどうするのか予測できない施術 \n あんまり体感で感じないほうなのだが、終わったあとはこんなに軽くなるかと驚く",
+    "author": "70代 男性",
+    "description": "全身の力が抜けていく 無になる",
     "imageSrc": "images/feel2.png"
   },
   {
     "id": "logo03",
     "name": "ロゴ3",
-    "author": "yuri",
-    "description": "やわらかい、やさしい動きで整う \n スッとする \n 自分のからだのなかの壮大さを感じられる",
+    "author": "yuri さん",
+    "description": "やわらかい、やさしい動きで整う スッとする 自分のからだのなかの壮大さを感じられる",
     "imageSrc": "images/feel3.png"
   },
   {
     "id": "logo04",
     "name": "ロゴ4",
-    "author": "T.I",
-    "description": "・からだのなかを這っていくようなモゾモゾ感 \n ・からだが緩んでいったり、使っていない筋肉が動いていく体感 \n ・おだやかで軽いけど地にしっかり足がついている",
+    "author": "T.I さん",
+    "description": "・からだのなかを這っていくようなモゾモゾ感 ・からだが緩んでいったり、使っていない筋肉が動いていく体感 ・おだやかで軽いけど地にしっかり足がついている",
     "imageSrc": "images/feel4.png"
+  },
+  {
+    "id": "logo05",
+    "name": "ロゴ5",
+    "author": "K さん",
+    "description": "どこからどうするのか予測できない施術 あんまり体感で感じないほうなのだが、終わったあとはこんなに軽くなるかと驚く",
+    "imageSrc": "images/feel5.png"
   }
 ]

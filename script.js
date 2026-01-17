@@ -1871,11 +1871,76 @@ mainMenu.addEventListener("click", (e) => {
 // フッターナビからのページ内遷移
 const footerNav = document.querySelector(".footer-nav-row");
 
+// ===========================
+// フッター：感じあう（ロゴ / Found U）ミニアコーディオン
+// ===========================
+const footerBrandItem = document.querySelector(".footer-brand-item");
+const footerBrandTrigger = document.querySelector(".footer-brand-trigger");
+const footerBrandPanel = document.getElementById("footer-brand-panel");
+
+function setFooterBrandAccordion(open) {
+  if (!footerBrandItem || !footerBrandTrigger || !footerBrandPanel) {
+    return;
+  }
+  footerBrandItem.classList.toggle("is-open", open);
+  footerBrandTrigger.setAttribute("aria-expanded", open ? "true" : "false");
+  footerBrandPanel.setAttribute("aria-hidden", open ? "false" : "true");
+}
+
+function toggleFooterBrandAccordion() {
+  if (!footerBrandItem) {
+    return;
+  }
+  const isOpen = footerBrandItem.classList.contains("is-open");
+  setFooterBrandAccordion(!isOpen);
+}
+
+if (footerBrandTrigger) {
+  footerBrandTrigger.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFooterBrandAccordion();
+  });
+}
+
+// パネル内のリンク選択時は閉じる（遷移処理自体は footerNav 側に任せる）
+if (footerBrandPanel) {
+  footerBrandPanel.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (!link) {
+      return;
+    }
+    setFooterBrandAccordion(false);
+  });
+}
+
+// 外側クリックで閉じる
+document.addEventListener("click", (e) => {
+  if (!footerBrandItem || !footerBrandItem.classList.contains("is-open")) {
+    return;
+  }
+  const inside = e.target.closest(".footer-brand-item");
+  if (!inside) {
+    setFooterBrandAccordion(false);
+  }
+});
+
+// Escで閉じる
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") {
+    return;
+  }
+  setFooterBrandAccordion(false);
+});
+
 if (footerNav) {
   footerNav.addEventListener("click", (e) => {
     const link = e.target.closest("a");
     if (!link) return;
     e.preventDefault();
+
+    // アコーディオンが開いていたら閉じる
+    setFooterBrandAccordion(false);
 
     // モーダルが開いていたら閉じる
     closeModal({ restoreFocus: false });

@@ -1737,6 +1737,88 @@ body.modal-open {
   border-radius: 999px;
 }
 
+/* ===========================
+   フッター：感じあうミニアコーディオン（ロゴ / Found U）
+   =========================== */
+
+/* li の中に小さなパネルを出すためのアンカー */
+.footer-brand-item {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ナビリンクと見た目を揃えるボタン */
+.footer-brand-trigger {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  color: #374151;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 4px 2px;
+}
+
+.footer-brand-trigger:hover {
+  background: rgba(209, 250, 229, 0.85);
+  border-radius: 999px;
+}
+
+.footer-brand-trigger:focus-visible {
+  outline: 2px solid rgba(16, 185, 129, 0.55);
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+.footer-brand-panel {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  min-width: 170px;
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 160;
+}
+
+.footer-brand-item.is-open .footer-brand-panel {
+  display: flex;
+}
+
+.footer-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: #374151;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.footer-brand-link:hover {
+  background: rgba(209, 250, 229, 0.85);
+}
+
+.footer-brand-link i {
+  width: 18px;
+  text-align: center;
+}
+
 /* ナビ内のアイコン（スマホ主体） */
 .footer-icon {
   font-size: 17px;
@@ -1763,6 +1845,12 @@ body.modal-open {
   }
 
   .footer-nav-row a {
+    flex-direction: row;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .footer-brand-trigger {
     flex-direction: row;
     gap: 8px;
     font-size: 13px;
@@ -1935,6 +2023,10 @@ body.modal-open {
   }
 
   .footer-nav-row a {
+    font-size: 10px;
+  }
+
+  .footer-brand-trigger {
     font-size: 10px;
   }
 

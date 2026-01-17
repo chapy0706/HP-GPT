@@ -161,7 +161,7 @@
                                 <dd id="detail-author"></dd>
                             </div>
                             <div class="logo-detail-row">
-                                <dt>ロゴへの想い</dt>
+                                <dt>感じたこと</dt>
                                 <dd id="detail-description"></dd>
                             </div>
                         </dl>
@@ -346,22 +346,45 @@
                   </a>
                 </li>
                 <li>
-                  <a href="#" data-section="feel">
-                    <span class="footer-icon" aria-hidden="true">
-                      <i class="fa-solid fa-hands-holding"></i>
-                    </span>
-                    <span class="footer-label">感じあうロゴ</span>
-                  </a>
+                  <div class="footer-brand-item">
+                    <button
+                      type="button"
+                      class="footer-brand-trigger"
+                      aria-expanded="false"
+                      aria-controls="footer-brand-panel"
+                    >
+                      <span class="footer-icon" aria-hidden="true">
+                        <i class="fa-solid fa-hands-holding"></i>
+                      </span>
+                      <span class="footer-label">感じあう</span>
+                    </button>
+
+                    <!-- 小さなアコーディオン：ロゴ / Found U -->
+                    <div
+                      id="footer-brand-panel"
+                      class="footer-brand-panel"
+                      aria-hidden="true"
+                    >
+                      <a href="#" class="footer-brand-link" data-section="feel">
+                        <i class="fa-solid" aria-hidden="true"></i>
+                        <span>ロゴ</span>
+                      </a>
+                      <a href="#" class="footer-brand-link" data-section="about">
+                        <i class="fa-solid" aria-hidden="true"></i>
+                        <span>Found U</span>
+                      </a>
+                    </div>
+                  </div>
                 </li>
-                <li>
-                  <a href="#" data-section="about">
+                <!-- 下段に追加した Uranai -->
+                  <li>
+                  <a href="#" data-section="contact">
                     <span class="footer-icon" aria-hidden="true">
                       <i class="fa-solid fa-circle-info"></i>
                     </span>
-                    <span class="footer-label">Found U</span>
+                    <span class="footer-label">お問い合わせ</span>
                   </a>
                 </li>
-                <!-- 下段に追加した Uranai -->
                 <li>
                   <a href="#" data-section="uranai">
                     <span class="footer-icon" aria-hidden="true">
