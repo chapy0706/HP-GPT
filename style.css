@@ -975,11 +975,14 @@ body.modal-open {
 
 /* LINE フォロー用QRコードなど */
 .found-u-logo {
-    width: min(220px, 60vw);
+    /* Found U ロゴをもう少し大きく（背景はそのまま） */
+    width: min(520px, 92vw);
+    max-width: 100%;
     height: auto;
+    display: block;
+    margin: 0 auto;
     border-radius: 8px;
 }
-
 .line-followup-bubble {
     display: flex;
     flex-direction: column;
