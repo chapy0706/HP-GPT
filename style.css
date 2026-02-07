@@ -2967,3 +2967,21 @@ a {
 .footer-info-right .map-embed iframe {
   background: #f5f5f5;
 }
+
+/* =========================================================
+   Found U（#about）: 最小限の可読性UP（文字の背後だけ）
+   - 文字色は変えず、下線も入れず、背景だけを薄く敷く
+   - 宇宙背景が「見える」ことを優先して、範囲はテキスト周りだけ
+   ========================================================= */
+#about .text-veil {
+  background: rgba(244, 238, 238, 0.22);
+  padding: 0.12em 0.45em;
+  border-radius: 0.7em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+#about .description {
+  background: transparent;
+  box-shadow: none;
+}
