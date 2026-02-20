@@ -1,100 +1,77 @@
 // /scripts/static-server.mjs
 import http from "node:http";
-import { promises as fs } from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const repoRoot = path.resolve(__dirname, "..");
 
 function parseArgs(argv) {
-  const args = { port: 4173, root: path.resolve(__dirname, "..") };
-  for (let i = 0; i < argv.length; i++) {
-    const a = argv[i];
-    if (a === "--port" && argv[i + 1]) {
-      args.port = Number(argv[++i]);
-    } else if (a === "--root" && argv[i + 1]) {
-      args.root = path.resolve(argv[++i]);
-    }
+  const args = new Map();
+  for (let i = 0; i < argv.length; i += 1) {
+    const key = argv[i];
+    if (!key.startsWith("--")) continue;
+    const value = argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : "true";
+    args.set(key.slice(2), value);
   }
   return args;
 }
 
-const { port, root } = parseArgs(process.argv.slice(2));
+const args = parseArgs(process.argv.slice(2));
+const port = Number(args.get("port") ?? "4173");
+const background = args.get("background") === "true";
 
-const MIME = {
+const mime = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
-  ".mjs": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
-  ".svg": "image/svg+xml",
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
-  ".webp": "image/webp",
   ".gif": "image/gif",
-  ".mp3": "audio/mpeg",
+  ".svg": "image/svg+xml",
   ".mp4": "video/mp4",
-  ".woff": "font/woff",
-  ".woff2": "font/woff2",
+  ".webp": "image/webp"
 };
 
-function safeJoin(base, target) {
-  const targetPath = path.normalize(path.join(base, target));
-  if (!targetPath.startsWith(base)) {
-    return null;
-  }
-  return targetPath;
+function safePath(urlPath) {
+  // Prevent path traversal
+  const decoded = decodeURIComponent(urlPath.split("?")[0]);
+  const clean = decoded.replace(/\\/g, "/");
+  const joined = path.join(repoRoot, clean);
+  const resolved = path.resolve(joined);
+  if (!resolved.startsWith(repoRoot)) return null;
+  return resolved;
 }
 
-const server = http.createServer(async (req, res) => {
-  try {
-    const url = new URL(req.url ?? "/", `http://${req.headers.host}`);
-    const pathname = decodeURIComponent(url.pathname);
+const server = http.createServer((req, res) => {
+  const reqUrl = req.url ?? "/";
+  const reqPath = reqUrl === "/" ? "/index.html" : reqUrl;
+  const abs = safePath(reqPath);
+  if (!abs) {
+    res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end("Bad Request");
+    return;
+  }
 
-    // Basic security headers (doesn't try to be a CSP solution).
-    res.setHeader("X-Content-Type-Options", "nosniff");
-    res.setHeader("X-Frame-Options", "SAMEORIGIN");
-    res.setHeader("Referrer-Policy", "no-referrer");
-
-    let filePath;
-
-    if (pathname === "/" || pathname === "") {
-      filePath = path.join(root, "index.html");
-    } else {
-      const joined = safeJoin(root, pathname.replace(/^\//, ""));
-      if (!joined) {
-        res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
-        res.end("Bad Request");
-        return;
-      }
-      filePath = joined;
-    }
-
-    // Serve directories as index.html
-    try {
-      const st = await fs.stat(filePath);
-      if (st.isDirectory()) {
-        filePath = path.join(filePath, "index.html");
-      }
-    } catch {
-      // ignore
-    }
-
-    const ext = path.extname(filePath).toLowerCase();
-    const contentType = MIME[ext] ?? "application/octet-stream";
-
-    const body = await fs.readFile(filePath);
-    res.writeHead(200, { "Content-Type": contentType });
-    res.end(body);
-  } catch (e) {
+  if (!fs.existsSync(abs) || fs.statSync(abs).isDirectory()) {
     res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
     res.end("Not Found");
+    return;
   }
+
+  const ext = path.extname(abs).toLowerCase();
+  res.writeHead(200, { "Content-Type": mime[ext] ?? "application/octet-stream" });
+  fs.createReadStream(abs).pipe(res);
 });
 
 server.listen(port, "127.0.0.1", () => {
-  // eslint-disable-next-line no-console
-  console.log(`static-server: http://127.0.0.1:${port} (root: ${root})`);
+  const msg = `static-server listening on http://127.0.0.1:${port}`;
+  if (!background) {
+    console.log(msg);
+  }
+  // If background mode, keep running silently.
 });

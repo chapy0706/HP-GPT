@@ -1,28 +1,49 @@
 <!-- /docs/specs/active/site-behavior.md -->
 
-# Spec: 現行挙動の基準（壊してはいけないもの）
+# Site behavior contracts (offline-first)
 
-このspecは「見た目」ではなく「挙動」を守るための最低限の約束。
+このドキュメントは「現行挙動を壊さない」ための最小ルール（契約）だよ。
 
-## 1) イントロ → スキップ → TOP表示
+## 目的
 
-- ページロード直後に `#intro-overlay` が表示される
-- `#skip-button` を押すと、イントロが閉じてTOPが表示される
-- `#main-content` は hidden でなくなる
+- AI（Claude Code / Codex）が、良かれと思って DOM 構造や ID を変えて挙動を壊す事故を減らす
+- ネットワーク無しでも `make verify` が回る状態を維持する
 
-## 2) はじまりボタン → チャットモーダル
+## 変えてはいけない UI API（DOM の契約）
 
-- `#start-journey-button` を押すと `#journey-modal` が開く
-- モーダルは `aria-hidden="false"` になる
-- 最初のステップとして、`modal-steps.json` の step[0] が描画される
+次の ID / class は API として扱い、名前変更や削除をしない。
 
-## 3) Feel（ロゴ）ページのグリッド
+- イントロ
+  - `#intro-overlay`
+  - `#skip-button`
+- TOP
+  - `#start-journey-button`
+  - `#main-content`
+- チャットモーダル
+  - `#journey-modal`
+  - `#modal-text`
+  - `#modal-actions`
+  - `#journey-close-button`
+- Feel
+  - `#logo-u-grid`
 
-- Feelセクションで `#logo-u-grid` が 100 マス（`.logo-cell`）生成される
-- ロゴ（画像）をクリックすると、右の詳細が更新される
-  - `#detail-author` が空でなくなる
-  - `#detail-thumbnail` の `src` が設定される
+## データファイル契約
 
-## 参照
+以下のどちらかに配置されていること。
 
-- E2E テスト: `tests/smoke.spec.mjs`
+- `modal-steps.json` または `data/modal-steps.json`
+- `logos.json` または `data/logos.json`
+
+## 検証方法
+
+- オフライン検証（依存なし）
+  - `make verify`
+
+- 証跡ログ
+  - `make evidence`（`out/evidence/*.log` を生成）
+
+## AI 実装ルール（最小）
+
+- ついでのリファクタ禁止
+- DOM 契約を壊す変更は禁止
+- 変更後は必ず `make verify` を通す

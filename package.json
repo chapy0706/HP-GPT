@@ -1,14 +1,11 @@
 {
-  "name": "static-site-guardrails",
+  "name": "static-site-guardrails-offline",
   "private": true,
   "type": "module",
   "scripts": {
     "serve": "node scripts/static-server.mjs --port 4173",
-    "test:e2e": "playwright test",
-    "verify": "npm run test:e2e",
-    "evidence": "bash scripts/evidence.sh"
-  },
-  "devDependencies": {
-    "@playwright/test": "^1.50.0"
+    "verify:offline": "node scripts/offline-verify.mjs",
+    "test:offline": "node --test tests/offline-contract.test.mjs",
+    "verify": "npm run -s verify:offline && npm run -s test:offline"
   }
 }
