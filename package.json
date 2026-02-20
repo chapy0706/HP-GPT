@@ -1,0 +1,14 @@
+{
+  "name": "static-site-guardrails",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "node scripts/static-server.mjs --port 4173",
+    "test:e2e": "playwright test",
+    "verify": "npm run test:e2e",
+    "evidence": "bash scripts/evidence.sh"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0"
+  }
+}
