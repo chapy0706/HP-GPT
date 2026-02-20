@@ -2389,6 +2389,73 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeVideoModal();
 });
 
+/* =====================================
+   Footer Calendar: 当月 Agenda 表示更新
+   ===================================== */
+function formatYyyymmdd(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}${m}${d}`;
+}
+
+function getMonthDateRange(date) {
+  const start = new Date(date.getFullYear(), date.getMonth(), 1);
+  const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  return { start: formatYyyymmdd(start), end: formatYyyymmdd(end) };
+}
+
+function buildGoogleCalendarEmbedUrl({ calendarSrc, ctz, mode, datesRange, uiFlags }) {
+  const params = Object.assign(
+    { src: calendarSrc, ctz, mode, dates: `${datesRange.start}/${datesRange.end}` },
+    uiFlags
+  );
+  return `https://calendar.google.com/calendar/embed?${new URLSearchParams(params).toString()}`;
+}
+
+let _footerCalLastMonth = null;
+
+function updateFooterCalendarIFrameIfNeeded() {
+  if (!window.matchMedia("(min-width: 769px)").matches) return;
+  if (!window.matchMedia("(hover: hover)").matches) return;
+
+  const iframe = document.getElementById("footer-calendar-iframe");
+  if (!iframe) return;
+
+  const now = new Date();
+  const thisMonth = `${now.getFullYear()}-${now.getMonth()}`;
+  if (_footerCalLastMonth === thisMonth) return; // 同月ならスキップ
+
+  const calSrcMatch = iframe.src.match(/[?&]src=([^&]+)/);
+  if (!calSrcMatch) return;
+  const calendarSrc = decodeURIComponent(calSrcMatch[1]);
+
+  const range = getMonthDateRange(now);
+  const newUrl = buildGoogleCalendarEmbedUrl({
+    calendarSrc,
+    ctz: "Asia/Tokyo",
+    mode: "AGENDA",
+    datesRange: range,
+    uiFlags: {
+      showTitle: "0",
+      showNav: "0",
+      showPrint: "0",
+      showTabs: "0",
+      showCalendars: "0",
+      showTz: "0",
+    },
+  });
+
+  iframe.src = newUrl;
+  _footerCalLastMonth = thisMonth;
+}
+
+const _footerInfoRow = document.querySelector(".footer-info-row");
+if (_footerInfoRow) {
+  _footerInfoRow.addEventListener("mouseenter", updateFooterCalendarIFrameIfNeeded);
+  _footerInfoRow.addEventListener("focusin", updateFooterCalendarIFrameIfNeeded);
+}
+
 /* =================================
    YouTube サムネ → 再生処理
    ================================= */
