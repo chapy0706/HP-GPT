@@ -1,3 +1,4 @@
+/* style.css */
 /* =========================================================
    全体レイアウト・タイポグラフィ
    - ページ全体の基本スタイル
@@ -1875,18 +1876,8 @@ body.modal-open {
   max-height: 0;
   overflow: hidden;
   opacity: 0;
-  transform: translateY(6px);
-  transition: max-height 0.35s ease, opacity 0.2s ease, transform 0.2s ease;
-}
-
-/* PC: ホバー or フォーカスで展開 */
-@media (min-width: 769px) {
-  .footer-info-row:hover .footer-info-expand,
-  .footer-info-row:focus-within .footer-info-expand {
-    max-height: 520px; /* 中身より大きければOK。足りなければ増やす */
-    opacity: 1;
-    transform: translateY(0);
-  }
+  transform: translateY(0);
+  pointer-events: none;
 }
 
 .footer-info-main {
@@ -2936,6 +2927,25 @@ a {
 @media (max-width: 768px) {
   #contact .calendar-embed iframe {
     height: 360px;
+  }
+}
+
+/* =========================
+   Contact: hours + map layout
+   ========================= */
+
+#contact .contact-info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  max-width: 900px;
+  margin: 24px auto 0;
+  align-items: start;
+}
+
+@media (min-width: 769px) {
+  #contact .contact-info-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
