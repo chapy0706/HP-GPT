@@ -14,6 +14,29 @@ body {
     transition: background-color 1s;
     text-align: center;
     z-index: 300;
+    -webkit-text-size-adjust: 100%;
+    font-size: clamp(15.5px, 1.2vw + 12px, 18px);
+    line-height: 1.75;
+    word-break: normal;
+    line-break: strict;
+    overflow-wrap: break-word;
+    text-wrap: pretty;
+}
+
+.prose {
+    max-width: 52ch;
+    width: min(100%, 52ch);
+    padding-inline: 0.5rem;
+    margin-inline: auto;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.contact-phone {
+    font-weight: 700;
+    font-size: 1.08em;
 }
 
 header {
@@ -2580,6 +2603,10 @@ a {
   margin: 0 0 18px;
   line-height: 1.8;
   color: rgba(17, 24, 39, 0.86);
+}
+
+.feel-project .prose {
+  text-align: center;
 }
 
 .feel-flow {
