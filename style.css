@@ -30,6 +30,11 @@ body {
     margin-inline: auto;
 }
 
+.prose-wide {
+    max-width: 60ch;
+    width: min(100%, 60ch);
+}
+
 .nowrap {
     white-space: nowrap;
 }
@@ -2605,8 +2610,19 @@ a {
   color: rgba(17, 24, 39, 0.86);
 }
 
-.feel-project .prose {
+.feel-project .feel-lead,
+.feel-project .feel-sub {
   text-align: center;
+}
+
+#contact .line-followup-qr {
+  display: block;
+  margin: 0 auto 10px;
+}
+
+#contact #start-journey-button {
+  display: inline-flex;
+  margin: 10px auto 0;
 }
 
 .feel-flow {
@@ -3038,4 +3054,10 @@ a {
 #about .description {
   background: transparent;
   box-shadow: none;
+}
+
+/* Feel project: force centered text for lead/sub copy */
+#feel .feel-project .feel-lead,
+#feel .feel-project .feel-sub {
+  text-align: center;
 }
