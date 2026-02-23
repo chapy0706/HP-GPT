@@ -2998,22 +2998,37 @@ a {
 @media (min-width: 769px) {
   #contact .contact-info-grid {
     grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "address address"
-      "hours map";
   }
 }
 
-#contact .contact-address {
-  grid-area: address;
-}
-
 #contact .contact-hours {
-  grid-area: hours;
+  width: 100%;
+  justify-self: center;
 }
 
-#contact .contact-map {
-  grid-area: map;
+#contact .contact-map-panel {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  text-align: center;
+  width: 100%;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  padding: 14px 14px;
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.10);
+}
+
+#contact .contact-map-panel .contact-address {
+  font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+  #contact .contact-info-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* =========================
