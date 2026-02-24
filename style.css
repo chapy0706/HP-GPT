@@ -1124,6 +1124,17 @@ body.modal-open {
     overflow-wrap: anywhere;
 }
 
+.details .description {
+    font-size: clamp(14px, 1.6vw + 10px, 16px);
+    line-height: 1.7;
+    word-break: normal;
+    line-break: normal;
+    overflow-wrap: break-word;
+    text-wrap: pretty;
+    max-width: 26ch;
+    padding-inline: 0.5rem;
+}
+
 .autonomic-note {
     font-size: 10px;
     font-weight: bold;
@@ -2945,7 +2956,7 @@ a {
 }
 
 .footer-hours-note::before {
-  content: "休診";
+  content: "休業日";
   font-size: 12px;
   font-weight: 900;
   padding: 4px 8px;
