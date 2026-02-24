@@ -1125,8 +1125,8 @@ body.modal-open {
 }
 
 .details .description {
-    font-size: clamp(14px, 1.6vw + 10px, 16px);
     line-height: 1.7;
+    white-space: pre-line;
     word-break: normal;
     line-break: normal;
     overflow-wrap: break-word;
