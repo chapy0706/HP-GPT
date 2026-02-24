@@ -1126,10 +1126,10 @@ body.modal-open {
 
 .details .description {
     line-height: 1.7;
-    white-space: pre-line;
-    word-break: normal;
+    white-space: pre;
+    word-break: keep-all;
     line-break: normal;
-    overflow-wrap: break-word;
+    overflow-wrap: normal;
     text-wrap: pretty;
     max-width: 26ch;
     padding-inline: 0.5rem;
