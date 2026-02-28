@@ -1459,7 +1459,7 @@ body.modal-open {
         transform: none;
         padding: 10px;
         box-sizing: border-box;
-        justify-content: flex-start;
+        justify-content: center;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
