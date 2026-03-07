@@ -1161,6 +1161,12 @@ body.not-safari .dim-image::before {
     padding-inline: 0.5rem;
 }
 
+/* Chrome: 暗転画像の上に黒文字は読みにくいため白に（Safariは薄い背景なので黒のまま） */
+body.not-safari .details .description {
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
 .autonomic-note {
     font-size: 10px;
     font-weight: bold;
