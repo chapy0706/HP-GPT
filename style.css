@@ -1069,20 +1069,9 @@ body.modal-open {
     opacity: 1;
 }
 
-/* Chrome: imgへのfilter適用をやめ、::beforeオーバーレイで暗転（GPU合成ズレ回避） */
 body.not-safari .dim-image img {
-    animation: none;
-    filter: none;
-}
-
-body.not-safari .dim-image::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 1; /* img(0)より上、.details(20)より下 */
-    pointer-events: none;
-    background: rgba(0, 0, 0, 0);
-    animation: dimImageOverlay 3s forwards;
+    animation: dimImageNonSafari 3s forwards;
+    opacity: 1;
 }
 
 @keyframes dimImage {
@@ -1094,9 +1083,13 @@ body.not-safari .dim-image::before {
     }
 }
 
-@keyframes dimImageOverlay {
-    from { background: rgba(0, 0, 0, 0); }
-    to   { background: rgba(0, 0, 0, 0.38); }
+@keyframes dimImageNonSafari {
+    from {
+        filter: brightness(1);
+    }
+    to {
+        filter: brightness(0.62);
+    }
 }
 
 .fade-in-text {
