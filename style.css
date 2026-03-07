@@ -524,6 +524,7 @@ footer {
 }
 
 .image-container img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -550,29 +551,31 @@ footer {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(2);
+    transform: translate3d(-50%, -50%, 0) scale(2);
     z-index: 10;
     opacity: 1;
     animation: zoomIn 0.5s forwards;
-    overflow: visible;
+    overflow: hidden;
+    clip-path: inset(0);
+    transform-style: flat; /* Chrome: preserve-3dを無効化しoverflow/clip/filterを正しく適用 */
 }
 
 /* 拡大アニメーション */
 @keyframes zoomIn {
     from {
-        transform: translate(-50%, -50%) scale(1);
+        transform: translate3d(-50%, -50%, 0) scale(1);
     }
     to {
-        transform: translate(-50%, -50%) scale(2);
+        transform: translate3d(-50%, -50%, 0) scale(2);
     }
 }
 
 @keyframes zoomInMobile {
     from {
-        transform: translate(-50%, -50%) scale(1);
+        transform: translate3d(-50%, -50%, 0) scale(1);
     }
     to {
-        transform: translate(-50%, -50%) scale(2);
+        transform: translate3d(-50%, -50%, 0) scale(2);
     }
 }
 
@@ -598,6 +601,7 @@ footer {
     justify-content: center;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    background: transparent; /* Chrome: overflow-y:autoのスクロールレイヤーにページ背景色が塗られるのを防止 */
 }
 
 /* 共通で使う非表示クラス */
@@ -1063,6 +1067,23 @@ body.modal-open {
 
 .dim-image img {
     animation: dimImage 3s forwards;
+    opacity: 1;
+}
+
+/* Chrome: imgへのfilter適用をやめ、::beforeオーバーレイで暗転（GPU合成ズレ回避） */
+body.not-safari .dim-image img {
+    animation: none;
+    filter: none;
+}
+
+body.not-safari .dim-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1; /* img(0)より上、.details(20)より下 */
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0);
+    animation: dimImageOverlay 3s forwards;
 }
 
 @keyframes dimImage {
@@ -1072,6 +1093,11 @@ body.modal-open {
     to {
         opacity: 0.3;
     }
+}
+
+@keyframes dimImageOverlay {
+    from { background: rgba(0, 0, 0, 0); }
+    to   { background: rgba(0, 0, 0, 0.38); }
 }
 
 .fade-in-text {
@@ -1359,6 +1385,12 @@ body.modal-open {
    ========================================================= */
 
 @media (max-width: 600px) {
+    .mission-line {
+        display: inline-block;
+        white-space: nowrap;
+        font-size: clamp(11px, 3.8vw, 14px);
+    }
+
     /* モーダル全体の余白調整＋安全領域考慮
        - 上: ステータスバー・ノッチ分を余白に足す
        - 下: ホームバー分も少し余裕を持たせる */
@@ -1444,11 +1476,11 @@ body.modal-open {
     }
 
     .expanded {
-        transform: translate(-50%, -50%) scale(2);
+        transform: translate3d(-50%, -50%, 0) scale(2);
         animation: zoomInMobile 0.5s forwards;
         max-width: 100vw;
         max-height: 100vh;
-        overflow: visible;
+        overflow: hidden;
     }
 
     .details {

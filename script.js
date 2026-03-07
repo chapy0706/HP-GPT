@@ -25,6 +25,14 @@ const header = document.querySelector("header");
 const siteFooter = document.querySelector(".site-footer");
 const moreButton = document.querySelector(".more-button");
 
+const userAgent = navigator.userAgent;
+const isSafariBrowser =
+  /Safari/i.test(userAgent) &&
+  !/Chrome|CriOS|Edg|OPR|Firefox|FxiOS|SamsungBrowser/i.test(userAgent);
+if (body && !isSafariBrowser) {
+  body.classList.add("not-safari");
+}
+
 // イントロ用オーバーレイ要素
 const introOverlay = document.getElementById("intro-overlay");
 const introText1 = document.getElementById("intro-text1");
@@ -1565,6 +1573,8 @@ images.forEach((img) => {
       });
       header.classList.add("hidden");
       window.scrollTo(0, 0);
+      // 拡大表示時はギャラリー位置オフセットを解除して真ん中基準に戻す
+      gallery.style.top = "";
       img.style.transform = "";
       img.classList.add("expanded");
       body.classList.add("fade-bg");
