@@ -601,7 +601,6 @@ footer {
     justify-content: center;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    background: transparent; /* Chrome: overflow-y:autoのスクロールレイヤーにページ背景色が塗られるのを防止 */
 }
 
 /* 共通で使う非表示クラス */
@@ -1161,11 +1160,7 @@ body.not-safari .dim-image::before {
     padding-inline: 0.5rem;
 }
 
-/* Chrome: 暗転画像の上に黒文字は読みにくいため白に（Safariは薄い背景なので黒のまま） */
-body.not-safari .details .description {
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
+
 
 .autonomic-note {
     font-size: 10px;
