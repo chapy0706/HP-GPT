@@ -1069,26 +1069,12 @@ body.modal-open {
     opacity: 1;
 }
 
-body.not-safari .dim-image img {
-    animation: dimImageNonSafari 3s forwards;
-    opacity: 1;
-}
-
 @keyframes dimImage {
     from {
         opacity: 1;
     }
     to {
         opacity: 0.3;
-    }
-}
-
-@keyframes dimImageNonSafari {
-    from {
-        filter: brightness(1);
-    }
-    to {
-        filter: brightness(0.62);
     }
 }
 
